@@ -8,7 +8,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import javafx.print.Collation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +19,6 @@ import com.jude.entity.User;
 import com.jude.repository.UserRepository;
 import com.jude.service.UserService;
 import com.jude.util.StringUtil;
-import org.springframework.util.CollectionUtils;
 
 /**
  * 用户Service实现类
