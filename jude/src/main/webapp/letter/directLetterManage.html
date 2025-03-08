@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>函件短信模板</title>
+    <title>函件直邮管理</title>
     <link rel="stylesheet" type="text/css" href="/static/jquery-easyui-1.3.3/themes/black/easyui.css"></link>
     <link rel="stylesheet" type="text/css" href="/static/jquery-easyui-1.3.3/themes/icon.css"></link>
     <script type="text/javascript" src="/static/jquery-easyui-1.3.3/jquery.min.js"></script>
@@ -157,7 +157,7 @@
     </script>
 </head>
 <body style="margin: 1px">
-<table id="dg" title="函件短信模板" class="easyui-datagrid"
+<table id="dg" title="函件直邮管理" class="easyui-datagrid"
        fitColumns="true" pagination="true" rownumbers="true"
        url="/letMsgTem/list" fit="true" toolbar="#tb">
     <thead>
@@ -185,21 +185,65 @@
         <a href="javascript:deleteSupplier()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
     </div>
     <div>
-        &nbsp;消息模版编号：&nbsp;<input type="text" id="s_name" size="20"
+        &nbsp;省/市： &nbsp; <input type="text" id="s_name0" size="20"
+                                   onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;城市：&nbsp;<input type="text" id="s_name" size="20"
                                       onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;消息模版名称：&nbsp;<input type="text" id="s_name1" size="20"
+        &nbsp;逾期人地址：&nbsp;<input type="text" id="s_name1" size="20"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;消息模版审核状态：&nbsp;<input type="text" id="s_name2" size="20"
-                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
-
-        &nbsp;创建开始时间：&nbsp;<input type="text" id="s_name3" size="20"
+        &nbsp;电话号码：&nbsp;<input type="text" id="s_name2" size="20"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
 
-        &nbsp;创建结束时间：&nbsp;<input type="text" id="s_name4" size="20"
+        &nbsp;逾期人姓名：&nbsp;<input type="text" id="s_name3" size="20"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
+
+        &nbsp;函件编号：&nbsp;<input type="text" id="s_name4" size="20"
+                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;函件创建开始时间：&nbsp;<input type="text" id="s_name5" size="20"
+                                            onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;函件创建结束时间：&nbsp;<input type="text" id="s_name6" size="20"
+                                            onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;地址规范状态：&nbsp;<input type="text" id="s_name7" size="20"
+                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;函件类型：&nbsp;<input type="text" id="s_name8" size="20"
+                                       onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;函件模板：&nbsp;<input type="text" id="s_name9" size="20"
+                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;直邮任务状态：&nbsp;<input type="text" id="s_name10" size="20"
+                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;邮件状态：&nbsp;<select id="mailStatus">
+            <option value="option1">未签收</option>
+            <option value="option2">已签收</option>
+            <option value="option3">问题件</option></select>
+
+    </div>
+    <br/>
+    <!-- 搜索按钮 -->
 
         <a href="javascript:searchSupplier()" class="easyui-linkbutton" iconCls="icon-search" plain="true">搜索</a>
     </div>
+</div>
+
+<div id="dlg" class="easyui-dialog" style="width:500px;height:350px;padding: 10px 20px"
+     closed="true" buttons="#dlg-buttons" data-options="onClose:function(){resetValue()}">
+    <form id="fm" method="post">
+        <table cellspacing="8px">
+            <tr><td>消息模板编号：</td><td><input type="text" id="msgTemNum" name="msgTemNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>消息模板名称：</td><td><input type="text" id="msgTemName" name="msgTemName" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>短信标题：</td><td><input type="text" id="msgTitle" name="msgTitle" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>短信内容：</td><td><input type="text" id="msfText" name="msfText" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>签名：</td><td><input type="text" id="signature" name="signature" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>申请时间：</td><td><input type="text" id="batchNum" name="batchNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>审核状态：</td><td><input type="text" id="temNum" name="temNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>审核信息：</td><td><input type="text" id="telNum" name="telNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>操作：</td>
+                <td>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" onclick="appoveView()">预览</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="appoveEdit()">编辑</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="appoveRemove()">删除</a>
+                </td></tr>
+        </table>
+    </form>
 </div>
 
 <div id="dlg-buttons">

@@ -202,6 +202,28 @@
     </div>
 </div>
 
+<div id="dlg" class="easyui-dialog" style="width:500px;height:350px;padding: 10px 20px"
+     closed="true" buttons="#dlg-buttons" data-options="onClose:function(){resetValue()}">
+    <form id="fm" method="post">
+        <table cellspacing="8px">
+            <tr><td>消息模板编号：</td><td><input type="text" id="msgTemNum" name="msgTemNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>消息模板名称：</td><td><input type="text" id="msgTemName" name="msgTemName" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>短信标题：</td><td><input type="text" id="msgTitle" name="msgTitle" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>短信内容：</td><td><input type="text" id="msfText" name="msfText" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>签名：</td><td><input type="text" id="signature" name="signature" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>申请时间：</td><td><input type="text" id="batchNum" name="batchNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>审核状态：</td><td><input type="text" id="temNum" name="temNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>审核信息：</td><td><input type="text" id="telNum" name="telNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>操作：</td>
+                <td>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" onclick="appoveView()">预览</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="appoveEdit()">编辑</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="appoveRemove()">删除</a>
+                </td></tr>
+        </table>
+    </form>
+</div>
+
 <div id="dlg-buttons">
     <a href="javascript:saveSupplier()" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
     <a href="javascript:closeSupplierDialog()" class="easyui-linkbutton" iconCls="icon-cancel">关闭</a>
