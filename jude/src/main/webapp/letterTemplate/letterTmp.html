@@ -138,7 +138,13 @@
 
          function searchSupplier(){
             $("#dg").datagrid('load',{
-                "name":$("#s_name").val()
+                "tempNum":$("#s_tempNum").val(),
+                "tempName":$("#s_tempName").val(),
+                "lawFirmName":$("#s_lawFirmName").val(),
+                "appleStartTime":$("#s_appleStartTime").val(),
+                "appleEndTime":$("#s_appleEndTime").val(),
+                "type":$("#s_type").val(),
+                "reviewStatus":$("#s_reviewStatus").val()
             });
         }
 
@@ -206,23 +212,25 @@
         <a href="javascript:deleteSupplier()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
     </div>
     <div>
-        &nbsp;模板编号：&nbsp;<input type="text" id="s_name" size="20"
+        &nbsp;模板编号：&nbsp;<input type="text" id="s_tempNum" size="20"
                                       onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;模板名称：&nbsp;<input type="text" id="s_name1" size="20"
+        &nbsp;模板名称：&nbsp;<input type="text" id="s_tempName" size="20"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;律所名称：&nbsp;<input type="text" id="s_name2" size="20"
+        &nbsp;律所名称：&nbsp;<input type="text" id="s_lawFirmName" size="20"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
         <br>
-        &nbsp;申请开始时间：&nbsp;<input type="text" id="s_name3" size="20"
+        &nbsp;申请开始时间：&nbsp;<input type="text" id="s_appleStartTime" size="20"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
 
-        &nbsp;申请结束时间：&nbsp;<input type="text" id="s_name4" size="20"
+        &nbsp;申请结束时间：&nbsp;<input type="text" id="s_appleEndTime" size="20"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;函件类型：&nbsp;<select id="letterType" style="width:100px; " >
-        <option value="option1">律师函</option>
-        <option value="option2">催告函</option></select>
-        &nbsp;审核状态：&nbsp;<input type="text" id="s_name6" size="20"
-                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;函件类型：&nbsp;<select id="s_type" style="width:100px; " >
+        <option value="律师函">律师函</option>
+        <option value="催告函">催告函</option></select>
+        &nbsp;审核状态：&nbsp;<select id="s_reviewStatus" style="width:100px; " >
+            <option value="待审核">待审核</option>
+            <option value="审核通过">审核通过</option>
+            <option value="审核未过">审核未过</option></select>
 
         <a href="javascript:searchSupplier()" class="easyui-linkbutton" iconCls="icon-search" plain="true">搜索</a>
     </div>
