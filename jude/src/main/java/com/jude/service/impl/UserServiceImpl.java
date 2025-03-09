@@ -44,10 +44,11 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User save(User user) throws  Exception {
-		 if(userRepository.findByUserName(user.getUserName())!=null){
+
+		if(user.getId()==null&&userRepository.findByUserName(user.getUserName())!=null){
 			 throw new  Exception("当前手机号已存在创建用户失败");
 		 }
-		return (User)userRepository.save(user);
+		return userRepository.save(user);
 	}
 
 	@Override

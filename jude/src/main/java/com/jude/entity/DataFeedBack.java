@@ -1,6 +1,8 @@
 package com.jude.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -31,8 +33,6 @@ public class DataFeedBack  {//extends BaseEntity
     @Column(length=50)
     private String isDelete;
     @Column(length = 200)
-    private String tel; //发送手机号
-    @Column(length = 200)
     private String userAcc; // 操作账号
     @Column(length = 200)
     private String overdueName; //逾期人姓名
@@ -47,12 +47,25 @@ public class DataFeedBack  {//extends BaseEntity
     @Column(length = 200)
     private String batchNum; //函件批次号
     @Column(length = 200)
-    private String letSendTime; //函件发送时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date letSendTime; //函件发送时间
     @Column(length = 200)
     private String sendType; //发送类型
     @Column(length = 200)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date firstQueryTime; //首次查看时间
     @Column(length = 200)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastQueryTime; //最近查看时间
+    private Integer viewCnt; // 查看次数
+    @Column(length = 200)
+    private String sendStatus; // 发送状态
+    @Column(length = 200)
+    private String customerMessage; // 客户留言
+
+
 
 }
