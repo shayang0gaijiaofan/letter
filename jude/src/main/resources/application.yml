@@ -5,14 +5,30 @@ spring:
    datasource:
       driver-class-name: com.mysql.jdbc.Driver
       # url: jdbc:mysql://localhost:3306/db_letter?characterEncoding=utf-8&&useSSL=false
+      #本地连测试
       url: jdbc:mysql://9df7c6b2a30f1182.natapp.cc:14725/db_letter?characterEncoding=utf-8&&useSSL=false
-      #&useSSL=false&
       username: root
-      #password: Asd147a..258..
       password: 123456
 
+       #本地连阿里云
+#      url: jdbc:mysql://47.116.216.173:3306/db_letter?characterEncoding=utf-8&useSSL=false
+#      username: remote
+#      password: 147258369Aa.
+      #&useSSL=false&
+      #username: remote
+
+      #生产阿里云
+      #url: jdbc:mysql://localhost:3306/db_letter?characterEncoding=utf-8&useSSL=false
+      #username: root
+      #password: Asd147a..258..
+      #password: 123456
    jpa:
      hibernate.ddl-auto: update
      show-sql: true
    thymeleaf:
     cache: false
+   resources:
+      static-locations: classpath:/static/
+
+
+

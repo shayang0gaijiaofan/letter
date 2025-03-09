@@ -54,13 +54,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public List<Employee> list(Employee employee, Integer page, Integer pageSize, Direction direction, String... properties) {
 		Pageable pageable=new PageRequest(page-1, pageSize, direction,properties);
+
 		Page<Employee> pageEmployee=employeeRepository.findAll(new Specification<Employee>() {
 			@Override
 			public Predicate toPredicate(Root<Employee> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Predicate predicate=cb.conjunction();
 				if(employee!=null){
 					if(StringUtil.isNotEmpty(employee.getCopId())){
-						predicate.getExpressions().add(cb.like(root.get("name"), "%"+employee.getName().trim()+"%"));
+						if (StringUtil.isNotEmpty(employee.getName())){
+							predicate.getExpressions().add(cb.like(root.get("name"), "%"+employee.getName().trim()+"%"));
+						}
 						predicate.getExpressions().add(cb.equal(root.get("copId"), employee.getCopId()));
 					}	
 				}

@@ -43,11 +43,11 @@ public class CopInfoServiceImpl implements CopService {
 			@Override
 			public Predicate toPredicate(Root<CopInfo> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Predicate predicate=cb.conjunction();
-//				if(CopInfo!=null){
-//					if(StringUtil.isNotEmpty(CopInfo.getName())){
-//						predicate.getExpressions().add(cb.like(root.get("name"), "%"+CopInfo.getName().trim()+"%"));
-//					}
-//				}
+				if(CopInfo!=null){
+					if(StringUtil.isNotEmpty(CopInfo.getName())){
+						predicate.getExpressions().add(cb.like(root.get("name"), "%"+CopInfo.getName().trim()+"%"));
+					}
+				}
 				return predicate;
 			}
 		}, pageable);
