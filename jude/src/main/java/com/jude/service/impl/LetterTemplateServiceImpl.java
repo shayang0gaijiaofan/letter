@@ -3,6 +3,7 @@ package com.jude.service.impl;
 import com.jude.entity.LetterTemplate;
 import com.jude.repository.LetterTemplateRepository;
 import com.jude.service.LetterTemplateService;
+import com.jude.util.StringUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,18 +39,30 @@ public class LetterTemplateServiceImpl implements LetterTemplateService {
 	public List<LetterTemplate> list(LetterTemplate LetterTemplate, Integer page, Integer pageSize, Direction direction, String... properties) {
 		Pageable pageable=new PageRequest(page-1, pageSize, direction,properties);
 		Page<LetterTemplate> pageLetterTemplate= LetterTemplateRepository.findAll(
-//			new Specification<LetterTemplate>() {
-//			@Override
-//			public Predicate toPredicate(Root<LetterTemplate> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-//				Predicate predicate=cb.conjunction();
-//				if(LetterTemplate!=null){
-//					if(StringUtil.isNotEmpty(LetterTemplate.getName())){
-//						predicate.getExpressions().add(cb.like(root.get("name"), "%"+LetterTemplate.getName().trim()+"%"));
-//					}
-//				}
-//				return predicate;
-//			}
-//		},
+			new Specification<LetterTemplate>() {
+			@Override
+			public Predicate toPredicate(Root<LetterTemplate> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				Predicate predicate=cb.conjunction();
+				if(LetterTemplate!=null){
+					if(StringUtil.isNotEmpty(LetterTemplate.getTempNum())){
+						predicate.getExpressions().add(cb.like(root.get("tempNum"), "%"+LetterTemplate.getTempNum().trim()+"%"));
+					}
+					if(StringUtil.isNotEmpty(LetterTemplate.getTempName())){
+						predicate.getExpressions().add(cb.like(root.get("tempName"), "%"+LetterTemplate.getTempName().trim()+"%"));
+					}
+					if(StringUtil.isNotEmpty(LetterTemplate.getLawFirmName())){
+						predicate.getExpressions().add(cb.like(root.get("lawFirmName"), "%"+LetterTemplate.getLawFirmName().trim()+"%"));
+					}
+					if(StringUtil.isNotEmpty(LetterTemplate.getType())){
+						predicate.getExpressions().add(cb.like(root.get("type"), "%"+LetterTemplate.getType().trim()+"%"));
+					}
+					if(StringUtil.isNotEmpty(LetterTemplate.getReviewStatus())){
+						predicate.getExpressions().add(cb.like(root.get("reviewStatus"), "%"+LetterTemplate.getReviewStatus().trim()+"%"));
+					}
+				}
+				return predicate;
+			}
+		},
 				pageable);
 		return pageLetterTemplate.getContent();
 	}

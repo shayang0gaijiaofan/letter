@@ -42,7 +42,7 @@
                 strRoleIds.push(selectedRows[i].id);
             }
             var roleIds=strRoleIds.join(",");
-            $.post("/letMsgTem/saveRoleSet",{roleIds:roleIds,supplierId:supplierId},function(result){
+            $.post("/Letter/saveRoleSet",{roleIds:roleIds,supplierId:supplierId},function(result){
                 if(result.success){
                     closeRoleSetDialog();
                     $("#dg").datagrid("reload");
@@ -68,7 +68,7 @@
              var ids=strIds.join(",");
              $.messager.confirm("系统提示","您确定要删除这<font color=red>"+selectedRows.length+"</font>条数据吗？",function(r){
                     if(r){
-                        $.post("/letMsgTem/delete",{ids:ids},function(result){
+                        $.post("/Letter/delete",{ids:ids},function(result){
                             if(result.success){
                                  $.messager.alert("系统提示","数据已成功删除！");
                                  $("#dg").datagrid("reload");
@@ -83,7 +83,7 @@
 
         function openSupplierAddDialog(){
             $("#dlg").dialog("open").dialog("setTitle","添加函件发送信息");
-            url="/letMsgTem/save";
+            url="/Letter/save";
         }
 
         function openSupplierModifyDialog(){
@@ -96,7 +96,7 @@
              $("#dlg").dialog("open").dialog("setTitle","修改短信模板");
              $("#fm").form("load",row);
              $("#supplierName").attr("readonly","readonly")
-             url="/letMsgTem/save?id="+row.id;
+             url="/Letter/save?id="+row.id;
          }
 
 
@@ -138,7 +138,11 @@
 
          function searchSupplier(){
             $("#dg").datagrid('load',{
-                "name":$("#s_name").val()
+                "batchNum":$("#s_batchNum").val(),
+                "temNum":$("#s_temNum").val(),
+                "type":$("#s_type").val(),
+                "createStartTime":$("#s_createStartTime").val(),
+                "createEndTime":$("#s_createEndTime").val()
             });
         }
 
@@ -151,10 +155,10 @@
              $("#dg").datagrid({
                     //双击事件
                     onDblClickRow: function (index, row) {
-                        $("#dlg").dialog("open").dialog("setTitle","修改短信模板");
+                        $("#dlg").dialog("open").dialog("setTitle","修改函件信息");
                             $("#fm").form("load",row);
                             $("#supplierName").attr("readonly","readonly")
-                            url="/letMsgTem/save?id="+row.id;
+                            url="/Letter/save?id="+row.id;
                     }
                 });
          });
@@ -199,17 +203,19 @@ function formatSubmitOper(value, rowObj) { // 已发送/未发送， 已转直�
         <a href="javascript:deleteSupplier()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
     </div>
     <div>
-        &nbsp;消息模版编号：&nbsp;<input type="text" id="s_name" size="20"
+        &nbsp;批次编号：&nbsp;<input type="text" id="s_batchNum" size="20"
                                       onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;消息模版名称：&nbsp;<input type="text" id="s_name1" size="20"
+        &nbsp;函件模板：&nbsp;<input type="text" id="s_temNum" size="20"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;消息模版审核状态：&nbsp;<input type="text" id="s_name2" size="20"
+        &nbsp;函件类型：&nbsp;<select id="s_type" style="width: 100px;">
+           <option value="律师函">律师函</option>
+            <option value="催告函">催告函</option>
+            </select>
+        <br>
+        &nbsp;创建开始时间：&nbsp;<input type="text" id="s_createStartTime" size="20"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
 
-        &nbsp;创建开始时间：&nbsp;<input type="text" id="s_name3" size="20"
-                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
-
-        &nbsp;创建结束时间：&nbsp;<input type="text" id="s_name4" size="20"
+        &nbsp;创建结束时间：&nbsp;<input type="text" id="s_createEndTime" size="20"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
 
         <a href="javascript:searchSupplier()" class="easyui-linkbutton" iconCls="icon-search" plain="true">搜索</a>
