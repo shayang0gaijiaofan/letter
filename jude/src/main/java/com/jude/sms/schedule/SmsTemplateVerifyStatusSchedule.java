@@ -24,7 +24,7 @@ import java.util.Objects;
  * @Description
  * @create 2025-03-09 21:29
  */
-@Component
+//@Component
 
 public class SmsTemplateVerifyStatusSchedule {
 
@@ -36,7 +36,7 @@ public class SmsTemplateVerifyStatusSchedule {
     @Resource
     private SmsTemplateClientService smsTemplateClientService;
 
-    @Scheduled(cron = "0 0 30 * * ?")
+//    @Scheduled(cron = "0 0/30 * * * ?")
 //    @Scheduled(fixedRate = 5000)
     public void verifyStatusConfirm() {
         log.info("定时任务-短信模版审核状态查询开始");
