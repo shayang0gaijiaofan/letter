@@ -42,7 +42,7 @@
                 strRoleIds.push(selectedRows[i].id);
             }
             var roleIds=strRoleIds.join(",");
-            $.post("/letMsgTem/saveRoleSet",{roleIds:roleIds,supplierId:supplierId},function(result){
+            $.post("/LetterTemplate/saveRoleSet",{roleIds:roleIds,supplierId:supplierId},function(result){
                 if(result.success){
                     closeRoleSetDialog();
                     $("#dg").datagrid("reload");
@@ -68,7 +68,7 @@
              var ids=strIds.join(",");
              $.messager.confirm("系统提示","您确定要删除这<font color=red>"+selectedRows.length+"</font>条数据吗？",function(r){
                     if(r){
-                        $.post("/letMsgTem/delete",{ids:ids},function(result){
+                        $.post("/LetterTemplate/delete",{ids:ids},function(result){
                             if(result.success){
                                  $.messager.alert("系统提示","数据已成功删除！");
                                  $("#dg").datagrid("reload");
@@ -82,8 +82,8 @@
 
 
         function openSupplierAddDialog(){
-            $("#dlg").dialog("open").dialog("setTitle","添加函件发送信息");
-            url="/letMsgTem/save";
+            $("#dlg").dialog("open").dialog("setTitle","添加函件模板信息");
+            url="/LetterTemplate/save";
         }
 
         function openSupplierModifyDialog(){
@@ -93,10 +93,10 @@
                  return;
              }
              var row=selectedRows[0];
-             $("#dlg").dialog("open").dialog("setTitle","修改短信模板");
+             $("#dlg").dialog("open").dialog("setTitle","修改函件模板");
              $("#fm").form("load",row);
              $("#supplierName").attr("readonly","readonly")
-             url="/letMsgTem/save?id="+row.id;
+             url="/LetterTemplate/save?id="+row.id;
          }
 
 
@@ -142,23 +142,14 @@
             });
         }
 
-        function formatAction(val,row){
-        	console.log(row)
-            return "
-            <a href=\"javascript:openMenuSetDialog("+row.id+")\">预览</a>
-            <a href=\"javascript:deleteSupplier("+row.id+")\">编辑</a>
-            <a href=\"javascript:deleteSupplier("+row.id+")\">删除</a>
-            ";
-        }
-
         $(function () {
              $("#dg").datagrid({
                     //双击事件
                     onDblClickRow: function (index, row) {
-                        $("#dlg").dialog("open").dialog("setTitle","修改短信模板");
+                        $("#dlg").dialog("open").dialog("setTitle","修改函件模板");
                             $("#fm").form("load",row);
                             $("#supplierName").attr("readonly","readonly")
-                            url="/letMsgTem/save?id="+row.id;
+                            url="/LetterTemplate/save?id="+row.id;
                     }
                 });
          });
@@ -183,12 +174,28 @@
         <th field="createTime" width="80" align="center">申请时间</th>
         <th field="reviewStatus" width="80" align="center">审核状态</th>
         <th field="reviewTime" width="80" align="center">审核时间</th>
-        <th field="action" width="80" align="center">操作</th>
 <!--        formatter="formatAction"-->
     </tr>
     </thead>
 </table>
 
+<div id="dlg" class="easyui-dialog" style="width:500px;height:350px;padding: 10px 20px"
+     closed="true" buttons="#dlg-buttons" data-options="onClose:function(){resetValue()}">
+    <form id="fm" method="post">
+        <table cellspacing="8px">
+            <tr><td>模板编号：</td><td><input type="text" id="tempNum" name="tempNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>模板名称：</td><td><input type="text" id="tempName" name="tempName" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>函件类型：</td><td><input type="text" id="type" name="type" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>律所名称：</td><td><input type="text" id="lawFirmName" name="lawFirmName" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>律师姓名：</td><td><input type="text" id="lawyerName" name="lawyerName" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>函件验证网址：</td><td><input type="text" id="validateUrl" name="validateUrl" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>申请人：</td><td><input type="text" id="applyPerson" name="applyPerson" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <!--            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" onclick="appoveView()">预览</a>-->
+            <!--            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="appoveEdit()">编辑</a>-->
+            <!--            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="appoveRemove()">删除</a>-->
+        </table>
+    </form>
+</div>
 
 
 <div id="tb">
@@ -199,17 +206,22 @@
         <a href="javascript:deleteSupplier()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
     </div>
     <div>
-        &nbsp;消息模版编号：&nbsp;<input type="text" id="s_name" size="20"
+        &nbsp;模板编号：&nbsp;<input type="text" id="s_name" size="20"
                                       onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;消息模版名称：&nbsp;<input type="text" id="s_name1" size="20"
+        &nbsp;模板名称：&nbsp;<input type="text" id="s_name1" size="20"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;消息模版审核状态：&nbsp;<input type="text" id="s_name2" size="20"
+        &nbsp;律所名称：&nbsp;<input type="text" id="s_name2" size="20"
+                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        <br>
+        &nbsp;申请开始时间：&nbsp;<input type="text" id="s_name3" size="20"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
 
-        &nbsp;创建开始时间：&nbsp;<input type="text" id="s_name3" size="20"
+        &nbsp;申请结束时间：&nbsp;<input type="text" id="s_name4" size="20"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
-
-        &nbsp;创建结束时间：&nbsp;<input type="text" id="s_name4" size="20"
+        &nbsp;函件类型：&nbsp;<select id="letterType" style="width:100px; " >
+        <option value="option1">律师函</option>
+        <option value="option2">催告函</option></select>
+        &nbsp;审核状态：&nbsp;<input type="text" id="s_name6" size="20"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
 
         <a href="javascript:searchSupplier()" class="easyui-linkbutton" iconCls="icon-search" plain="true">搜索</a>

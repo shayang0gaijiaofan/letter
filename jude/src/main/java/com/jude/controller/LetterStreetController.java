@@ -1,8 +1,8 @@
 package com.jude.controller;
 
-import com.jude.entity.LetterTemplate;
+import com.jude.entity.LetterStreet;
 import com.jude.entity.Log;
-import com.jude.service.LetterTemplateService;
+import com.jude.service.LetterStreetService;
 import com.jude.service.LogService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.data.domain.Sort;
@@ -21,18 +21,18 @@ import java.util.Map;
  *
  */
 @RestController
-@RequestMapping("/LetterTemplate")
-public class LetterTemplateController {
+@RequestMapping("/LetterStreet")
+public class LetterStreetController {
 
 	@Resource
-	private LetterTemplateService LetterTemplateService;
+	private LetterStreetService LetterStreetService;
 
 	@Resource
 	private LogService logService;
 
 	/**
 	 * 分页查询供应商信息
-	 * @param LetterTemplate
+	 * @param LetterStreet
 	 * @param page
 	 * @param rows
 	 * @return
@@ -40,33 +40,37 @@ public class LetterTemplateController {
 	 */
 	@RequestMapping("/list")
 	//@RequiresPermissions(value = { "供应商管理" })
-	public Map<String,Object> list(LetterTemplate LetterTemplate, @RequestParam(value="page",required=false)Integer page, @RequestParam(value="rows",required=false)Integer rows)throws Exception{
-		List<LetterTemplate> LetterTemplateList= LetterTemplateService.list(LetterTemplate, page, rows, Sort.Direction.ASC, "id");
-		Long total= LetterTemplateService.getCount(LetterTemplate);
+	public Map<String,Object> list(LetterStreet LetterStreet, @RequestParam(value="page",required=false)Integer page, @RequestParam(value="rows",required=false)Integer rows)throws Exception{
+		List<LetterStreet> LetterStreetList= LetterStreetService.list(LetterStreet, page, rows, Sort.Direction.ASC, "id");
+		Long total= LetterStreetService.getCount(LetterStreet);
 		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("rows", LetterTemplateList);
+		resultMap.put("rows", LetterStreetList);
 		resultMap.put("total", total);
 		//logService.save(new Log(Log.SEARCH_ACTION,"查询供应商信息")); // 写入日志
 		return resultMap;
 	}
 
 
+
+
+
+
 	/**
 	 * 添加或者修改供应商信息
-	 * @param LetterTemplate
+	 * @param LetterStreet
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping("/save")
-//	@RequiresPermissions(value = { "添加或者修改供应商信息" })
-	public Map<String,Object> save(LetterTemplate LetterTemplate)throws Exception{
-		if(LetterTemplate.getId()!=null){ // 写入日志
-			logService.save(new Log(Log.UPDATE_ACTION,"更新供应商信息"+LetterTemplate));
+	@RequiresPermissions(value = { "供应商管理" })
+	public Map<String,Object> save(LetterStreet LetterStreet)throws Exception{
+		if(LetterStreet.getId()!=null){ // 写入日志
+			logService.save(new Log(Log.UPDATE_ACTION,"更新供应商信息"+LetterStreet));
 		}else{
-			logService.save(new Log(Log.ADD_ACTION,"添加供应商信息"+LetterTemplate));
+			logService.save(new Log(Log.ADD_ACTION,"添加供应商信息"+LetterStreet));
 		}
 		Map<String, Object> resultMap = new HashMap<>();
-		LetterTemplateService.save(LetterTemplate);
+		LetterStreetService.save(LetterStreet);
 		resultMap.put("success", true);
 		return resultMap;
 	}
@@ -86,8 +90,8 @@ public class LetterTemplateController {
 		String []idsStr=ids.split(",");
 		for(int i=0;i<idsStr.length;i++){
 			int id=Integer.parseInt(idsStr[i]);
-			//logService.save(new Log(Log.DELETE_ACTION,"删除供应商信息"+ LetterTemplateService.findById(id)));  // 写入日志
-			LetterTemplateService.delete(id);
+			//logService.save(new Log(Log.DELETE_ACTION,"删除供应商信息"+ LetterStreetService.findById(id)));  // 写入日志
+			LetterStreetService.delete(id);
 		}
 		resultMap.put("success", true);
 		return resultMap;

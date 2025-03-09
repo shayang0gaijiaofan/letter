@@ -159,26 +159,31 @@
                 });
          });
 
+function formatSubmitOper(value, rowObj) { // 已发送/未发送， 已转直邮/未转直邮， 生成成功/生成失败
+    var badCnt = rowObj.importCnt - value;
+    var result = "" + value + "/" + badCnt;
+    return result;
+}
 
     </script>
 </head>
 <body style="margin: 1px">
 <table id="dg" title="电子函件管理" class="easyui-datagrid"
        fitColumns="true" pagination="true" rownumbers="true"
-       url="/Letter/list" fit="true" toolbar="#tb">
+       url="/Letter/list" fit="true" toolbar="#tb" fixedcolumns="true">
     <thead>
     <tr>
         <th field="cb" checkbox="true" align="center"></th>
-        <th field="batchId" width="80" align="center">批次编号</th>
+        <th field="batchNum" width="80" align="center">批次编号</th>
         <th field="createTime" width="80" align="center">创建日期</th>
         <th field="importCnt" width="80" align="center">导入数量</th>
-        <th field="successCnt" width="80" align="center">生成成功/生成失败</th>
-        <th field="sendCnt" width="80" align="center">已发送/未发送</th>
-        <th field="streetCnt" width="80" align="center">已转直邮/未转直邮</th>
-        <th field="letterTmpId" width="80" align="center">函件模板编号</th>
+        <th field="successCnt" width="80" align="center" formatter="formatSubmitOper">生成成功/生成失败</th>
+        <th field="sentCnt" width="80" align="center" formatter="formatSubmitOper">已发送/未发送</th>
+        <th field="streetCnt" width="80" align="center" formatter="formatSubmitOper">已转直邮/未转直邮</th>
+        <th field="temNum" width="80" align="center">函件模板编号</th>
         <th field="tmpName" width="80" align="center">函件模板名称</th>
         <th field="type" width="80" align="center">函件类型</th>
-        <th field="appoveOperator" width="80" align="center">操作</th>
+<!--        <th field="appoveOperator" width="80" align="center">操作</th>-->
 <!--        formatter="formatOper"-->
     </tr>
     </thead>
@@ -211,27 +216,18 @@
     </div>
 </div>
 
-<!--<div id="dlg" class="easyui-dialog" style="width:500px;height:350px;padding: 10px 20px"-->
-<!--     closed="true" buttons="#dlg-buttons" data-options="onClose:function(){resetValue()}">-->
-<!--    <form id="fm" method="post">-->
-<!--        <table cellspacing="8px">-->
-<!--            <tr><td>消息模板编号：</td><td><input type="text" id="msgTemNum" name="msgTemNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>-->
-<!--            <tr><td>消息模板名称：</td><td><input type="text" id="msgTemName" name="msgTemName" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>-->
-<!--            <tr><td>短信标题：</td><td><input type="text" id="msgTitle" name="msgTitle" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>-->
-<!--            <tr><td>短信内容：</td><td><input type="text" id="msfText" name="msfText" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>-->
-<!--            <tr><td>签名：</td><td><input type="text" id="signature" name="signature" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>-->
-<!--            <tr><td>申请时间：</td><td><input type="text" id="batchNum" name="batchNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>-->
-<!--            <tr><td>审核状态：</td><td><input type="text" id="temNum" name="temNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>-->
-<!--            <tr><td>审核信息：</td><td><input type="text" id="telNum" name="telNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>-->
-<!--            <tr><td>操作：</td>-->
-<!--                <td>-->
-<!--                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" onclick="appoveView()">预览</a>-->
-<!--                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="appoveEdit()">编辑</a>-->
-<!--                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="appoveRemove()">删除</a>-->
-<!--                </td></tr>-->
-<!--        </table>-->
-<!--    </form>-->
-<!--</div>-->
+<div id="dlg" class="easyui-dialog" style="width:500px;height:350px;padding: 10px 20px"
+     closed="true" buttons="#dlg-buttons" data-options="onClose:function(){resetValue()}">
+    <form id="fm" method="post">
+        <table cellspacing="8px">
+            <tr><td>批次编号：</td><td><input type="text" id="batchNum" name="batchNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>函件模板编号：</td><td><input type="text" id="letterTmpId" name="letterTmpId" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+<!--            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" onclick="appoveView()">预览</a>-->
+<!--            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="appoveEdit()">编辑</a>-->
+<!--            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="appoveRemove()">删除</a>-->
+        </table>
+    </form>
+</div>
 
 <div id="dlg-buttons">
     <a href="javascript:saveSupplier()" class="easyui-linkbutton" iconCls="icon-ok">保存</a>

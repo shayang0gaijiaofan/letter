@@ -2,13 +2,13 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>电子函件模板</title>
+    <title>函件直邮管理</title>
     <link rel="stylesheet" type="text/css" href="/static/jquery-easyui-1.3.3/themes/black/easyui.css"></link>
     <link rel="stylesheet" type="text/css" href="/static/jquery-easyui-1.3.3/themes/icon.css"></link>
     <script type="text/javascript" src="/static/jquery-easyui-1.3.3/jquery.min.js"></script>
     <script type="text/javascript" src="/static/jquery-easyui-1.3.3/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="/static/jquery-easyui-1.3.3/locale/easyui-lang-zh_CN.js"></script>
-    <script type="textkehu/javascript">
+    <script type="text/javascript">
 
         var url;
 
@@ -42,7 +42,7 @@
                 strRoleIds.push(selectedRows[i].id);
             }
             var roleIds=strRoleIds.join(",");
-            $.post("/letterSend/saveRoleSet",{roleIds:roleIds,supplierId:supplierId},function(result){
+            $.post("/LetterStreet/saveRoleSet",{roleIds:roleIds,supplierId:supplierId},function(result){
                 if(result.success){
                     closeRoleSetDialog();
                     $("#dg").datagrid("reload");
@@ -68,7 +68,7 @@
              var ids=strIds.join(",");
              $.messager.confirm("系统提示","您确定要删除这<font color=red>"+selectedRows.length+"</font>条数据吗？",function(r){
                     if(r){
-                        $.post("/letterSend/delete",{ids:ids},function(result){
+                        $.post("/LetterStreet/delete",{ids:ids},function(result){
                             if(result.success){
                                  $.messager.alert("系统提示","数据已成功删除！");
                                  $("#dg").datagrid("reload");
@@ -83,7 +83,7 @@
 
         function openSupplierAddDialog(){
             $("#dlg").dialog("open").dialog("setTitle","添加函件发送信息");
-            url="/letterSend/save";
+            url="/LetterStreet/save";
         }
 
         function openSupplierModifyDialog(){
@@ -96,7 +96,7 @@
              $("#dlg").dialog("open").dialog("setTitle","修改短信模板");
              $("#fm").form("load",row);
              $("#supplierName").attr("readonly","readonly")
-             url="/letterSend/save?id="+row.id;
+             url="/LetterStreet/save?id="+row.id;
          }
 
 
@@ -148,7 +148,7 @@
                         $("#dlg").dialog("open").dialog("setTitle","修改短信模板");
                             $("#fm").form("load",row);
                             $("#supplierName").attr("readonly","readonly")
-                            url="/letterSend/save?id="+row.id;
+                            url="/LetterStreet/save?id="+row.id;
                     }
                 });
          });
@@ -157,23 +157,30 @@
     </script>
 </head>
 <body style="margin: 1px">
-<table id="dg" title="函件发送列表" class="easyui-datagrid"
+<table id="dg" title="函件直邮管理" class="easyui-datagrid"
        fitColumns="true" pagination="true" rownumbers="true"
-       url="/letterSend/list" fit="true" toolbar="#tb">
+       url="/LetterStreet/list" fit="true" toolbar="#tb">
     <thead>
     <tr>
         <th field="cb" checkbox="true" align="center"></th>
-        <th field="msgTemNum" width="80" align="center">消息模板编号</th>
-        <th field="msgTemName" width="80" align="center">消息模板名称</th>
-        <th field="msfText" width="80" align="center">短信标题</th>
-        <th field="signature" width="80" align="center">短信内容</th>
-        <th field="letNum" width="80" align="center">签名</th>
-        <th field="appTime" width="80" align="center">申请时间</th>
-        <th field="approveStatus" width="80" align="center">审核状态</th>
-        <th field="approveInfo" width="80" align="center">审核信息</th>
+        <th field="phoneNum" width="80" align="center">发送手机号</th>
+        <th field="phoneAddr" width="80" align="center">号码所属地</th>
+        <th field="overduePerson" width="80" align="center">逾期人姓名</th>
+        <th field="overdueAddr" width="80" align="center">逾期人地址</th>
+        <th field="addrNormStatus" width="80" align="center">地址规范状态</th>
+        <th field="tempNum" width="80" align="center">函件模板编号</th>
+        <th field="letterNum" width="80" align="center">函件编号</th>
+        <th field="debtAmount" width="80" align="center">欠款金额</th>
+        <th field="letterPic" width="80" align="center">函件图片</th>
+        <th field="letterPages" width="80" align="center">函件页数</th>
+        <th field="letterType" width="80" align="center">函件类型</th>
+        <th field="streetStatus" width="80" align="center">直邮状态</th>
+        <th field="trackingNum" width="80" align="center">物流单号</th>
     </tr>
     </thead>
 </table>
+
+
 
 <div id="tb">
     <div>
@@ -183,9 +190,42 @@
         <a href="javascript:deleteSupplier()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
     </div>
     <div>
-        &nbsp;供应商名称：&nbsp;<input type="text" id="s_name" size="20"
+        &nbsp;&nbsp;<input type="text" id="s_name0" size="20" placeholder="请输入省/市名称"
+                                   onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;&nbsp;<input type="text" id="s_name" size="20" placeholder="请输入城市名称"
                                       onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;&nbsp;<input type="text" id="s_name1" size="20" placeholder="请输入逾期人地址"
+                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;&nbsp;<input type="text" id="s_name2" size="20" placeholder="请输入逾期人电话号码"
+                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+
+        &nbsp;&nbsp;<input type="text" id="s_name3" size="20" placeholder="请输入逾期人姓名"
+                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        <br>
+        &nbsp;&nbsp;<input type="text" id="s_name4" size="20" placeholder="请输入函件编号"
+                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;&nbsp;<input type="text" id="s_name5" size="20" placeholder="请输入函件创建开始时间"
+                                            onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;&nbsp;<input type="text" id="s_name6" size="20" placeholder="请输入函件创建结束时间"
+                                            onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;&nbsp;<input type="text" id="s_name7" size="20" placeholder="请输入地址规范状态"
+                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;&nbsp;<input type="text" id="s_name8" size="20" placeholder="请输入函件类型"
+                                       onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        <br>
+        &nbsp;&nbsp;<input type="text" id="s_name9" size="20" placeholder="请输入函件模板名称"
+                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;&nbsp;<input type="text" id="s_name10" size="20" placeholder="请输入直邮任务状态"
+                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;&nbsp;邮件状态：&nbsp; <select id="mailStatus" style="width:100px; " >
+            <option value="option1">未签收</option>
+            <option value="option2">已签收</option>
+            <option value="option3">问题件</option></select>
+
+        <!-- 搜索按钮 -->
+
         <a href="javascript:searchSupplier()" class="easyui-linkbutton" iconCls="icon-search" plain="true">搜索</a>
+    </div>
     </div>
 </div>
 
@@ -193,14 +233,19 @@
      closed="true" buttons="#dlg-buttons" data-options="onClose:function(){resetValue()}">
     <form id="fm" method="post">
         <table cellspacing="8px">
-            <tr><td>消息模板编号：</td><td><input type="text" id="msgTemNum" name="msgTemNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>消息模板名称：</td><td><input type="text" id="msgTemName" name="msgTemName" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>短信标题：</td><td><input type="text" id="msgTitle" name="msgTitle" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>短信内容：</td><td><input type="text" id="msfText" name="msfText" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>签名：</td><td><input type="text" id="signature" name="signature" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>申请时间：</td><td><input type="text" id="batchNum" name="batchNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>审核状态：</td><td><input type="text" id="temNum" name="temNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>审核信息：</td><td><input type="text" id="telNum" name="telNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>发送手机号：</td><td><input type="text" id="phoneNum" name="phoneNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>号码所属地：</td><td><input type="text" id="phoneAddr" name="phoneAddr" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>逾期人姓名：</td><td><input type="text" id="overduePerson" name="overduePerson" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>逾期人地址：</td><td><input type="text" id="overdueAddr" name="overdueAddr" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>地址规范状态：</td><td><input type="text" id="addrNormStatus" name="addrNormStatus" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>函件模板编号：</td><td><input type="text" id="tempNum" name="tempNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>函件编号：</td><td><input type="text" id="letterNum" name="letterNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>欠款金额：</td><td><input type="number" id="debtAmount" name="debtAmount" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>函件图片：</td><td><input type="text" id="letterPic" name="letterPic" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>函件页数：</td><td><input type="text" id="letterPages" name="letterPages" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>函件类型：</td><td><input type="text" id="letterType" name="letterType" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>直邮状态：</td><td><input type="text" id="streetStatus" name="streetStatus" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>物流单号：</td><td><input type="text" id="trackingNum" name="trackingNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
         </table>
     </form>
 </div>
