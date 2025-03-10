@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>电子函件模板</title>
+    <link rel="stylesheet" type="text/css" href="/static/jquery-easyui-1.3.3/themes/black/easyui.css"></link>
+    <link rel="stylesheet" type="text/css" href="/static/jquery-easyui-1.3.3/themes/icon.css"></link>
+    <script type="text/javascript" src="/static/jquery-easyui-1.3.3/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/jquery-easyui-1.3.3/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/static/jquery-easyui-1.3.3/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript">
+
+        var url;
+
+        function formatEdit(val,row){
+            return "<a href=\"javascript:openRoleChooseDialog('"+row.roles+"',"+row.id+")\"><img style='margin-top: 4px' src='/static/images/edit.gif' /></a>";
+        }
+
+        function openRoleChooseDialog(roles,supplierId){
+            var rolesArr=roles.split(",");
+            $("#roleSetDialog").dialog("open").dialog("setTitle","选择角色");
+            $("#roleDg").datagrid({
+                        url:'/admin/role/listAll',
+                        onLoadSuccess:function(data){
+                            var selectedRows=$("#roleDg").datagrid('getRows');
+                            for(var i=0;i<selectedRows.length;i++){
+                                var name=selectedRows[i].name;
+                                if($.inArray(name, rolesArr)>=0){
+                                    $("#roleDg").datagrid('checkRow',i);
+                                }
+                            }
+                        }
+            });
+            $("#supplierId").val(supplierId);
+        }
+
+        function saveRoleSet(){
+            var supplierId=$("#supplierId").val();
+            var selectedRows=$("#roleDg").datagrid("getSelections");
+            var strRoleIds=[];
+            for(var i=0;i<selectedRows.length;i++){
+                strRoleIds.push(selectedRows[i].id);
+            }
+            var roleIds=strRoleIds.join(",");
+            $.post("/LetterTemplate/saveRoleSet",{roleIds:roleIds,supplierId:supplierId},function(result){
+                if(result.success){
+                    closeRoleSetDialog();
+                    $("#dg").datagrid("reload");
+                }else{
+                    $.messager.alert("系统提示","提交失败，请联系管理员！");
+                }
+            },"json");
+        }
+
+        function closeRoleSetDialog(){
+             $("#roleSetDialog").dialog("close");
+         }
+        function deleteSupplier(){
+            var selectedRows=$("#dg").datagrid("getSelections");
+            if(selectedRows.length==0){
+                 $.messager.alert("系统提示","请选择要删除的数据！");
+                 return;
+             }
+            var strIds=[];
+             for(var i=0;i<selectedRows.length;i++){
+                 strIds.push(selectedRows[i].id);
+             }
+             var ids=strIds.join(",");
+             $.messager.confirm("系统提示","您确定要删除这<font color=red>"+selectedRows.length+"</font>条数据吗？",function(r){
+                    if(r){
+                        $.post("/LetterTemplate/delete",{ids:ids},function(result){
+                            if(result.success){
+                                 $.messager.alert("系统提示","数据已成功删除！");
+                                 $("#dg").datagrid("reload");
+                            }else{
+                                $.messager.alert("系统提示",result.errorInfo);
+                            }
+                        },"json");
+                    }
+           });
+        }
+
+
+        function openSupplierAddDialog(){
+            $("#dlg").dialog("open").dialog("setTitle","添加函件模板信息");
+            url="/LetterTemplate/save";
+        }
+
+        function openSupplierModifyDialog(){
+            var selectedRows=$("#dg").datagrid("getSelections");
+             if(selectedRows.length!=1){
+                 $.messager.alert("系统提示","请选择一条要修改的数据！");
+                 return;
+             }
+             var row=selectedRows[0];
+             $("#dlg").dialog("open").dialog("setTitle","修改函件模板");
+             $("#fm").form("load",row);
+             $("#supplierName").attr("readonly","readonly")
+             url="/LetterTemplate/save?id="+row.id;
+         }
+
+
+
+        function saveSupplier(){
+             $("#fm").form("submit",{
+                url:url,
+                onSubmit:function(){
+                    return $(this).form("validate");
+                },
+                success:function(result){
+                    var result=eval('('+result+')');
+                    if(result.success){
+                        $.messager.alert("系统提示","保存成功！");
+                        resetValue();
+                        $("#dlg").dialog("close");
+                        $("#dg").datagrid("reload");
+                    }else{
+                        $.messager.alert("系统提示",result.errorInfo);
+                    }
+                }
+             });
+         }
+
+
+
+        function resetValue(){
+             $("#name").val("");
+             $("#contact").val("");
+             $("#number").val("");
+             $("#address").val("");
+             $("#remarks").val("");
+         }
+
+         function closeSupplierDialog(){
+             $("#dlg").dialog("close");
+             resetValue();
+         }
+
+         function searchSupplier(){
+            $("#dg").datagrid('load',{
+                "tempNum":$("#s_tempNum").val(),
+                "tempName":$("#s_tempName").val(),
+                "lawFirmName":$("#s_lawFirmName").val(),
+                "appleStartTime":$("#s_appleStartTime").val(),
+                "appleEndTime":$("#s_appleEndTime").val(),
+                "type":$("#s_type").val(),
+                "reviewStatus":$("#s_reviewStatus").val()
+            });
+        }
+
+        $(function () {
+             $("#dg").datagrid({
+                    //双击事件
+                    onDblClickRow: function (index, row) {
+                        $("#dlg").dialog("open").dialog("setTitle","修改函件模板");
+                            $("#fm").form("load",row);
+                            $("#supplierName").attr("readonly","readonly")
+                            url="/LetterTemplate/save?id="+row.id;
+                    }
+                });
+         });
+
+
+    </script>
+</head>
+<body style="margin: 1px">
+<table id="dg" title="电子函件模板" class="easyui-datagrid"
+       fitColumns="true" pagination="true" rownumbers="true"
+       url="/LetterTemplate/list" fit="true" toolbar="#tb">
+    <thead>
+    <tr>
+        <th field="cb" checkbox="true" align="center"></th>
+        <th field="tempNum" width="80" align="center">模板编号</th>
+        <th field="tempName" width="80" align="center">模板名称</th>
+        <th field="type" width="80" align="center">函件类型</th>
+        <th field="lawFirmName" width="80" align="center">律所名称</th>
+        <th field="lawyerName" width="80" align="center">律师姓名</th>
+        <th field="validateUrl" width="80" align="center">函件验证网址</th>
+        <th field="applyPerson" width="80" align="center">申请人</th>
+        <th field="createTime" width="80" align="center">申请时间</th>
+        <th field="reviewStatus" width="80" align="center">审核状态</th>
+        <th field="reviewTime" width="80" align="center">审核时间</th>
+<!--        formatter="formatAction"-->
+    </tr>
+    </thead>
+</table>
+
+<div id="dlg" class="easyui-dialog" style="width:500px;height:350px;padding: 10px 20px"
+     closed="true" buttons="#dlg-buttons" data-options="onClose:function(){resetValue()}">
+    <form id="fm" method="post">
+        <table cellspacing="8px">
+            <tr><td>模板编号：</td><td><input type="text" id="tempNum" name="tempNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>模板名称：</td><td><input type="text" id="tempName" name="tempName" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>函件类型：</td><td><input type="text" id="type" name="type" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>律所名称：</td><td><input type="text" id="lawFirmName" name="lawFirmName" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>律师姓名：</td><td><input type="text" id="lawyerName" name="lawyerName" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>函件验证网址：</td><td><input type="text" id="validateUrl" name="validateUrl" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>申请人：</td><td><input type="text" id="applyPerson" name="applyPerson" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <!--            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" onclick="appoveView()">预览</a>-->
+            <!--            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="appoveEdit()">编辑</a>-->
+            <!--            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="appoveRemove()">删除</a>-->
+        </table>
+    </form>
+</div>
+
+
+<div id="tb">
+    <div>
+        <a href="javascript:openSupplierAddDialog()" class="easyui-linkbutton" iconCls="icon-add" plain="true">添加</a>
+        <a href="javascript:openSupplierModifyDialog()" class="easyui-linkbutton" iconCls="icon-edit"
+           plain="true">修改</a>
+        <a href="javascript:deleteSupplier()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
+    </div>
+    <div>
+        &nbsp;模板编号：&nbsp;<input type="text" id="s_tempNum" size="20"
+                                      onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;模板名称：&nbsp;<input type="text" id="s_tempName" size="20"
+                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;律所名称：&nbsp;<input type="text" id="s_lawFirmName" size="20"
+                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        <br>
+        &nbsp;申请开始时间：&nbsp;<input type="text" id="s_appleStartTime" size="20"
+                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+
+        &nbsp;申请结束时间：&nbsp;<input type="text" id="s_appleEndTime" size="20"
+                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;函件类型：&nbsp;<select id="s_type" style="width:100px; " >
+        <option value="律师函">律师函</option>
+        <option value="催告函">催告函</option></select>
+        &nbsp;审核状态：&nbsp;<select id="s_reviewStatus" style="width:100px; " >
+            <option value="待审核">待审核</option>
+            <option value="审核通过">审核通过</option>
+            <option value="审核未过">审核未过</option></select>
+
+        <a href="javascript:searchSupplier()" class="easyui-linkbutton" iconCls="icon-search" plain="true">搜索</a>
+    </div>
+</div>
+
+<div id="dlg-buttons">
+    <a href="javascript:saveSupplier()" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+    <a href="javascript:closeSupplierDialog()" class="easyui-linkbutton" iconCls="icon-cancel">关闭</a>
+</div>
+
+
+</body>
+</html>
