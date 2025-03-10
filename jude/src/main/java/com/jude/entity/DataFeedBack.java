@@ -21,7 +21,10 @@ public class DataFeedBack  {//extends BaseEntity
     //@GeneratedValue
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column
+
+    @Column(name = "create_time", insertable = false, updatable = false, columnDefinition = "datetime default current_timestamp")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createTime;
 
     @Column(length=50)

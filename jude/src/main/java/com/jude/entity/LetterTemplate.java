@@ -21,7 +21,8 @@ public class LetterTemplate {
 	//@GeneratedValue
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	@Column
+
+	@Column(name = "create_time", insertable = false, updatable = false, columnDefinition = "datetime default current_timestamp")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createTime;	// 申请时间

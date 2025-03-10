@@ -3,6 +3,7 @@ package com.jude.service.impl;
 import com.jude.entity.DataFeedBack;
 import com.jude.repository.DataFeedBackRepository;
 import com.jude.service.DataFeedBackService;
+import com.jude.util.StringUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,18 +39,42 @@ public class DataFeedBackServiceImpl implements DataFeedBackService {
 	public List<DataFeedBack> list(DataFeedBack DataFeedBack, Integer page, Integer pageSize, Direction direction, String... properties) {
 		Pageable pageable=new PageRequest(page-1, pageSize, direction,properties);
 		Page<DataFeedBack> pageDataFeedBack= DataFeedBackRepository.findAll(
-//			new Specification<DataFeedBack>() {
-//			@Override
-//			public Predicate toPredicate(Root<DataFeedBack> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-//				Predicate predicate=cb.conjunction();
-//				if(DataFeedBack!=null){
-//					if(StringUtil.isNotEmpty(DataFeedBack.getName())){
-//						predicate.getExpressions().add(cb.like(root.get("name"), "%"+DataFeedBack.getName().trim()+"%"));
-//					}
-//				}
-//				return predicate;
-//			}
-//		},
+			new Specification<DataFeedBack>() {
+			@Override
+			public Predicate toPredicate(Root<DataFeedBack> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				Predicate predicate=cb.conjunction();
+				if(DataFeedBack!=null){
+					if(StringUtil.isNotEmpty(DataFeedBack.getOverdueName())){
+						predicate.getExpressions().add(cb.like(root.get("overdueName"), "%"+DataFeedBack.getOverdueName().trim()+"%"));
+					}
+					if(StringUtil.isNotEmpty(DataFeedBack.getSendTel())){
+						predicate.getExpressions().add(cb.like(root.get("sendTel"), "%"+DataFeedBack.getSendTel().trim()+"%"));
+					}
+					if(StringUtil.isNotEmpty(DataFeedBack.getUserAcc())){
+						predicate.getExpressions().add(cb.like(root.get("userAcc"), "%"+DataFeedBack.getUserAcc().trim()+"%"));
+					}
+					if(StringUtil.isNotEmpty(DataFeedBack.getBatchNum())){
+						predicate.getExpressions().add(cb.like(root.get("batchNum"), "%"+DataFeedBack.getBatchNum().trim()+"%"));
+					}
+					if(StringUtil.isNotEmpty(DataFeedBack.getSendStatus())
+						&& !DataFeedBack.getSendStatus().equals("all")){
+						predicate.getExpressions().add(cb.like(root.get("sendStatus"), "%"+DataFeedBack.getSendStatus().trim()+"%"));
+					}
+					if(StringUtil.isNotEmpty(DataFeedBack.getSendType())
+							&& !DataFeedBack.getSendType().equals("all")){
+						predicate.getExpressions().add(cb.like(root.get("sendType"), "%"+DataFeedBack.getSendType().trim()+"%"));
+					}
+					if(StringUtil.isNotEmpty(DataFeedBack.getLetType())
+							&& !DataFeedBack.getLetType().equals("all")){
+						predicate.getExpressions().add(cb.like(root.get("letType"), "%"+DataFeedBack.getLetType().trim()+"%"));
+					}
+					if(StringUtil.isNotEmpty(DataFeedBack.getLetNum())){
+						predicate.getExpressions().add(cb.like(root.get("letNum"), "%"+DataFeedBack.getLetNum().trim()+"%"));
+					}
+				}
+				return predicate;
+			}
+		},
 				pageable);
 		return pageDataFeedBack.getContent();
 	}

@@ -20,16 +20,16 @@
             var rolesArr=roles.split(",");
             $("#roleSetDialog").dialog("open").dialog("setTitle","选择角色");
             $("#roleDg").datagrid({
-                        url:'/admin/role/listAll',
-                        onLoadSuccess:function(data){
-                            var selectedRows=$("#roleDg").datagrid('getRows');
-                            for(var i=0;i<selectedRows.length;i++){
-                                var name=selectedRows[i].name;
-                                if($.inArray(name, rolesArr)>=0){
-                                    $("#roleDg").datagrid('checkRow',i);
-                                }
+                    url:'/admin/role/listAll',
+                    onLoadSuccess:function(data){
+                        var selectedRows=$("#roleDg").datagrid('getRows');
+                        for(var i=0;i<selectedRows.length;i++){
+                            var name=selectedRows[i].name;
+                            if($.inArray(name, rolesArr)>=0){
+                                $("#roleDg").datagrid('checkRow',i);
                             }
                         }
+                    }
             });
             $("#supplierId").val(supplierId);
         }
@@ -83,6 +83,15 @@
 
         function openSupplierAddDialog(){
             $("#dlg").dialog("open").dialog("setTitle","添加函件发送信息");
+
+            $.post("/LetterTemplate/findAll",{},function(data){
+                var select = $("#temNum");
+                select.empty();   //清空原有选项
+                $.each(data, function (i, item) {
+                    select.append($('<option>', {value: item.tempNum, text: item.tempName}));
+                })
+            },"json");
+
             url="/Letter/save";
         }
 
@@ -163,11 +172,25 @@
                 });
          });
 
-function formatSubmitOper(value, rowObj) { // 已发送/未发送， 已转直邮/未转直邮， 生成成功/生成失败
-    var badCnt = rowObj.importCnt - value;
-    var result = "" + value + "/" + badCnt;
-    return result;
-}
+    function formatSubmitOper(value, rowObj) { // 已发送/未发送， 已转直邮/未转直邮， 生成成功/生成失败
+        var badCnt = rowObj.importCnt - value;
+        var result = "" + value + "/" + badCnt;
+        return result;
+    }
+
+     $.ajax({
+        type: "POST",
+        url: "/LetterTemplate/findAll", // 获取函件模板list
+        dataType: 'json',
+        success: function (data) {
+            var select = $("#s_temNum");
+            select.empty();   //清空原有选项
+            select.append($('<option>', {value: "all", text: "全部函件模板"}));
+            $.each(data, function (i, item) {
+                select.append($('<option>', {value: item.tempNum, text: item.tempName})); //为每个item添加一个新的option
+            });
+        },
+    });
 
     </script>
 </head>
@@ -203,13 +226,15 @@ function formatSubmitOper(value, rowObj) { // 已发送/未发送， 已转直�
         <a href="javascript:deleteSupplier()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
     </div>
     <div>
-        &nbsp;批次编号：&nbsp;<input type="text" id="s_batchNum" size="20"
+        &nbsp;批次编号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：&nbsp;<input type="text" id="s_batchNum" size="20"
                                       onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;函件模板：&nbsp;<input type="text" id="s_temNum" size="20"
-                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;函件类型：&nbsp;<select id="s_type" style="width: 100px;">
-           <option value="律师函">律师函</option>
-            <option value="催告函">催告函</option>
+        &nbsp;函件模板&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：&nbsp;
+        <select id="s_temNum"  style="width:160px; height:25px; "  onkeydown="if(event.keyCode==13) searchSupplier()" >
+        </select>
+        &nbsp;函件类型：&nbsp;<select id="s_type"  style="width:160px; height:25px; ">
+                <option value="all">全部</option>
+                <option value="律师函">律师函</option>
+                <option value="催告函">催告函</option>
             </select>
         <br>
         &nbsp;创建开始时间：&nbsp;<input type="text" id="s_createStartTime" size="20"
@@ -227,10 +252,10 @@ function formatSubmitOper(value, rowObj) { // 已发送/未发送， 已转直�
     <form id="fm" method="post">
         <table cellspacing="8px">
             <tr><td>批次编号：</td><td><input type="text" id="batchNum" name="batchNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>函件模板编号：</td><td><input type="text" id="letterTmpId" name="letterTmpId" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-<!--            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" onclick="appoveView()">预览</a>-->
-<!--            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="appoveEdit()">编辑</a>-->
-<!--            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="appoveRemove()">删除</a>-->
+            <tr><td>函件模板编号：</td><td>
+                <select id="temNum" name="temNum" style="width: 255px;  height:25px;">
+                </select>
+            </td></tr>
         </table>
     </form>
 </div>

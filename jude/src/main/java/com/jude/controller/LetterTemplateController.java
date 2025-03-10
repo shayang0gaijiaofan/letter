@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,19 @@ public class LetterTemplateController {
 
 	@Resource
 	private LogService logService;
+
+	/**
+	 * 查询所有函件模板
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/findAll")
+	public List<LetterTemplate> findAll()throws Exception{
+		List<LetterTemplate> result = new ArrayList<>();
+		result = LetterTemplateService.findAll();
+		logService.save(new Log(Log.SEARCH_ACTION,"查询所有函件模板")); // 写入日志
+		return result;
+	}
 
 	/**
 	 * 分页查询供应商信息

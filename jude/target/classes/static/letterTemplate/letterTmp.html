@@ -185,24 +185,6 @@
     </thead>
 </table>
 
-<div id="dlg" class="easyui-dialog" style="width:500px;height:350px;padding: 10px 20px"
-     closed="true" buttons="#dlg-buttons" data-options="onClose:function(){resetValue()}">
-    <form id="fm" method="post">
-        <table cellspacing="8px">
-            <tr><td>模板编号：</td><td><input type="text" id="tempNum" name="tempNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>模板名称：</td><td><input type="text" id="tempName" name="tempName" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>函件类型：</td><td><input type="text" id="type" name="type" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>律所名称：</td><td><input type="text" id="lawFirmName" name="lawFirmName" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>律师姓名：</td><td><input type="text" id="lawyerName" name="lawyerName" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>函件验证网址：</td><td><input type="text" id="validateUrl" name="validateUrl" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>申请人：</td><td><input type="text" id="applyPerson" name="applyPerson" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <!--            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" onclick="appoveView()">预览</a>-->
-            <!--            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="appoveEdit()">编辑</a>-->
-            <!--            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="appoveRemove()">删除</a>-->
-        </table>
-    </form>
-</div>
-
 
 <div id="tb">
     <div>
@@ -225,15 +207,45 @@
         &nbsp;申请结束时间：&nbsp;<input type="text" id="s_appleEndTime" size="20"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
         &nbsp;函件类型：&nbsp;<select id="s_type" style="width:100px; " >
-        <option value="律师函">律师函</option>
-        <option value="催告函">催告函</option></select>
+            <option value="all">全部</option>
+            <option value="律师函">律师函</option>
+            <option value="催告函">催告函</option></select>
         &nbsp;审核状态：&nbsp;<select id="s_reviewStatus" style="width:100px; " >
+            <option value="all">全部</option>
             <option value="待审核">待审核</option>
             <option value="审核通过">审核通过</option>
             <option value="审核未过">审核未过</option></select>
 
         <a href="javascript:searchSupplier()" class="easyui-linkbutton" iconCls="icon-search" plain="true">搜索</a>
     </div>
+</div>
+
+
+<div id="dlg" class="easyui-dialog" style="width:500px;height:350px;padding: 10px 20px"
+     closed="true" buttons="#dlg-buttons" data-options="onClose:function(){resetValue()}">
+    <form id="fm" method="post">
+        <table cellspacing="8px">
+            <tr><td>模板编号：</td><td><input type="text" id="tempNum" name="tempNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>模板名称：</td><td><input type="text" id="tempName" name="tempName" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>函件类型：</td><td>
+                <select  id="type" name="type" class="easyui-combobox" style="width: 255px;  height:25px;">
+                    <option value="律师函">律师函</option>
+                    <option value="催告函">催告函</option>
+                </select>
+            </td></tr>
+            <tr><td>律所名称：</td><td><input type="text" id="lawFirmName" name="lawFirmName" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>律师姓名：</td><td><input type="text" id="lawyerName" name="lawyerName" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>函件验证网址：</td><td><input type="text" id="validateUrl" name="validateUrl" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>申请人：</td><td><input type="text" id="applyPerson" name="applyPerson" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>审核状态：</td><td>
+                <select  id="reviewStatus" name="reviewStatus" class="easyui-combobox"  style="width: 255px;  height:25px;">
+                    <option value="待审核">待审核</option>
+                    <option value="审核通过">审核通过</option>
+                    <option value="审核未过">审核未过</option>
+                </select>
+            </td></tr>
+        </table>
+    </form>
 </div>
 
 <div id="dlg-buttons">

@@ -47,7 +47,8 @@ public class LetterServiceImpl implements LetterService {
 					if(StringUtil.isNotEmpty(Letter.getBatchNum())){
 						predicate.getExpressions().add(cb.like(root.get("batchNum"), "%"+Letter.getBatchNum().trim()+"%"));
 					}
-					if (StringUtil.isNotEmpty(Letter.getTemNum())){
+					if (StringUtil.isNotEmpty(Letter.getTemNum())
+						&& !Letter.getTemNum().equals("all")){
 						predicate.getExpressions().add(cb.like(root.get("temNum"), "%"+Letter.getTemNum().trim()+"%"));
 					}
 				}

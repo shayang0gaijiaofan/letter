@@ -56,9 +56,6 @@
              $("#roleSetDialog").dialog("close");
          }
 
-
-
-
         function deleteSupplier(){
             var selectedRows=$("#dg").datagrid("getSelections");
             if(selectedRows.length==0){
@@ -125,8 +122,6 @@
              });
          }
 
-
-
         function resetValue(){
              $("#name").val("");
              $("#contact").val("");
@@ -142,7 +137,16 @@
 
          function searchSupplier(){
             $("#dg").datagrid('load',{
-                "name":$("#s_name").val()
+                "overdueName":$("#s_overdueName").val(),
+                "sendTel":$("#s_sendTel").val(),
+                "userAcc":$("#s_userAcc").val(),
+                "batchNum":$("#s_batchNum").val(),
+                "checkStartTime":$("#s_checkStartTime").val(),
+                "checkEndTime":$("#s_checkEndTime").val(),
+                "sendStatus":$("#s_sendStatus").val(),
+                "sendType":$("#s_sendType").val(),
+                "letType":$("#s_letType").val(),
+                "letNum":$("#s_letNum").val()
             });
         }
 
@@ -180,6 +184,7 @@
         <th field="letType" width="30" align="center">函件类型</th>
         <th field="batchNum" width="30" align="center">函件批次号</th>
         <th field="letSendTime" width="30" align="center">函件发送时间</th>
+        <th field="sendStatus" width="30" align="center">发送状态</th>
         <th field="sendType" width="30" align="center">发送类型</th>
         <th field="firstQueryTime" width="30" align="center">首次查看时间</th>
         <th field="lastQueryTime" width="30" align="center">最近查看时间</th>
@@ -194,7 +199,47 @@
         <a href="javascript:deleteSupplier()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
     </div>
     <div>
-        &nbsp;供应商名称：&nbsp;<input type="text" id="s_name" size="20" onkeydown="if(event.keyCode==13) searchSupplier()"/>
+
+        &nbsp;逾期人姓名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：&nbsp;<input type="text" id="s_overdueName" size="20"
+                                                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;发送手机号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：&nbsp;<input type="text" id="s_sendTel" size="20"
+                                                                          onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;操作账号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：&nbsp;<input type="text" id="s_userAcc" size="20"
+                                                                          onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;批次号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：&nbsp;<input type="text" id="s_batchNum" size="20"
+                                                                      onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        <br>
+        &nbsp;查看开始时间：&nbsp;<input type="text" id="s_checkStartTime" size="20"
+                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+
+        &nbsp;查看结束时间：&nbsp;<input type="text" id="s_checkEndTime" size="20"
+                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+
+        &nbsp;发送状态&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：&nbsp;
+        <select id="s_sendStatus"  style="width:160px; height:25px; ">
+            <option value="all">全部</option>
+            <option value="未知">未知</option>
+            <option value="发送成功">发送成功</option>
+            <option value="发送失败">发送失败</option>
+        </select>
+        &nbsp;发送类型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：&nbsp;
+        <select id="s_sendType"  style="width:160px; height:25px; ">
+            <option value="all">全部</option>
+            <option value="短信">短信</option>
+            <option value="彩信">彩信</option>
+            <option value="视频短信">视频短信</option>
+        </select>
+        <br>
+
+        &nbsp;函件类型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：&nbsp;
+        <select id="s_letType"  style="width:160px; height:25px; ">
+            <option value="all">全部</option>
+            <option value="催告函">催告函</option>
+            <option value="律师函">律师函</option>
+        </select>
+        &nbsp;函件编号：&nbsp;<input type="text" id="s_letNum" size="20"
+                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
+
         <a href="javascript:searchSupplier()" class="easyui-linkbutton" iconCls="icon-search" plain="true">搜索</a>
     </div>
 </div>
@@ -208,9 +253,20 @@
             <tr><td>发送手机号：</td><td><input type="text" id="sendTel" name="sendTel" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
             <tr><td>函件编号：</td><td><input type="text" id="letNum" name="letNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
             <tr><td>函件图片：</td><td><input type="text" id="letPic" name="letPic" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>函件类型：</td><td><input type="text" id="letType" name="letType" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>函件类型：</td><td>
+                <select id="letType" name="letType" style="width: 255px;  height:25px;">
+                    <option value="催告函">催告函</option>
+                    <option value="律师函">律师函</option>
+                </select>
+            </td></tr>
             <tr><td>函件批次号：</td><td><input type="text" id="batchNum" name="batchNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>发送类型：</td><td><input type="text" id="sendType" name="sendType" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>发送类型：</td><td>
+                <select id="sendType" name="sendType" style="width: 255px;  height:25px;">
+                    <option value="短信">短信</option>
+                    <option value="彩信">彩信</option>
+                    <option value="视频短信">视频短信</option>
+                </select>
+            </td></tr>
         </table>
     </form>
 </div>

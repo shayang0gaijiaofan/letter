@@ -29,8 +29,10 @@ public class LetMsgTem {//extends BaseEntity
     private String msfText;
     @Column(length=200)
     private String signature;
-    @Column(length=200)
-    private String appTime;
+    @Column(name = "create_time", insertable = false, columnDefinition = "datetime default current_timestamp")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;	// 申请时间
     @Column(length=200)
     private String approveStatus;
     @Column(length=200)

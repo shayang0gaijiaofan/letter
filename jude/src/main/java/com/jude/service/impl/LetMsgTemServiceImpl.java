@@ -44,10 +44,16 @@ public class LetMsgTemServiceImpl implements LetMsgTemService {
 			public Predicate toPredicate(Root<LetMsgTem> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Predicate predicate=cb.conjunction();
 				if(letMsgTem!=null){
-					//判断条件
-					/*if(StringUtil.isNotEmpty(LetterMsg.getName())){
-						predicate.getExpressions().add(cb.like(root.get("name"), "%"+LetterMsg.getName().trim()+"%"));
-					}*/
+					if(StringUtil.isNotEmpty(letMsgTem.getMsgTemNum())){	// 消息模板编号
+						predicate.getExpressions().add(cb.like(root.get("msgTemNum"), "%"+letMsgTem.getMsgTemNum().trim()+"%"));
+					}
+					if(StringUtil.isNotEmpty(letMsgTem.getMsgTemName())){	// 消息模板名称
+						predicate.getExpressions().add(cb.like(root.get("msgTemName"), "%"+letMsgTem.getMsgTemName().trim()+"%"));
+					}
+					if(StringUtil.isNotEmpty(letMsgTem.getApproveStatus())
+						&& !letMsgTem.getApproveStatus().equals("all")){	// 消息模版审核状态
+						predicate.getExpressions().add(cb.like(root.get("approveStatus"), "%"+letMsgTem.getApproveStatus().trim()+"%"));
+					}
 				}
 				return predicate;
 			}

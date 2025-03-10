@@ -21,12 +21,15 @@ public class LetterStreet {
 	//@GeneratedValue
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	@Column
+
+	@Column(name = "create_time", insertable = false, updatable = false, columnDefinition = "datetime default current_timestamp")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createTime;	// 创建时间
 
 	@Column(length=50)
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date updateTime;
 
 	@Column(length=50)
@@ -54,6 +57,8 @@ public class LetterStreet {
 	private String letterType    ; 	// 函件类型
 	@Column(length=50)
 	private String streetStatus     ; // 直邮状态
+	@Column(length=50)
+	private String mailStatus;		// 邮件状态
 	@Column(length=200)
 	private String trackingNum     ;	// 物流单号
 }

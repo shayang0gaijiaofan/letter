@@ -53,10 +53,12 @@ public class LetterTemplateServiceImpl implements LetterTemplateService {
 					if(StringUtil.isNotEmpty(LetterTemplate.getLawFirmName())){
 						predicate.getExpressions().add(cb.like(root.get("lawFirmName"), "%"+LetterTemplate.getLawFirmName().trim()+"%"));
 					}
-					if(StringUtil.isNotEmpty(LetterTemplate.getType())){
+					if(StringUtil.isNotEmpty(LetterTemplate.getType())
+						&& !LetterTemplate.getType().equals("all")){
 						predicate.getExpressions().add(cb.like(root.get("type"), "%"+LetterTemplate.getType().trim()+"%"));
 					}
-					if(StringUtil.isNotEmpty(LetterTemplate.getReviewStatus())){
+					if(StringUtil.isNotEmpty(LetterTemplate.getReviewStatus())
+							&& !LetterTemplate.getReviewStatus().equals("all")){
 						predicate.getExpressions().add(cb.like(root.get("reviewStatus"), "%"+LetterTemplate.getReviewStatus().trim()+"%"));
 					}
 				}

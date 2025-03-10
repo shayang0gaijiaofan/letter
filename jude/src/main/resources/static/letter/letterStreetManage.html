@@ -100,7 +100,6 @@
          }
 
 
-
         function saveSupplier(){
              $("#fm").form("submit",{
                 url:url,
@@ -138,20 +137,47 @@
 
          function searchSupplier(){
             $("#dg").datagrid('load',{
-                "name":$("#s_name").val()
+                "province":$("#s_province").val(),
+                "city":$("#s_city").val(),
+                "overdueAddr":$("#s_overdueAddr").val(),
+                "phoneNum":$("#s_phoneNum").val(),
+                "overduePerson":$("#s_overduePerson").val(),
+                "letterNum":$("#s_letterNum").val(),
+                "createStartTime":$("#s_createStartTime").val(),
+                "createEndTime":$("#s_createEndTime").val(),
+                "addrNormStatus":$("#s_addrNormStatus").val(),
+                "letterType":$("#s_letterType").val(),
+                "tempNum":$("#s_tempNum").val(),
+                "streetStatus":$("#s_streetStatus").val(),
+                "mailStatus":$("#s_mailStatus").val()
             });
         }
         $(function () {
              $("#dg").datagrid({
-                    //双击事件
-                    onDblClickRow: function (index, row) {
-                        $("#dlg").dialog("open").dialog("setTitle","修改短信模板");
-                            $("#fm").form("load",row);
-                            $("#supplierName").attr("readonly","readonly")
-                            url="/LetterStreet/save?id="+row.id;
-                    }
-                });
+                //双击事件
+                onDblClickRow: function (index, row) {
+                    $("#dlg").dialog("open").dialog("setTitle","修改短信模板");
+                        $("#fm").form("load",row);
+                        $("#supplierName").attr("readonly","readonly")
+                        url="/LetterStreet/save?id="+row.id;
+                }
+            });
+
          });
+
+    $.ajax({
+        type: "POST",
+        url: "/LetterTemplate/findAll", // 获取函件模板list
+        dataType: 'json',
+        success: function (data) {
+            var select = $("#s_tempNum");
+            select.empty();   //清空原有选项
+            select.append($('<option>', {value: "all", text: "全部函件模板"}));
+            $.each(data, function (i, item) {
+                select.append($('<option>', {value: item.tempNum, text: item.tempName})); //为每个item添加一个新的option
+            });
+        },
+    });
 
 
     </script>
@@ -167,14 +193,15 @@
         <th field="phoneAddr" width="80" align="center">号码所属地</th>
         <th field="overduePerson" width="80" align="center">逾期人姓名</th>
         <th field="overdueAddr" width="80" align="center">逾期人地址</th>
-        <th field="addrNormStatus" width="80" align="center">地址规范状态</th>
+        <th field="addrNormStatus" width="80" align="center">地址规范</th>
         <th field="tempNum" width="80" align="center">函件模板编号</th>
         <th field="letterNum" width="80" align="center">函件编号</th>
         <th field="debtAmount" width="80" align="center">欠款金额</th>
         <th field="letterPic" width="80" align="center">函件图片</th>
         <th field="letterPages" width="80" align="center">函件页数</th>
         <th field="letterType" width="80" align="center">函件类型</th>
-        <th field="streetStatus" width="80" align="center">直邮状态</th>
+        <th field="streetStatus" width="80" align="center">直邮任务状态</th>
+        <th field="mailStatus" width="80" align="center">邮件状态</th>
         <th field="trackingNum" width="80" align="center">物流单号</th>
     </tr>
     </thead>
@@ -190,37 +217,48 @@
         <a href="javascript:deleteSupplier()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
     </div>
     <div>
-        &nbsp;&nbsp;<input type="text" id="s_name0" size="20" placeholder="请输入省/市名称"
+
+        &nbsp;&nbsp;<input type="text" id="s_province_city" size="20" placeholder="请输入省/市名称"
                                    onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;&nbsp;<input type="text" id="s_name" size="20" placeholder="请输入城市名称"
+        &nbsp;&nbsp;<input type="text" id="s_city" size="20" placeholder="请输入城市名称"
                                       onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;&nbsp;<input type="text" id="s_name1" size="20" placeholder="请输入逾期人地址"
+        &nbsp;&nbsp;<input type="text" id="s_overdueAddr" size="20" placeholder="请输入逾期人地址"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;&nbsp;<input type="text" id="s_name2" size="20" placeholder="请输入逾期人电话号码"
+        &nbsp;&nbsp;<input type="text" id="s_phoneNum" size="20" placeholder="请输入发送手机号"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
 
-        &nbsp;&nbsp;<input type="text" id="s_name3" size="20" placeholder="请输入逾期人姓名"
+        &nbsp;&nbsp;<input type="text" id="s_overduePerson" size="20" placeholder="请输入逾期人姓名"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
         <br>
-        &nbsp;&nbsp;<input type="text" id="s_name4" size="20" placeholder="请输入函件编号"
+        &nbsp;&nbsp;<input type="text" id="s_letterNum" size="20" placeholder="请输入函件编号"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;&nbsp;<input type="text" id="s_name5" size="20" placeholder="请输入函件创建开始时间"
+        &nbsp;&nbsp;<input type="text" id="s_createStartTime" size="20" placeholder="请输入函件创建开始时间"
                                             onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;&nbsp;<input type="text" id="s_name6" size="20" placeholder="请输入函件创建结束时间"
+        &nbsp;&nbsp;<input type="text" id="s_createEndTime" size="20" placeholder="请输入函件创建结束时间"
                                             onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;&nbsp;<input type="text" id="s_name7" size="20" placeholder="请输入地址规范状态"
-                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;&nbsp;<input type="text" id="s_name8" size="20" placeholder="请输入函件类型"
-                                       onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;&nbsp;地址规范状态：&nbsp; <select id="s_addrNormStatus" style="width:100px; height:25px; " >
+        <option value="all">全部</option>
+        <option value="不规范">不规范</option>
+        <option value="规范">规范</option></select>
+
+        &nbsp;&nbsp;函件类型：&nbsp; <select id="s_letterType" style="width:100px; height:25px; " >
+        <option value="all">全部</option>
+        <option value="律师函">律师函</option>
+        <option value="催告函">催告函</option></select>
         <br>
-        &nbsp;&nbsp;<input type="text" id="s_name9" size="20" placeholder="请输入函件模板名称"
-                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;&nbsp;<input type="text" id="s_name10" size="20" placeholder="请输入直邮任务状态"
-                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;&nbsp;邮件状态：&nbsp; <select id="mailStatus" style="width:100px; " >
-            <option value="option1">未签收</option>
-            <option value="option2">已签收</option>
-            <option value="option3">问题件</option></select>
+        &nbsp;&nbsp;<select id="s_tempNum"  style="width:160px; height:25px; "  onkeydown="if(event.keyCode==13) searchSupplier()" >
+        </select>
+
+        &nbsp;&nbsp;直邮任务状态：&nbsp; <select id="s_streetStatus" style="width:100px; height:25px; " >
+        <option value="all">全部</option>
+        <option value="未下单">未下单</option>
+        <option value="已下单">已下单</option></select>
+
+        &nbsp;&nbsp;邮件状态：&nbsp; <select id="s_mailStatus" style="width:100px; height:25px; " >
+            <option value="all">全部</option>
+            <option value="未签收">未签收</option>
+            <option value="已签收">已签收</option>
+            <option value="问题件">问题件</option></select>
 
         <!-- 搜索按钮 -->
 
@@ -237,14 +275,28 @@
             <tr><td>号码所属地：</td><td><input type="text" id="phoneAddr" name="phoneAddr" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
             <tr><td>逾期人姓名：</td><td><input type="text" id="overduePerson" name="overduePerson" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
             <tr><td>逾期人地址：</td><td><input type="text" id="overdueAddr" name="overdueAddr" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>地址规范状态：</td><td><input type="text" id="addrNormStatus" name="addrNormStatus" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>地址规范状态：</td><td>
+                <select id="addrNormStatus" name="addrNormStatus" style="width:255px; height:25px; " streetStatus >
+                    <option value="不规范">不规范</option>
+                    <option value="规范">规范</option></select>
+            </td></tr>
             <tr><td>函件模板编号：</td><td><input type="text" id="tempNum" name="tempNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
             <tr><td>函件编号：</td><td><input type="text" id="letterNum" name="letterNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
             <tr><td>欠款金额：</td><td><input type="number" id="debtAmount" name="debtAmount" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
             <tr><td>函件图片：</td><td><input type="text" id="letterPic" name="letterPic" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
             <tr><td>函件页数：</td><td><input type="text" id="letterPages" name="letterPages" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
             <tr><td>函件类型：</td><td><input type="text" id="letterType" name="letterType" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>直邮状态：</td><td><input type="text" id="streetStatus" name="streetStatus" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
+            <tr><td>直邮任务状态：</td><td>
+                <select id="streetStatus" name="streetStatus" style="width:255px; height:25px; " streetStatus  >
+                    <option value="未下单">未下单</option>
+                    <option value="已下单">已下单</option></select>
+            </td></tr>
+            <tr><td>邮件状态：</td><td>
+                <select id="mailStatus" name="mailStatus" style="width:255px; height:25px; " streetStatus  >
+                    <option value="未签收">未签收</option>
+                    <option value="已签收">已签收</option>
+                    <option value="问题件">问题件</option></select>
+            </td></tr>
             <tr><td>物流单号：</td><td><input type="text" id="trackingNum" name="trackingNum" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
         </table>
     </form>
