@@ -1,7 +1,8 @@
 package com.jude.sms.controller;
 
-import com.jude.sms.bo.*;
-import com.jude.sms.service.SmsSendService;
+
+import com.jude.sms.api.bo.*;
+import com.jude.sms.api.service.impl.SmsSendService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

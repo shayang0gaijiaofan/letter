@@ -1,9 +1,7 @@
 package com.jude.sms.controller;
 
-import com.jude.sms.bo.SmsSign;
-import com.jude.sms.bo.SmsSignCodeCreate;
-import com.jude.sms.bo.SmsSignResponse;
-import com.jude.sms.service.SmsSignService;
+import com.jude.sms.api.bo.*;
+import com.jude.sms.api.service.impl.SmsSignService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

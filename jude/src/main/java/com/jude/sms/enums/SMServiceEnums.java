@@ -16,7 +16,8 @@ public enum SMServiceEnums {
     SEND_V2("/textSMS/sendSMS/V2", "普通发送 V2"),
     SEND_BATCH_V1("/textSMS/sendSMS/batch/V1", "批量发送"),
 
-    RECEIPT_QUERY("/receipt/pull","短信回执查询接口"),
+    RECEIPT_PULL("/pull/dr","短信回执拉取接口"),
+    RECEIPT_QUERY("/textSMS/receipt/pull","短信回执查询接口"),
     RECEIPT_UP_PULL("/pull/mo","短信上行拉取接口"),
     RECEIPT_UP_QUERY("/textSMS/mo/pull","短信上行查询接口"),
 
