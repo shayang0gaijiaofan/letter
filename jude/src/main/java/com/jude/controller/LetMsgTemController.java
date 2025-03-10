@@ -6,16 +6,23 @@ import com.jude.entity.dto.LetMsgTemWithTime;
 import com.jude.repository.LetMsgTemRepository;
 import com.jude.service.LetMsgTemService;
 import com.jude.service.LogService;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.jude.sms.dto.SmsTemplateCreateReqDTO;
+import com.jude.sms.dto.SmsTemplateResDTO;
+import com.jude.sms.dto.SmsTemplateUpdateReqDTO;
+import com.jude.sms.enums.RespCodeEnum;
+import com.jude.sms.enums.SmsTemplateAuthEnum;
+import com.jude.sms.service.SmsTemplateManageService;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 函件发送
@@ -33,6 +40,9 @@ public class LetMsgTemController {
 
 	@Resource
 	private LogService logService;
+
+	@Resource
+	private SmsTemplateManageService smsTemplateManageService;
 
 	/**
 	 * 分页查询函件短信模版信息
@@ -65,20 +75,48 @@ public class LetMsgTemController {
 
 	/**
 	 * 添加或者修改函件短信模版信息
-	 * @param letterMsg
+	 * @param letMsgTem
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping("/save")
 	public Map<String,Object> save(LetMsgTem letMsgTem)throws Exception{
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("success", false);
 		if(letMsgTem.getId()!=null){ // 写入日志
 			logService.save(new Log(Log.UPDATE_ACTION,"更新函件短信模版信息"+letMsgTem));
+			SmsTemplateUpdateReqDTO smsTemplateUpdateReqDTO = new SmsTemplateUpdateReqDTO();
+			smsTemplateUpdateReqDTO.setId(letMsgTem.getId());
+			smsTemplateUpdateReqDTO.setTemplateName(letMsgTem.getMsgTemName());
+			smsTemplateUpdateReqDTO.setTemplateContent(letMsgTem.getMsfText());
+			SmsTemplateResDTO template = smsTemplateManageService.updateTemplate(smsTemplateUpdateReqDTO);
+			if (Objects.nonNull(template) && RespCodeEnum.SUCCESS.getCode().equals(template.getRespCode())) {
+				letterMsgService.save(letMsgTem);
+				letMsgTem.setUpdateTime(new Date(System.currentTimeMillis()));
+				resultMap.put("success", true);
+			}
 		}else{
-			logService.save(new Log(Log.ADD_ACTION,"添加函件短信模版信息"+letMsgTem));
+			logService.save(new Log(Log.ADD_ACTION, "添加函件短信模版信息" + letMsgTem));
+			SmsTemplateCreateReqDTO smsTemplateCreateReqDTO = new SmsTemplateCreateReqDTO();
+			smsTemplateCreateReqDTO.setAccountId("");
+			// 短信签名
+			smsTemplateCreateReqDTO.setTemplateSign(letMsgTem.getSignature());
+			// 模板名称
+			smsTemplateCreateReqDTO.setTemplateName(letMsgTem.getMsgTemName());
+			// 模板内容
+			smsTemplateCreateReqDTO.setTemplateContent(letMsgTem.getMsfText());
+			// 模板权限
+			smsTemplateCreateReqDTO.setTemplateAuth(Integer.parseInt(SmsTemplateAuthEnum.SHARED.getCode()));
+			SmsTemplateResDTO template = smsTemplateManageService.createTemplate(smsTemplateCreateReqDTO);
+			if (Objects.nonNull(template) && RespCodeEnum.SUCCESS.getCode().equals(template.getRespCode())) {
+				letMsgTem.setCreateTime(new Date(System.currentTimeMillis()));
+				letMsgTem.setUpdateTime(new Date(System.currentTimeMillis()));
+				letterMsgService.save(letMsgTem);
+				resultMap.put("success", true);
+			}
 		}
-		Map<String, Object> resultMap = new HashMap<>();
-		letterMsgService.save(letMsgTem);
-		resultMap.put("success", true);
+
+
 		return resultMap;
 	}
 

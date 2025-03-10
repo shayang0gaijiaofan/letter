@@ -1,18 +1,19 @@
 package com.jude.sms.service.impl;
 
-import com.jude.sms.bo.*;
+import com.jude.sms.api.bo.*;
 import com.jude.sms.dto.*;
-import com.jude.sms.entity.SmsTemplateEntity;
+import com.jude.sms.template.entity.SmsTemplateEntity;
 import com.jude.sms.enums.RespCodeEnum;
 import com.jude.sms.enums.VerifyStatusEnums;
-import com.jude.sms.repository.SmsTemplateRepository;
-import com.jude.sms.service.SmsTemplateClientService;
+import com.jude.sms.template.repository.SmsTemplateRepository;
+import com.jude.sms.api.service.SmsTemplateClientService;
 import com.jude.sms.service.SmsTemplateManageService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.Predicate;
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.Objects;
 
@@ -46,8 +47,8 @@ public class SmsTemplateManageServiceImpl implements SmsTemplateManageService {
             smsTemplateRepository.save(entity);
         }
         SmsTemplateResDTO smsTemplateResDTO = new SmsTemplateResDTO();
-        smsTemplateResDTO.setRespCode("R" + smsResponse.getRespCode());
-        smsTemplateResDTO.setRespDesc("R" + smsResponse.getRespDesc());
+        smsTemplateResDTO.setRespCode( smsResponse.getRespCode());
+        smsTemplateResDTO.setRespDesc( smsResponse.getRespDesc());
         return smsTemplateResDTO;
     }
 
@@ -56,17 +57,21 @@ public class SmsTemplateManageServiceImpl implements SmsTemplateManageService {
         SmsTemplateResDTO smsTemplateResDTO = new SmsTemplateResDTO();
 
         //  查询是否有模版
-        SmsTemplateEntity smsTemplateEntity = smsTemplateRepository.findOne(smsTemplateUpdateReqDTO.getId());
+        SmsTemplateEntity smsTemplateEntity = smsTemplateRepository.findOne((root, query, cb) -> {
+            Predicate id = cb.equal(root.get("id").as(Long.class), smsTemplateUpdateReqDTO.getId());
+            Predicate isDeleted = cb.equal(root.get("isDeleted").as(Boolean.class), false);
+            return cb.and(id, isDeleted);
+        });
         if (Objects.isNull(smsTemplateEntity)) {
-            smsTemplateResDTO.setRespCode("L9999");
-            smsTemplateResDTO.setRespDesc("L非本系统的短信模版id");
+            smsTemplateResDTO.setRespCode("9999");
+            smsTemplateResDTO.setRespDesc("非本系统的短信模版id");
             return smsTemplateResDTO;
         }
 
         //  校验本地状态是否可编辑
         if (!VerifyStatusEnums.REJECTED.getCode().equals(smsTemplateEntity.getVerifyStatus())) {
-            smsTemplateResDTO.setRespCode("L0001");
-            smsTemplateResDTO.setRespDesc("L审核拒绝的模板才能修改");
+            smsTemplateResDTO.setRespCode("0001");
+            smsTemplateResDTO.setRespDesc("审核拒绝的模板才能修改");
             return smsTemplateResDTO;
         }
 
@@ -81,8 +86,8 @@ public class SmsTemplateManageServiceImpl implements SmsTemplateManageService {
             smsTemplateEntity.setUpdateTime(new Date());
             // 同步外部服务状态
             smsTemplateRepository.save(smsTemplateEntity);
-            smsTemplateResDTO.setRespCode("L0001");
-            smsTemplateResDTO.setRespDesc("L审核拒绝的模板才能修改or外部服务短信模版查询失败");
+            smsTemplateResDTO.setRespCode("0001");
+            smsTemplateResDTO.setRespDesc("审核拒绝的模板才能修改or外部服务短信模版查询失败");
             return smsTemplateResDTO;
         }
 
@@ -97,8 +102,8 @@ public class SmsTemplateManageServiceImpl implements SmsTemplateManageService {
 
         // 更新失败
         if (Objects.isNull(smsTemplateUpdateResponse) || !RespCodeEnum.SUCCESS.getCode().equals(smsTemplateUpdateResponse.getRespCode())) {
-            smsTemplateResDTO.setRespCode("R" + smsTemplateUpdateResponse.getRespCode());
-            smsTemplateResDTO.setRespDesc("R" + smsTemplateUpdateResponse.getRespDesc());
+            smsTemplateResDTO.setRespCode( smsTemplateUpdateResponse.getRespCode());
+            smsTemplateResDTO.setRespDesc( smsTemplateUpdateResponse.getRespDesc());
             return smsTemplateResDTO;
         }
 
@@ -108,8 +113,8 @@ public class SmsTemplateManageServiceImpl implements SmsTemplateManageService {
         smsTemplateEntity.setUpdateTime(new Date());
         smsTemplateRepository.save(smsTemplateEntity);
 
-        smsTemplateResDTO.setRespCode("R" + smsTemplateUpdateResponse.getRespCode());
-        smsTemplateResDTO.setRespDesc("R" + smsTemplateUpdateResponse.getRespDesc());
+        smsTemplateResDTO.setRespCode( smsTemplateUpdateResponse.getRespCode());
+        smsTemplateResDTO.setRespDesc( smsTemplateUpdateResponse.getRespDesc());
         return smsTemplateResDTO;
     }
 
@@ -117,17 +122,15 @@ public class SmsTemplateManageServiceImpl implements SmsTemplateManageService {
     public SmsTemplateResDTO deleteTemplate(SmsTemplateDeleteReqDTO smsTemplateDeleteReqDTO) {
         SmsTemplateResDTO smsTemplateResDTO = new SmsTemplateResDTO();
         //  查询是否有模版
-        SmsTemplateEntity smsTemplateEntity = smsTemplateRepository.findOne(smsTemplateDeleteReqDTO.getId());
+        SmsTemplateEntity smsTemplateEntity = smsTemplateRepository.findOne((root, query, cb) -> {
+            Predicate id = cb.equal(root.get("id").as(Long.class), smsTemplateDeleteReqDTO.getId());
+            Predicate isDeleted = cb.equal(root.get("isDeleted").as(Boolean.class), false);
+            return cb.and(id, isDeleted);
+        });
 
         if (Objects.isNull(smsTemplateEntity)) {
-            smsTemplateResDTO.setRespCode("L9999");
-            smsTemplateResDTO.setRespDesc("L非本系统的短信模版id或已删除");
-            return smsTemplateResDTO;
-        }
-
-        if (smsTemplateEntity.getIsDeleted()) {
-            smsTemplateResDTO.setRespCode("L0000");
-            smsTemplateResDTO.setRespDesc("L已删除");
+            smsTemplateResDTO.setRespCode("000");
+            smsTemplateResDTO.setRespDesc("已删除");
             return smsTemplateResDTO;
         }
 
@@ -138,38 +141,83 @@ public class SmsTemplateManageServiceImpl implements SmsTemplateManageService {
 
         // 外部服务不存在或 非待审核状态 无法修改
         if (Objects.isNull(smsTemplateQueryResponse) || !RespCodeEnum.SUCCESS.getCode().equals(smsTemplateQueryResponse.getRespCode())) {
-            smsTemplateResDTO.setRespCode("R" + smsTemplateQueryResponse.getRespCode());
-            smsTemplateResDTO.setRespDesc("R" + smsTemplateQueryResponse.getRespDesc());
+            smsTemplateResDTO.setRespCode( smsTemplateQueryResponse.getRespCode());
+            smsTemplateResDTO.setRespDesc( smsTemplateQueryResponse.getRespDesc());
             return smsTemplateResDTO;
         }
+
         SmsTemplateDelete smsTemplate = new SmsTemplateDelete();
         smsTemplate.setTemplateid(smsTemplateEntity.getTemplateid());
         SmsTemplateDeleteResponse smsTemplateDeleteResponse = smsTemplateClientService.deleteTemplate(smsTemplate);
         if (Objects.isNull(smsTemplateDeleteResponse) || !RespCodeEnum.SUCCESS.getCode().equals(smsTemplateDeleteResponse.getRespCode())) {
-            smsTemplateResDTO.setRespCode("R" + smsTemplateDeleteResponse.getRespCode());
-            smsTemplateResDTO.setRespDesc("R" + smsTemplateDeleteResponse.getRespDesc());
+            smsTemplateResDTO.setRespCode( smsTemplateDeleteResponse.getRespCode());
+            smsTemplateResDTO.setRespDesc( smsTemplateDeleteResponse.getRespDesc());
             return smsTemplateResDTO;
         }
         //  校验本地状态是否可删除
         smsTemplateEntity.setIsDeleted(true);
         smsTemplateRepository.save(smsTemplateEntity);
-        smsTemplateResDTO.setRespCode("R" + smsTemplateDeleteResponse.getRespCode());
-        smsTemplateResDTO.setRespDesc("R" + smsTemplateDeleteResponse.getRespDesc());
+        smsTemplateResDTO.setRespCode( smsTemplateDeleteResponse.getRespCode());
+        smsTemplateResDTO.setRespDesc( smsTemplateDeleteResponse.getRespDesc());
         return smsTemplateResDTO;
     }
 
     @Override
     public SmsTemplateResDTO queryTemplate(SmsTemplateQueryReqDTO smsTemplateQueryReqDTO) {
         SmsTemplateResDTO smsTemplateResDTO = new SmsTemplateResDTO();
-        SmsTemplateEntity smsTemplateEntity = new SmsTemplateEntity();
-        smsTemplateEntity.setId(smsTemplateQueryReqDTO.getId());
-        smsTemplateEntity.setIsDeleted(false);
-        Example<SmsTemplateEntity> smsTemplateEntityExample = Example.of(smsTemplateEntity);
-        SmsTemplateEntity templateEntity = smsTemplateRepository.findOne(smsTemplateEntityExample);
-        if (Objects.nonNull(templateEntity)) {
-            BeanUtils.copyProperties(templateEntity, smsTemplateResDTO);
-            smsTemplateResDTO.setRespDesc("L0000");
+
+        SmsTemplateEntity templateEntity = smsTemplateRepository.findOne((root, query, cb) -> {
+            Predicate id = cb.equal(root.get("id").as(Long.class), smsTemplateQueryReqDTO.getId());
+            Predicate isDeleted = cb.equal(root.get("isDeleted").as(Boolean.class), false);
+            return cb.and(id, isDeleted);
+        });
+        if (Objects.isNull(templateEntity)) {
+            smsTemplateResDTO.setRespCode("0001");
+            smsTemplateResDTO.setRespDesc("未查询到该id模版");
+            return smsTemplateResDTO;
         }
+        BeanUtils.copyProperties(templateEntity, smsTemplateResDTO);
+        smsTemplateResDTO.setRespCode("0000");
+        return smsTemplateResDTO;
+    }
+
+    @Override
+    public SmsTemplateResDTO updateTemplateAuth(@Valid SmsTemplateAuthReqDTO smsTemplateAuthReqDTO) {
+        SmsTemplateResDTO smsTemplateResDTO = new SmsTemplateResDTO();
+        //  查询是否有模版
+        SmsTemplateEntity smsTemplateEntity = smsTemplateRepository.findOne((root, query, cb) -> {
+            Predicate id = cb.equal(root.get("id").as(Long.class), smsTemplateAuthReqDTO.getId());
+            Predicate isDeleted = cb.equal(root.get("isDeleted").as(Boolean.class), false);
+            return cb.and(id, isDeleted);
+        });
+        if (Objects.isNull(smsTemplateEntity)) {
+            smsTemplateResDTO.setRespCode("9999");
+            smsTemplateResDTO.setRespDesc("改id模版不存在");
+            return smsTemplateResDTO;
+        }
+
+        //  查询外部服务模版以及状态
+        SmsTemplateQuery smsTemplateQueryReq = new SmsTemplateQuery();
+        smsTemplateQueryReq.setTemplateid(smsTemplateEntity.getTemplateid());
+        SmsTemplateQueryResponse smsTemplateQueryResponse = smsTemplateClientService.queryTemplate(smsTemplateQueryReq);
+
+        // 外部服务不存在或 非待审核状态 无法修改
+        if (Objects.isNull(smsTemplateQueryResponse) || !RespCodeEnum.SUCCESS.getCode().equals(smsTemplateQueryResponse.getRespCode())) {
+            smsTemplateResDTO.setRespCode( smsTemplateQueryResponse.getRespCode());
+            smsTemplateResDTO.setRespDesc( smsTemplateQueryResponse.getRespDesc());
+            return smsTemplateResDTO;
+        }
+
+        SmsTemplateAuth smsTemplate = new SmsTemplateAuth();
+        smsTemplate.setTemplateAuth(smsTemplateAuthReqDTO.getTemplateAuth());
+        smsTemplate.setTemplateid(smsTemplateEntity.getTemplateid());
+        SmsTemplateAuthResponse smsTemplateAuthResponse = smsTemplateClientService.updateTemplateAuth(smsTemplate);
+        if (Objects.isNull(smsTemplateAuthResponse) || !RespCodeEnum.SUCCESS.getCode().equals(smsTemplateAuthResponse.getRespCode())) {
+            smsTemplateEntity.setTemplateAuth(Integer.parseInt(smsTemplateAuthReqDTO.getTemplateAuth()));
+            smsTemplateRepository.save(smsTemplateEntity);
+        }
+        smsTemplateResDTO.setRespCode( smsTemplateAuthResponse.getRespCode());
+        smsTemplateResDTO.setRespDesc( smsTemplateAuthResponse.getRespDesc());
         return smsTemplateResDTO;
     }
 }

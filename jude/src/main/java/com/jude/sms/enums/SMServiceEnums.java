@@ -14,18 +14,15 @@ public enum SMServiceEnums {
 
     SEND_V1("/textSMS/sendSMS/V1", "普通发送 V1"),
     SEND_V2("/textSMS/sendSMS/V2", "普通发送 V2"),
-    SEND_BATCH_V1("/textSMS/sendSMS/batch/V1", "批量发送"),
+    SEND_BATCH_V1("/textSMS/sendSMS/batch/v1", "批量发送"),
 
-    RECEIPT_QUERY("/receipt/pull","短信回执查询接口"),
-    RECEIPT_UP_PULL("/pull/mo","短信上行拉取接口"),
-    RECEIPT_UP_QUERY("/textSMS/mo/pull","短信上行查询接口"),
+    RECEIPT_PUL_DR("/pull/dr","短信回执拉取接口"),
+    RECEIPT_PULL("/textSMS/receipt/pull","短信回执查询接口"),
+    RECEIPT_PULL_MO("/pull/mo","短信上行拉取接口"),
+    RECEIPT_MO_PULL("/textSMS/mo/pull","短信上行查询接口"),
 
     SIGN_QUERY("/sign/signQuery","签名查询接口"),
     SIGN_CREATE("/sign/signCodeCreate","签名子码用户拓展接口"),
-
-
-
-
     ;
     private final String operate;
     private final String desc;

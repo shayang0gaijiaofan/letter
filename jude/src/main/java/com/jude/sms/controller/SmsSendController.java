@@ -1,7 +1,10 @@
 package com.jude.sms.controller;
 
-import com.jude.sms.bo.*;
-import com.jude.sms.service.SmsSendService;
+
+import com.jude.sms.api.bo.*;
+import com.jude.sms.api.service.SmsSendClientService;
+import com.jude.sms.dto.SmsSendV1ReqDTO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,21 +22,23 @@ import javax.validation.Valid;
 @RequestMapping("/sms")
 public class SmsSendController {
     @Resource
-    private SmsSendService smsSendService;
+    private SmsSendClientService smsSendClientService;
 
     @PostMapping("/sendV1")
-    public SmsSendResponse sendV1(@Valid @RequestBody SmsSendV1 smsSendV1) {
-        return smsSendService.sendV1(smsSendV1);
+    public SmsSendResponse sendV1(@Valid @RequestBody SmsSendV1ReqDTO SmsSendV1ReqDTO) {
+        SmsSendV1 smsSendV1 = new SmsSendV1();
+        BeanUtils.copyProperties(SmsSendV1ReqDTO,smsSendV1);
+        return smsSendClientService.sendV1(smsSendV1);
     }
 
     @PostMapping("/sendV2")
     public SmsSendResponse sendV2(@Valid @RequestBody SmsSendV2 smsSendV2) {
-        return smsSendService.sendV2(smsSendV2);
+        return smsSendClientService.sendV2(smsSendV2);
     }
 
     @PostMapping("/sendBatchV1")
     public SmsSendVBatchResponse sendBatchV1(@Valid @RequestBody SmsSendVBatch smsSendVBatch) {
-        return smsSendService.sendBatchV1(smsSendVBatch);
+        return smsSendClientService.sendBatchV1(smsSendVBatch);
     }
 
 
