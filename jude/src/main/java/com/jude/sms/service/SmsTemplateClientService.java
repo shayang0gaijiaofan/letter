@@ -21,4 +21,6 @@ public interface SmsTemplateClientService {
 
     // 查询短信模板
     public SmsTemplateQueryResponse queryTemplate(SmsTemplateQuery smsTemplate) ;
+
+    public SmsTemplateAuthResponse updateTemplateAuth(SmsTemplateAuth smsTemplate) ;
 }

@@ -41,7 +41,7 @@ public class SmsReceiptService {
      */
     public SmsReceiptMoPullResponse receiptUpPull(SmsReceiptMoPull smsReceipt) {
         smsReceipt.setAccountId("100396344471");
-        String stringResponseEntity = apiHttpClient.getStringResponseEntity(smsReceipt, SMServiceEnums.RECEIPT_UP_PULL);
+        String stringResponseEntity = apiHttpClient.getFormUrlEncodedResponse(smsReceipt, SMServiceEnums.RECEIPT_UP_PULL);
         SmsReceiptMoPullResponse smsReceiptMoPullResponse = JSONObject.parseObject(stringResponseEntity, SmsReceiptMoPullResponse.class);
         return smsReceiptMoPullResponse;
     }

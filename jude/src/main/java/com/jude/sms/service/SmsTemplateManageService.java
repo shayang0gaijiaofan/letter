@@ -10,4 +10,8 @@ public interface SmsTemplateManageService {
     public SmsTemplateResDTO deleteTemplate(SmsTemplateDeleteReqDTO smsTemplate);
 
     public SmsTemplateResDTO queryTemplate(SmsTemplateQueryReqDTO smsTemplate);
+
+    public SmsTemplateResDTO updateTemplateAuth(SmsTemplateAuthReqDTO smsTemplate);
+
+
 }

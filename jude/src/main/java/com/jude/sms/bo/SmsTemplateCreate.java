@@ -21,5 +21,5 @@ public class SmsTemplateCreate extends SmsAuth {
     private String templateName; // 模板名称
     @NotNull
     private String templateContent; // 模板内容
-    private int templateAuth; // 模板权限（0：共享，1：专享）
+    private Integer templateAuth; // 模板权限（0：共享，1：专享）
 }
