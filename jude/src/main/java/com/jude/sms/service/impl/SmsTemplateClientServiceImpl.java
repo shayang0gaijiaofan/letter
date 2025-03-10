@@ -68,4 +68,14 @@ public class SmsTemplateClientServiceImpl implements SmsTemplateClientService {
         }
         return smsResponse;
     }
+
+    @Override
+    public SmsTemplateAuthResponse updateTemplateAuth(SmsTemplateAuth smsTemplate) {
+        String response = apiHttpClient.getStringResponseEntity(smsTemplate, SMServiceEnums.TEMPLATE_AUTH_UPDATE);
+        SmsTemplateAuthResponse smsResponse = JSONObject.parseObject(response, SmsTemplateAuthResponse.class);
+        if (Objects.nonNull(smsResponse) && SUCCESS_CODE.equals(smsResponse.getRespCode())) {
+            // todo 数据落表
+        }
+        return smsResponse;
+    }
 }

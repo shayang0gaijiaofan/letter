@@ -32,7 +32,7 @@ public class SmsTemplateQueryResponse extends SmsResponse  {
     @NotNull
     private String verifyStatusMsg; // 结果描述
     @NotNull
-    private Integer templateAuth; // 模板权限
+    private String templateAuth; // 模板权限
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime  ;

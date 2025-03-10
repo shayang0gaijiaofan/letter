@@ -24,7 +24,7 @@ public class SmsSendService {
 
     public SmsSendResponse sendV1(SmsSendV1 smsSendV1) {
         smsSendV1.setAccountId("100396344471");
-        String stringResponseEntity = apiHttpClient.getStringResponseEntity(smsSendV1, SMServiceEnums.SEND_V1);
+        String stringResponseEntity = apiHttpClient.getFormUrlEncodedResponse(smsSendV1, SMServiceEnums.SEND_V1);
         SmsSendResponse smsSendResponse = JSONObject.parseObject(stringResponseEntity, SmsSendResponse.class);
         return smsSendResponse;
 
