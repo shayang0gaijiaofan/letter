@@ -1,6 +1,7 @@
 package com.jude.service;
 
 import com.jude.entity.LetMsgTem;
+import com.jude.entity.dto.LetMsgTemWithTime;
 import org.springframework.data.domain.Sort.Direction;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public interface LetMsgTemService {
 	 * @param properties
 	 * @return
 	 */
-	public List<LetMsgTem> list(LetMsgTem letterMsg,Integer page,Integer pageSize,Direction direction,String... properties);
+	public List<LetMsgTem> list(LetMsgTemWithTime letterMsg, Integer page, Integer pageSize, Direction direction, String... properties);
 	
 	/**
 	 * 获取总记录数

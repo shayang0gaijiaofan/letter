@@ -1,6 +1,7 @@
 package com.jude.service.impl;
 
 import com.jude.entity.LetterStreet;
+import com.jude.entity.dto.LetterStreetWithTime;
 import com.jude.repository.LetterStreetRepository;
 import com.jude.service.LetterStreetService;
 import com.jude.util.StringUtil;
@@ -16,6 +17,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,7 +38,7 @@ public class LetterStreetServiceImpl implements LetterStreetService {
 	}
 
 	@Override
-	public List<LetterStreet> list(LetterStreet LetterStreet, Integer page, Integer pageSize, Direction direction, String... properties) {
+	public List<LetterStreet> list(LetterStreetWithTime LetterStreet, Integer page, Integer pageSize, Direction direction, String... properties) {
 		Pageable pageable=new PageRequest(page-1, pageSize, direction,properties);
 		Page<LetterStreet> pageLetterStreet= LetterStreetRepository.findAll(
 			new Specification<LetterStreet>() {
@@ -75,6 +77,17 @@ public class LetterStreetServiceImpl implements LetterStreetService {
 					if(StringUtil.isNotEmpty(LetterStreet.getMailStatus())
 							&& !LetterStreet.getMailStatus().equals("all")){	// 邮件状态
 						predicate.getExpressions().add(cb.like(root.get("mailStatus"), "%"+LetterStreet.getMailStatus().trim()+"%"));
+					}
+					if (LetterStreet.getCreateStartTime() != null) {
+						predicate.getExpressions().add(cb.greaterThanOrEqualTo(root.get("createTime"), LetterStreet.getCreateStartTime()));
+					}
+					if (LetterStreet.getCreateEndTime() != null) {
+						// 设置时间为23时59分59秒
+						Date date = LetterStreet.getCreateEndTime();
+						date.setHours(23);
+						date.setMinutes(59);
+						date.setSeconds(59);
+						predicate.getExpressions().add(cb.lessThanOrEqualTo(root.get("createTime"), date));
 					}
 				}
 				return predicate;

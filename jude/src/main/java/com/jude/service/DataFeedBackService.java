@@ -1,6 +1,7 @@
 package com.jude.service;
 
 import com.jude.entity.DataFeedBack;
+import com.jude.entity.dto.DataFeedBackWithTime;
 import org.springframework.data.domain.Sort.Direction;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public interface DataFeedBackService {
 	 * @param properties
 	 * @return
 	 */
-	public List<DataFeedBack> list(DataFeedBack DataFeedBack,Integer page,Integer pageSize,Direction direction,String... properties);
+	public List<DataFeedBack> list(DataFeedBackWithTime DataFeedBack, Integer page, Integer pageSize, Direction direction, String... properties);
 	
 	/**
 	 * 获取总记录数

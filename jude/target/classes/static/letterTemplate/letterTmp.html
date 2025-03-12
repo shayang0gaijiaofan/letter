@@ -141,8 +141,8 @@
                 "tempNum":$("#s_tempNum").val(),
                 "tempName":$("#s_tempName").val(),
                 "lawFirmName":$("#s_lawFirmName").val(),
-                "appleStartTime":$("#s_appleStartTime").val(),
-                "appleEndTime":$("#s_appleEndTime").val(),
+                "createStartTime":$("#s_createStartTime").datebox("getValue"),
+                "createEndTime":$("#s_createEndTime").datebox("getValue"),
                 "type":$("#s_type").val(),
                 "reviewStatus":$("#s_reviewStatus").val()
             });
@@ -201,11 +201,11 @@
         &nbsp;律所名称：&nbsp;<input type="text" id="s_lawFirmName" size="20"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
         <br>
-        &nbsp;申请开始时间：&nbsp;<input type="text" id="s_appleStartTime" size="20"
-                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;申请开始时间：&nbsp;<input type="text" id="s_createStartTime" size="20"
+                                        class="easyui-datebox" onkeydown="if(event.keyCode==13) searchSupplier()"/>
 
-        &nbsp;申请结束时间：&nbsp;<input type="text" id="s_appleEndTime" size="20"
-                                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
+        &nbsp;申请结束时间：&nbsp;<input type="text" id="s_createEndTime" size="20"
+                                        class="easyui-datebox" onkeydown="if(event.keyCode==13) searchSupplier()"/>
         &nbsp;函件类型：&nbsp;<select id="s_type" style="width:100px; " >
             <option value="all">全部</option>
             <option value="律师函">律师函</option>

@@ -1,6 +1,7 @@
 package com.jude.service.impl;
 
 import com.jude.entity.LetterTemplate;
+import com.jude.entity.dto.LetterTemplateWithTime;
 import com.jude.repository.LetterTemplateRepository;
 import com.jude.service.LetterTemplateService;
 import com.jude.util.StringUtil;
@@ -16,6 +17,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,7 +38,7 @@ public class LetterTemplateServiceImpl implements LetterTemplateService {
 	}
 
 	@Override
-	public List<LetterTemplate> list(LetterTemplate LetterTemplate, Integer page, Integer pageSize, Direction direction, String... properties) {
+	public List<LetterTemplate> list(LetterTemplateWithTime LetterTemplate, Integer page, Integer pageSize, Direction direction, String... properties) {
 		Pageable pageable=new PageRequest(page-1, pageSize, direction,properties);
 		Page<LetterTemplate> pageLetterTemplate= LetterTemplateRepository.findAll(
 			new Specification<LetterTemplate>() {
@@ -60,6 +62,17 @@ public class LetterTemplateServiceImpl implements LetterTemplateService {
 					if(StringUtil.isNotEmpty(LetterTemplate.getReviewStatus())
 							&& !LetterTemplate.getReviewStatus().equals("all")){
 						predicate.getExpressions().add(cb.like(root.get("reviewStatus"), "%"+LetterTemplate.getReviewStatus().trim()+"%"));
+					}
+					if (LetterTemplate.getCreateStartTime() != null) {
+						predicate.getExpressions().add(cb.greaterThanOrEqualTo(root.get("createTime"), LetterTemplate.getCreateStartTime()));
+					}
+					if (LetterTemplate.getCreateEndTime() != null) {
+						// 设置时间为23时59分59秒
+						Date date = LetterTemplate.getCreateEndTime();
+						date.setHours(23);
+						date.setMinutes(59);
+						date.setSeconds(59);
+						predicate.getExpressions().add(cb.lessThanOrEqualTo(root.get("createTime"), date));
 					}
 				}
 				return predicate;

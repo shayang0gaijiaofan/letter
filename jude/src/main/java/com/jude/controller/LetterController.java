@@ -2,6 +2,7 @@ package com.jude.controller;
 
 import com.jude.entity.Letter;
 import com.jude.entity.Log;
+import com.jude.entity.dto.LetterWithTime;
 import com.jude.service.LetterService;
 import com.jude.service.LogService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -40,12 +41,14 @@ public class LetterController {
 	 */
 	@RequestMapping("/list")
 	//@RequiresPermissions(value = { "供应商管理" })
-	public Map<String,Object> list(Letter Letter, @RequestParam(value="page",required=false)Integer page, @RequestParam(value="rows",required=false)Integer rows)throws Exception{
-		List<Letter> LetterList= LetterService.list(Letter, page, rows, Sort.Direction.ASC, "id");
-		Long total= LetterService.getCount(Letter);
+	public Map<String,Object> list(LetterWithTime let, @RequestParam(value="page",required=false)Integer page, @RequestParam(value="rows",required=false)Integer rows)throws Exception{
+		List<Letter> LetterList= LetterService.list(let, page, rows, Sort.Direction.ASC, "id");
+		Long total= LetterService.getCount(let);
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("rows", LetterList);
 		resultMap.put("total", total);
+
+
 		//logService.save(new Log(Log.SEARCH_ACTION,"查询供应商信息")); // 写入日志
 		return resultMap;
 	}

@@ -1,6 +1,7 @@
 package com.jude.service.impl;
 
 import com.jude.entity.DataFeedBack;
+import com.jude.entity.dto.DataFeedBackWithTime;
 import com.jude.repository.DataFeedBackRepository;
 import com.jude.service.DataFeedBackService;
 import com.jude.util.StringUtil;
@@ -16,6 +17,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,7 +38,7 @@ public class DataFeedBackServiceImpl implements DataFeedBackService {
 	}
 
 	@Override
-	public List<DataFeedBack> list(DataFeedBack DataFeedBack, Integer page, Integer pageSize, Direction direction, String... properties) {
+	public List<DataFeedBack> list(DataFeedBackWithTime DataFeedBack, Integer page, Integer pageSize, Direction direction, String... properties) {
 		Pageable pageable=new PageRequest(page-1, pageSize, direction,properties);
 		Page<DataFeedBack> pageDataFeedBack= DataFeedBackRepository.findAll(
 			new Specification<DataFeedBack>() {
@@ -70,6 +72,17 @@ public class DataFeedBackServiceImpl implements DataFeedBackService {
 					}
 					if(StringUtil.isNotEmpty(DataFeedBack.getLetNum())){
 						predicate.getExpressions().add(cb.like(root.get("letNum"), "%"+DataFeedBack.getLetNum().trim()+"%"));
+					}
+					if (DataFeedBack.getCheckStartTime() != null) {
+						predicate.getExpressions().add(cb.greaterThanOrEqualTo(root.get("lastQueryTime"), DataFeedBack.getCheckStartTime()));
+					}
+					if (DataFeedBack.getCheckEndTime() != null) {
+						// 设置时间为23时59分59秒
+						Date date = DataFeedBack.getCheckEndTime();
+						date.setHours(23);
+						date.setMinutes(59);
+						date.setSeconds(59);
+						predicate.getExpressions().add(cb.lessThanOrEqualTo(root.get("lastQueryTime"), date));
 					}
 				}
 				return predicate;

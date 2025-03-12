@@ -2,6 +2,7 @@ package com.jude.controller;
 
 import com.jude.entity.LetMsgTem;
 import com.jude.entity.Log;
+import com.jude.entity.dto.LetMsgTemWithTime;
 import com.jude.repository.LetMsgTemRepository;
 import com.jude.service.LetMsgTemService;
 import com.jude.service.LogService;
@@ -42,7 +43,7 @@ public class LetMsgTemController {
 	 * @throws Exception
 	 */
 	@RequestMapping("/list")
-	public Map<String,Object> list(LetMsgTem letterMsg, @RequestParam(value="page",required=false)Integer page, @RequestParam(value="rows",required=false)Integer rows)throws Exception{
+	public Map<String,Object> list(LetMsgTemWithTime letterMsg, @RequestParam(value="page",required=false)Integer page, @RequestParam(value="rows",required=false)Integer rows)throws Exception{
 		List<LetMsgTem> letterMsgList= letterMsgService.list(letterMsg, page, rows, Sort.Direction.ASC, "id");
 		Long total= letterMsgService.getCount(letterMsg);
 		Map<String, Object> resultMap = new HashMap<>();

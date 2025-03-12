@@ -1,6 +1,7 @@
 package com.jude.service;
 
 import com.jude.entity.LetterStreet;
+import com.jude.entity.dto.LetterStreetWithTime;
 import org.springframework.data.domain.Sort.Direction;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public interface LetterStreetService {
 	 * @param properties
 	 * @return
 	 */
-	public List<LetterStreet> list(LetterStreet LetterStreet,Integer page,Integer pageSize,Direction direction,String... properties);
+	public List<LetterStreet> list(LetterStreetWithTime LetterStreet, Integer page, Integer pageSize, Direction direction, String... properties);
 	
 	/**
 	 * 获取总记录数

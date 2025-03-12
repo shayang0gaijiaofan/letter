@@ -1,6 +1,7 @@
 package com.jude.service;
 
 import com.jude.entity.Letter;
+import com.jude.entity.dto.LetterWithTime;
 import org.springframework.data.domain.Sort.Direction;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public interface LetterService {
 	 * @param properties
 	 * @return
 	 */
-	public List<Letter> list(Letter Letter,Integer page,Integer pageSize,Direction direction,String... properties);
+	public List<Letter> list(LetterWithTime Letter, Integer page, Integer pageSize, Direction direction, String... properties);
 	
 	/**
 	 * 获取总记录数

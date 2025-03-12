@@ -141,8 +141,8 @@
                 "msgTemNum":$("#s_msgTemNum").val(),
                 "msgTemName": $("#s_msgTemName").val(),
                 "approveStatus": $("#s_approveStatus").val(),
-                "createStartTime": $("#s_createStartTime").val(),
-                "createEndTime": $("#s_createEndTime").val()
+                "createStartTime": $("#s_createStartTime").datebox("getValue"),
+                "createEndTime": $("#s_createEndTime").datebox("getValue"),
             });
         }
         $(function () {
@@ -200,10 +200,10 @@
             <option value="审核通过">审核通过</option>
             <option value="审核未过">审核未过</option></select>
         <br>
-        &nbsp;创建开始时间：&nbsp;<input type="text" id="s_createStartTime" size="20"
+        &nbsp;创建开始时间：&nbsp;<input type="text" id="s_createStartTime" size="20"  class="easyui-datebox"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
 
-        &nbsp;创建结束时间：&nbsp;<input type="text" id="s_createEndTime" size="20"
+        &nbsp;创建结束时间：&nbsp;<input type="text" id="s_createEndTime" size="20"  class="easyui-datebox"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
 
         <a href="javascript:searchSupplier()" class="easyui-linkbutton" iconCls="icon-search" plain="true">搜索</a>

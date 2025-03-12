@@ -1,6 +1,7 @@
 package com.jude.service.impl;
 
 import com.jude.entity.Letter;
+import com.jude.entity.dto.LetterWithTime;
 import com.jude.repository.LetterRepository;
 import com.jude.service.LetterService;
 import com.jude.util.StringUtil;
@@ -16,6 +17,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,20 +38,31 @@ public class LetterServiceImpl implements LetterService {
 	}
 
 	@Override
-	public List<Letter> list(Letter Letter, Integer page, Integer pageSize, Direction direction, String... properties) {
+	public List<Letter> list(LetterWithTime let, Integer page, Integer pageSize, Direction direction, String... properties) {
 		Pageable pageable=new PageRequest(page-1, pageSize, direction,properties);
 		Page<Letter> pageLetter= letterRepository.findAll(
 			new Specification<Letter>() {
 			@Override
 			public Predicate toPredicate(Root<Letter> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Predicate predicate=cb.conjunction();
-				if(Letter!=null){
-					if(StringUtil.isNotEmpty(Letter.getBatchNum())){
-						predicate.getExpressions().add(cb.like(root.get("batchNum"), "%"+Letter.getBatchNum().trim()+"%"));
+				if(let!=null){
+					if(StringUtil.isNotEmpty(let.getBatchNum())){
+						predicate.getExpressions().add(cb.like(root.get("batchNum"), "%"+let.getBatchNum().trim()+"%"));
 					}
-					if (StringUtil.isNotEmpty(Letter.getTemNum())
-						&& !Letter.getTemNum().equals("all")){
-						predicate.getExpressions().add(cb.like(root.get("temNum"), "%"+Letter.getTemNum().trim()+"%"));
+					if (StringUtil.isNotEmpty(let.getTemNum())
+						&& !let.getTemNum().equals("all")){
+						predicate.getExpressions().add(cb.like(root.get("temNum"), "%"+let.getTemNum().trim()+"%"));
+					}
+					if (let.getCreateStartTime() != null) {
+						predicate.getExpressions().add(cb.greaterThanOrEqualTo(root.get("createTime"), let.getCreateStartTime()));
+					}
+					if (let.getCreateEndTime() != null) {
+						// 设置时间为23时59分59秒
+						Date date = let.getCreateEndTime();
+						date.setHours(23);
+						date.setMinutes(59);
+						date.setSeconds(59);
+						predicate.getExpressions().add(cb.lessThanOrEqualTo(root.get("createTime"), date));
 					}
 				}
 				return predicate;

@@ -2,6 +2,7 @@ package com.jude.controller;
 
 import com.jude.entity.DataFeedBack;
 import com.jude.entity.Log;
+import com.jude.entity.dto.DataFeedBackWithTime;
 import com.jude.service.DataFeedBackService;
 import com.jude.service.LogService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -40,7 +41,7 @@ public class DataFeedBackController {
 	 */
 	@RequestMapping("/list")
 	//@RequiresPermissions(value = { "供应商管理" })
-	public Map<String,Object> list(DataFeedBack DataFeedBack, @RequestParam(value="page",required=false)Integer page, @RequestParam(value="rows",required=false)Integer rows)throws Exception{
+	public Map<String,Object> list(DataFeedBackWithTime DataFeedBack, @RequestParam(value="page",required=false)Integer page, @RequestParam(value="rows",required=false)Integer rows)throws Exception{
 		List<DataFeedBack> DataFeedBackList= DataFeedBackService.list(DataFeedBack, page, rows, Sort.Direction.ASC, "id");
 		Long total= DataFeedBackService.getCount(DataFeedBack);
 		Map<String, Object> resultMap = new HashMap<>();

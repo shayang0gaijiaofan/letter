@@ -2,6 +2,7 @@ package com.jude.controller;
 
 import com.jude.entity.LetterStreet;
 import com.jude.entity.Log;
+import com.jude.entity.dto.LetterStreetWithTime;
 import com.jude.service.LetterStreetService;
 import com.jude.service.LogService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -40,7 +41,7 @@ public class LetterStreetController {
 	 */
 	@RequestMapping("/list")
 	//@RequiresPermissions(value = { "供应商管理" })
-	public Map<String,Object> list(LetterStreet LetterStreet, @RequestParam(value="page",required=false)Integer page, @RequestParam(value="rows",required=false)Integer rows)throws Exception{
+	public Map<String,Object> list(LetterStreetWithTime LetterStreet, @RequestParam(value="page",required=false)Integer page, @RequestParam(value="rows",required=false)Integer rows)throws Exception{
 		List<LetterStreet> LetterStreetList= LetterStreetService.list(LetterStreet, page, rows, Sort.Direction.ASC, "id");
 		Long total= LetterStreetService.getCount(LetterStreet);
 		Map<String, Object> resultMap = new HashMap<>();

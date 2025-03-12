@@ -150,8 +150,8 @@
                 "batchNum":$("#s_batchNum").val(),
                 "temNum":$("#s_temNum").val(),
                 "type":$("#s_type").val(),
-                "createStartTime":$("#s_createStartTime").val(),
-                "createEndTime":$("#s_createEndTime").val()
+                "createStartTime":$("#s_createStartTime").datebox("getValue"),
+                "createEndTime":$("#s_createEndTime").datebox("getValue")
             });
         }
 
@@ -226,21 +226,21 @@
         <a href="javascript:deleteSupplier()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
     </div>
     <div>
-        &nbsp;批次编号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：&nbsp;<input type="text" id="s_batchNum" size="20"
+        &nbsp;批次编号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：&nbsp;<input type="text" id="s_batchNum" size="20"
                                       onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;函件模板&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：&nbsp;
+        &nbsp;函件模板&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;：&nbsp;
         <select id="s_temNum"  style="width:160px; height:25px; "  onkeydown="if(event.keyCode==13) searchSupplier()" >
         </select>
-        &nbsp;函件类型：&nbsp;<select id="s_type"  style="width:160px; height:25px; ">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;函件类型：&nbsp;<select id="s_type"  style="width:160px; height:25px; ">
                 <option value="all">全部</option>
                 <option value="律师函">律师函</option>
                 <option value="催告函">催告函</option>
             </select>
         <br>
-        &nbsp;创建开始时间：&nbsp;<input type="text" id="s_createStartTime" size="20"
+        &nbsp;创建开始时间：&nbsp;<input type="text" id="s_createStartTime" size="20" class="easyui-datebox"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
 
-        &nbsp;创建结束时间：&nbsp;<input type="text" id="s_createEndTime" size="20"
+        &nbsp;&nbsp;&nbsp;创建结束时间：&nbsp;<input type="text" id="s_createEndTime" size="20" class="easyui-datebox"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
 
         <a href="javascript:searchSupplier()" class="easyui-linkbutton" iconCls="icon-search" plain="true">搜索</a>
