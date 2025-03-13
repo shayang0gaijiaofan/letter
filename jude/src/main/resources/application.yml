@@ -34,6 +34,5 @@ sms:
     baseUrl: https://openapi.danmi.com
     accountSid: 4de5da7c57a67200849572eb3a12ab2a
     authToken: 6fd2cae798640047d8d5cc501153fd7b
-
-
+    accountId: 100727822613
 

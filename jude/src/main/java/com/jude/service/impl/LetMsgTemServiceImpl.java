@@ -33,8 +33,8 @@ public class LetMsgTemServiceImpl implements LetMsgTemService {
 	
 
 	@Override
-	public void save(LetMsgTem letterMsg) {
-		letterMsgRepository.save(letterMsg);
+	public LetMsgTem save(LetMsgTem letterMsg) {
+		return letterMsgRepository.save(letterMsg);
 	}
 
 	@Override

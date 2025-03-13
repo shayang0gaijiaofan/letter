@@ -18,6 +18,12 @@ public class SmsTemplateEntity {
     @Column(name = "id")
     private int id;
 
+    @Column(name = "tem_id")
+    private int temId;
+    @Size(max = 32)
+    @Column(name = "supplier", length = 32)
+    private String supplier;
+
     @Size(max = 32)
     @Column(name = "template_id", length = 32)
     private String templateid;
