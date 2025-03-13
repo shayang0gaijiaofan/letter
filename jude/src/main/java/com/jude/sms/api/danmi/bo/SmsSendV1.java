@@ -1,6 +1,5 @@
-package com.jude.sms.dto;
+package com.jude.sms.api.danmi.bo;
 
-import com.jude.sms.api.danmi.bo.SmsAuth;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,9 +10,9 @@ import javax.validation.constraints.NotNull;
  * @Description
  * @create 2025-02-28 10:39
  */
-
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class SmsSendV1ReqDTO  {
+public class SmsSendV1 extends SmsAuth {
 
     /**
      * 模板 ID

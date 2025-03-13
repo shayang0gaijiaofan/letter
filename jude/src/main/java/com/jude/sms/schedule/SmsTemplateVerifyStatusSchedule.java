@@ -1,12 +1,12 @@
 package com.jude.sms.schedule;
 
 
-import com.jude.sms.api.bo.*;
+import com.jude.sms.api.danmi.bo.*;
 import com.jude.sms.template.entity.SmsTemplateEntity;
 import com.jude.sms.enums.RespCodeEnum;
 import com.jude.sms.enums.VerifyStatusEnums;
 import com.jude.sms.template.repository.SmsTemplateRepository;
-import com.jude.sms.api.service.SmsTemplateClientService;
+import com.jude.sms.api.danmi.service.SmsTemplateClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;

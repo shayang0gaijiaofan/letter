@@ -1,12 +1,12 @@
 package com.jude.sms.service.impl;
 
-import com.jude.sms.api.bo.*;
+import com.jude.sms.api.danmi.bo.*;
 import com.jude.sms.dto.*;
 import com.jude.sms.template.entity.SmsTemplateEntity;
 import com.jude.sms.enums.RespCodeEnum;
 import com.jude.sms.enums.VerifyStatusEnums;
 import com.jude.sms.template.repository.SmsTemplateRepository;
-import com.jude.sms.api.service.SmsTemplateClientService;
+import com.jude.sms.api.danmi.service.SmsTemplateClientService;
 import com.jude.sms.service.SmsTemplateManageService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
