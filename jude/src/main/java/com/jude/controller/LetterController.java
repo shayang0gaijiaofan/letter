@@ -1,5 +1,6 @@
 package com.jude.controller;
 
+import com.jude.common.ResponseEntity;
 import com.jude.entity.Letter;
 import com.jude.entity.Log;
 import com.jude.entity.dto.LetterWithTime;
@@ -59,23 +60,21 @@ public class LetterController {
 
 
 	/**
-	 * 添加或者修改供应商信息
+	 * 添加或者修改函件信息
 	 * @param Letter
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping("/save")
-	@RequiresPermissions(value = { "供应商管理" })
-	public Map<String,Object> save(Letter Letter)throws Exception{
+//	@RequiresPermissions(value = { "更新函件" })
+	public ResponseEntity save(Letter Letter)throws Exception{
 		if(Letter.getId()!=null){ // 写入日志
-			logService.save(new Log(Log.UPDATE_ACTION,"更新供应商信息"+Letter));
+			logService.save(new Log(Log.UPDATE_ACTION,"更新函件信息"+Letter));
 		}else{
-			logService.save(new Log(Log.ADD_ACTION,"添加供应商信息"+Letter));
+			logService.save(new Log(Log.ADD_ACTION,"添加函件信息"+Letter));
 		}
-		Map<String, Object> resultMap = new HashMap<>();
 		LetterService.save(Letter);
-		resultMap.put("success", true);
-		return resultMap;
+		return ResponseEntity.ok("函件更新成功");
 	}
 
 

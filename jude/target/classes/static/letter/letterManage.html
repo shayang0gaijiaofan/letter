@@ -80,7 +80,6 @@
            });
         }
 
-
         function openSupplierAddDialog(){
             $("#dlg").dialog("open").dialog("setTitle","添加函件发送信息");
 
@@ -118,13 +117,13 @@
                 },
                 success:function(result){
                     var result=eval('('+result+')');
-                    if(result.success){
-                        $.messager.alert("系统提示","保存成功！");
+                    if(result.code == 200){
+                        $.messager.alert("系统提示", result.data);
                         resetValue();
                         $("#dlg").dialog("close");
                         $("#dg").datagrid("reload");
                     }else{
-                        $.messager.alert("系统提示",result.errorInfo);
+                        $.messager.alert("系统提示", result.message);
                     }
                 }
              });
@@ -133,11 +132,8 @@
 
 
         function resetValue(){
-             $("#name").val("");
-             $("#contact").val("");
-             $("#number").val("");
-             $("#address").val("");
-             $("#remarks").val("");
+             $("#batchNum").val("");
+             $("#temNum").val("");
          }
 
          function closeSupplierDialog(){
@@ -189,8 +185,22 @@
             $.each(data, function (i, item) {
                 select.append($('<option>', {value: item.tempNum, text: item.tempName})); //为每个item添加一个新的option
             });
+
+            var select = $("#temNum");
+            select.empty();   //清空原有选项
+            $.each(data, function (i, item) {
+                select.append($('<option>', {value: item.tempNum, text: item.tempName})); //为每个item添加一个新的option
+            });
         },
     });
+
+    function formatTempName(value, row, index) {
+        return row.temp.tempName;
+    }
+
+    function formatType(value, row, index) {
+        return row.temp.type;
+    }
 
     </script>
 </head>
@@ -208,8 +218,10 @@
         <th field="sentCnt" width="80" align="center" formatter="formatSubmitOper">已发送/未发送</th>
         <th field="streetCnt" width="80" align="center" formatter="formatSubmitOper">已转直邮/未转直邮</th>
         <th field="temNum" width="80" align="center">函件模板编号</th>
-        <th field="tmpName" width="80" align="center">函件模板名称</th>
-        <th field="type" width="80" align="center">函件类型</th>
+        <th data-options="field:'tempName',width:80,formatter:formatTempName">
+            函件模板名称</th>
+        <th data-options="field:'tempType',width:80,formatter:formatType">
+            函件类型</th>
 <!--        <th field="appoveOperator" width="80" align="center">操作</th>-->
 <!--        formatter="formatOper"-->
     </tr>

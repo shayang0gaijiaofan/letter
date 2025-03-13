@@ -5,7 +5,9 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 客户实体
@@ -15,7 +17,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name="t_letter_template")
-public class LetterTemplate {
+public class LetterTemplate implements Serializable {
 	//extends BaseEntity
 	@Id
 	//@GeneratedValue
@@ -23,7 +25,7 @@ public class LetterTemplate {
 	private Integer id;
 
 	@Column(name = "create_time", insertable = false, updatable = false, columnDefinition = "datetime default current_timestamp")
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date createTime;	// 申请时间
 
@@ -52,7 +54,12 @@ public class LetterTemplate {
 	@Column(length=200)
 	private String reviewStatus   ; // 审核状态
 
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date reviewTime;	// 审核时间
+//
+//	@OneToMany(targetEntity = Letter.class, fetch = FetchType.EAGER)
+//	@org.hibernate.annotations.ForeignKey(name = "none")
+//	@JoinColumn(name = "tempNum", referencedColumnName = "temNum")
+//	private List<LetterTemplate> letterList;
 }

@@ -50,17 +50,17 @@ public class DataFeedBack  {//extends BaseEntity
     @Column(length = 200)
     private String batchNum; //函件批次号
     @Column(length = 200)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date letSendTime; //函件发送时间
     @Column(length = 200)
     private String sendType; //发送类型
     @Column(length = 200)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date firstQueryTime; //首次查看时间
     @Column(length = 200)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastQueryTime; //最近查看时间
     private Integer viewCnt; // 查看次数
