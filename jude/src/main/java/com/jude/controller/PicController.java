@@ -7,12 +7,17 @@ import com.jude.service.LogService;
 import com.jude.service.PicService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.persistence.criteria.CriteriaBuilder;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,5 +111,24 @@ public class PicController {
 		return resultMap;
 	}
 
+	@GetMapping("/image")
+	public ResponseEntity<byte[]> getImage(@RequestParam Integer id) {
+		Pic pic= picService.getBase(id);
+		String base64Data = pic.getPicData();
+		// 移除 Base64 数据头（如果存在）
+		if (base64Data.startsWith("data:image")) {
+			base64Data = base64Data.substring(base64Data.indexOf(",") + 1);
+		}
+
+		// 解码 Base64 数据
+		byte[] imageBytes = Base64.getDecoder().decode(base64Data);
+
+		// 设置 HTTP 响应头
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "image/png");
+
+		// 返回图片数据
+		return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+	}
 
 }
