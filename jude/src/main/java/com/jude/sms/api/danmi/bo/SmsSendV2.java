@@ -1,22 +1,22 @@
-package com.jude.sms.dto;
+package com.jude.sms.api.danmi.bo;
 
-import com.jude.sms.api.danmi.bo.SmsAuth;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author yuzhihang
  * @Description
  * @create 2025-02-28 10:39
  */
-
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class SmsSendV1ReqDTO  {
+public class SmsSendV2 extends SmsAuth {
 
     /**
-     * 模板 ID
+     * 模板 ID 模板ID，和短信内容必传一个
      */
     private String templateid;
 
@@ -26,11 +26,10 @@ public class SmsSendV1ReqDTO  {
     private String smsContent;
 
     /**
-     * 手机号
+     * 手机号 多个手机号，用英文逗号隔开 一次最多1000 个手机号
      */
     @NotNull
     private String to;
-
     /**
      * 扩展码
      */
@@ -39,10 +38,10 @@ public class SmsSendV1ReqDTO  {
     /**
      * 短信变量
      */
-    private String param;
+    private List<String> paramsList;
 
     /**
-     * 业务账号  2-18
+     * 业务账号
      */
     @NotNull
     private String accountId;
