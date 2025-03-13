@@ -12,6 +12,7 @@ import com.jude.sms.dto.SmsTemplateUpdateReqDTO;
 import com.jude.sms.enums.RespCodeEnum;
 import com.jude.sms.enums.SmsTemplateAuthEnum;
 import com.jude.sms.service.SmsTemplateManageService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +32,7 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping("/letMsgTem")
+@Slf4j
 public class LetMsgTemController {
 
 	@Resource
@@ -80,23 +82,28 @@ public class LetMsgTemController {
 	 * @throws Exception
 	 */
 	@RequestMapping("/save")
-	public Map<String,Object> save(LetMsgTem letMsgTem)throws Exception{
+	public Map<String, Object> save(LetMsgTem letMsgTem) throws Exception {
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("success", false);
-		if(letMsgTem.getId()!=null){ // 写入日志
-			logService.save(new Log(Log.UPDATE_ACTION,"更新函件短信模版信息"+letMsgTem));
+		if (letMsgTem.getId() != null) { // 写入日志
+			logService.save(new Log(Log.UPDATE_ACTION, "更新函件短信模版信息" + letMsgTem));
 			SmsTemplateUpdateReqDTO smsTemplateUpdateReqDTO = new SmsTemplateUpdateReqDTO();
 			smsTemplateUpdateReqDTO.setId(letMsgTem.getId());
 			smsTemplateUpdateReqDTO.setTemplateName(letMsgTem.getMsgTemName());
 			smsTemplateUpdateReqDTO.setTemplateContent(letMsgTem.getMsfText());
 			SmsTemplateResDTO template = smsTemplateManageService.updateTemplate(smsTemplateUpdateReqDTO);
-			if (Objects.nonNull(template) && RespCodeEnum.SUCCESS.getCode().equals(template.getRespCode())) {
-				letterMsgService.save(letMsgTem);
-				letMsgTem.setUpdateTime(new Date(System.currentTimeMillis()));
-				resultMap.put("success", true);
+			if (Objects.isNull(template) || !RespCodeEnum.SUCCESS.getCode().equals(template.getRespCode())) {
+				resultMap.put("errorInfo", template.getRespDesc());
+				log.error("更新失败[{}]-[{}]回滚", template.getRespCode(), template.getRespDesc());
+				return resultMap;
 			}
-		}else{
+			letterMsgService.save(letMsgTem);
+			letMsgTem.setUpdateTime(new Date(System.currentTimeMillis()));
+			resultMap.put("success", true);
+			return resultMap;
+		} else {
 			logService.save(new Log(Log.ADD_ACTION, "添加函件短信模版信息" + letMsgTem));
+			LetMsgTem entity = letterMsgService.save(letMsgTem);
 			SmsTemplateCreateReqDTO smsTemplateCreateReqDTO = new SmsTemplateCreateReqDTO();
 			smsTemplateCreateReqDTO.setAccountId("");
 			// 短信签名
@@ -107,17 +114,23 @@ public class LetMsgTemController {
 			smsTemplateCreateReqDTO.setTemplateContent(letMsgTem.getMsfText());
 			// 模板权限
 			smsTemplateCreateReqDTO.setTemplateAuth(Integer.parseInt(SmsTemplateAuthEnum.SHARED.getCode()));
+			//
+			smsTemplateCreateReqDTO.setTemId(entity.getId());
 			SmsTemplateResDTO template = smsTemplateManageService.createTemplate(smsTemplateCreateReqDTO);
-			if (Objects.nonNull(template) && RespCodeEnum.SUCCESS.getCode().equals(template.getRespCode())) {
-				letMsgTem.setCreateTime(new Date(System.currentTimeMillis()));
-				letMsgTem.setUpdateTime(new Date(System.currentTimeMillis()));
-				letterMsgService.save(letMsgTem);
-				resultMap.put("success", true);
+			if (Objects.isNull(template) || !RespCodeEnum.SUCCESS.getCode().equals(template.getRespCode())) {
+				letterMsgService.delete(entity.getId());
+				resultMap.put("errorInfo", template.getRespDesc());
+				log.error("保存失败[{}]-[{}]回滚", template.getRespCode(), template.getRespDesc());
+				return resultMap;
 			}
+			letMsgTem.setCreateTime(new Date(System.currentTimeMillis()));
+			letMsgTem.setUpdateTime(new Date(System.currentTimeMillis()));
+			letterMsgService.save(letMsgTem);
+			resultMap.put("success", true);
+			return resultMap;
 		}
 
 
-		return resultMap;
 	}
 
 

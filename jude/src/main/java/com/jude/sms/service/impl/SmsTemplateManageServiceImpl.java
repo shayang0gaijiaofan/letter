@@ -2,6 +2,7 @@ package com.jude.sms.service.impl;
 
 import com.jude.sms.api.danmi.bo.*;
 import com.jude.sms.dto.*;
+import com.jude.sms.enums.SupplierEnums;
 import com.jude.sms.template.entity.SmsTemplateEntity;
 import com.jude.sms.enums.RespCodeEnum;
 import com.jude.sms.enums.VerifyStatusEnums;
@@ -9,8 +10,10 @@ import com.jude.sms.template.repository.SmsTemplateRepository;
 import com.jude.sms.api.danmi.service.SmsTemplateClientService;
 import com.jude.sms.service.SmsTemplateManageService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
 import javax.validation.Valid;
@@ -23,6 +26,7 @@ import java.util.Objects;
  * @create 2025-03-09 09:12
  */
 @Service
+@Order(1)
 public class SmsTemplateManageServiceImpl implements SmsTemplateManageService {
 
     @Resource
@@ -30,6 +34,13 @@ public class SmsTemplateManageServiceImpl implements SmsTemplateManageService {
 
     @Resource
     private SmsTemplateRepository smsTemplateRepository;
+
+    SupplierEnums supplierEnums;
+
+    @PostConstruct
+    public void init() {
+        supplierEnums = SupplierEnums.DANMI;
+    }
 
     @Override
     public SmsTemplateResDTO createTemplate(SmsTemplateCreateReqDTO smsTemplateCreateReqDTO) {
@@ -40,6 +51,7 @@ public class SmsTemplateManageServiceImpl implements SmsTemplateManageService {
             SmsTemplateEntity entity = new SmsTemplateEntity();
             BeanUtils.copyProperties(smsResponse, entity);
             BeanUtils.copyProperties(smsTemplateCreateReqDTO, entity);
+            entity.setSupplier(supplierEnums.getCode());
             entity.setVerifyStatus(VerifyStatusEnums.PENDING.getCode());
             entity.setVersion(1);
             entity.setCreateTime(new Date());

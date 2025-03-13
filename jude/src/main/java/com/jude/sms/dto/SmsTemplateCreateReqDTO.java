@@ -12,6 +12,10 @@ import javax.validation.constraints.NotNull;
 @Data
 public class SmsTemplateCreateReqDTO {
     /**
+     * 本地模版id
+     */
+    private int temId;
+    /**
      * 业务账号
      */
     @NotNull

@@ -28,9 +28,11 @@ public interface LetMsgTemService {
 	
 	/**
 	 * 修改或者修改供应商信息
+	 *
 	 * @param letterMsg
+	 * @return
 	 */
-	public void save(LetMsgTem letterMsg);
+	public LetMsgTem save(LetMsgTem letterMsg);
 	
 	/**
 	 * 根据条件分页查询供应商信息
