@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.jude.sms.api.danmi.client.ApiHttpClient;
 import com.jude.sms.api.danmi.bo.*;
 import com.jude.sms.api.danmi.service.SmsSignClientService;
-import com.jude.sms.enums.SMServiceEnums;
+import com.jude.sms.api.danmi.enums.SMServiceEnums;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

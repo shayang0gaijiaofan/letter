@@ -15,8 +15,8 @@ import javax.validation.Valid;
  * @Description
  * @create 2025-02-27 14:35
  */
-@RestController
-@RequestMapping("/sms")
+//@RestController
+//@RequestMapping("/sms")
 public class SmsTemplateController {
     @Resource
     private SmsTemplateManageService smsTemplateManageService;

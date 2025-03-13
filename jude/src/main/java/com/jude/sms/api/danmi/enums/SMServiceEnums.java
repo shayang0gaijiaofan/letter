@@ -1,4 +1,4 @@
-package com.jude.sms.enums;
+package com.jude.sms.api.danmi.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

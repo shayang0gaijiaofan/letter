@@ -1,4 +1,4 @@
-package com.jude.sms.api.danmi.service;
+package com.jude.sms.api.maisui.service;
 
 import com.jude.sms.api.danmi.bo.SmsSign;
 import com.jude.sms.api.danmi.bo.SmsSignCodeCreate;
