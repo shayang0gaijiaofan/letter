@@ -11,13 +11,28 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 public class SmsTemplateCreateReqDTO {
+    /**
+     * 业务账号
+     */
     @NotNull
-    private String accountId; // 业务账号
+    private String accountId;
+    /**
+     * 短信签名
+     */
     @NotNull
-    private String templateSign; // 短信签名
+    private String templateSign;
+    /**
+     * 模板名称
+     */
     @NotNull
-    private String templateName; // 模板名称
+    private String templateName;
+    /**
+     * 模板内容
+     */
     @NotNull
-    private String templateContent; // 模板内容
-    private int templateAuth; // 模板权限（0：共享，1：专享）
+    private String templateContent;
+    /**
+     * 模板权限
+     */
+    private int templateAuth;
 }

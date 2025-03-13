@@ -21,13 +21,14 @@ public class SmsTemplateController {
     @Resource
     private SmsTemplateManageService smsTemplateManageService;
 
+
     @PostMapping("/createTemplate")
     public SmsTemplateResDTO createTemplate(@Valid @RequestBody SmsTemplateCreateReqDTO smsTemplate) {
         return smsTemplateManageService.createTemplate(smsTemplate); // 调用服务层方法创建模板
     }
 
     @PostMapping("/updateTemplate")
-    public SmsTemplateResDTO updateTemplate(@RequestBody SmsTemplateUpdateReqDTO smsTemplate) {
+    public SmsTemplateResDTO updateTemplate(@Valid @RequestBody SmsTemplateUpdateReqDTO smsTemplate) {
         return smsTemplateManageService.updateTemplate(smsTemplate); // 调用服务层方法更新模板
     }
 
@@ -37,7 +38,12 @@ public class SmsTemplateController {
     }
 
     @PostMapping("/queryTemplate")
-    public SmsTemplateResDTO queryTemplate(@RequestBody SmsTemplateQueryReqDTO smsTemplate) {
+    public SmsTemplateResDTO queryTemplate(@Valid @RequestBody SmsTemplateQueryReqDTO smsTemplate) {
         return smsTemplateManageService.queryTemplate(smsTemplate); // 调用服务层方法查询模板
+    }
+
+    @PostMapping("/updateTemplateAuth")
+    public SmsTemplateResDTO updateTemplateAuth(@Valid @RequestBody SmsTemplateAuthReqDTO smsTemplate) {
+        return smsTemplateManageService.updateTemplateAuth(smsTemplate); // 调用服务层方法查询模板
     }
 }

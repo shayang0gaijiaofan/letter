@@ -1,12 +1,12 @@
 package com.jude.sms.schedule;
 
-import com.jude.sms.bo.SmsTemplateQuery;
-import com.jude.sms.bo.SmsTemplateQueryResponse;
-import com.jude.sms.entity.SmsTemplateEntity;
+
+import com.jude.sms.api.bo.*;
+import com.jude.sms.template.entity.SmsTemplateEntity;
 import com.jude.sms.enums.RespCodeEnum;
 import com.jude.sms.enums.VerifyStatusEnums;
-import com.jude.sms.repository.SmsTemplateRepository;
-import com.jude.sms.service.SmsTemplateClientService;
+import com.jude.sms.template.repository.SmsTemplateRepository;
+import com.jude.sms.api.service.SmsTemplateClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -24,8 +24,7 @@ import java.util.Objects;
  * @Description
  * @create 2025-03-09 21:29
  */
-//@Component
-
+@Component
 public class SmsTemplateVerifyStatusSchedule {
 
     private static final Logger log = LoggerFactory.getLogger(SmsTemplateVerifyStatusSchedule.class);
@@ -36,8 +35,7 @@ public class SmsTemplateVerifyStatusSchedule {
     @Resource
     private SmsTemplateClientService smsTemplateClientService;
 
-//    @Scheduled(cron = "0 0/30 * * * ?")
-//    @Scheduled(fixedRate = 5000)
+    @Scheduled(cron = "0 */1 * * * ?")
     public void verifyStatusConfirm() {
         log.info("定时任务-短信模版审核状态查询开始");
         List<SmsTemplateEntity> templateEntityList = templateRepository.findByVerifyStatus(VerifyStatusEnums.PENDING.getCode());
@@ -54,7 +52,7 @@ public class SmsTemplateVerifyStatusSchedule {
                     !VerifyStatusEnums.PENDING.getCode().equals(smsTemplateQueryResponse.getVerifyStatus())) {
 
                 if (RespCodeEnum.SUCCESS.getCode().equals(smsTemplateQueryResponse.getRespCode())) {
-                    BeanUtils.copyProperties(smsTemplateQueryResponse, item);
+                    BeanUtils.copyProperties(smsTemplateQueryResponse, item,"templateSign");
                 } else {
                     item.setIsDeleted(true);
                 }
