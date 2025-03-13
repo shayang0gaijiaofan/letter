@@ -51,10 +51,5 @@ public class LetMsgTem {//extends BaseEntity
     private String approveStatus;
     @Column(length=200)
     private String approveInfo;
-    @Column(name = "tem_id")
-    private int temId;
-    @Size(max = 32)
-    @Column(name = "supplier", length = 32)
-    private String supplier;
 
 }
