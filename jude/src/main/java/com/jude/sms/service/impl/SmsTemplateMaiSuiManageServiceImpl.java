@@ -1,14 +1,14 @@
 package com.jude.sms.service.impl;
 
 import com.jude.sms.api.danmi.bo.*;
-import com.jude.sms.dto.*;
-import com.jude.sms.enums.SupplierEnums;
-import com.jude.sms.template.entity.SmsTemplateEntity;
-import com.jude.sms.enums.RespCodeEnum;
-import com.jude.sms.enums.VerifyStatusEnums;
-import com.jude.sms.template.repository.SmsTemplateRepository;
 import com.jude.sms.api.danmi.service.SmsTemplateClientService;
+import com.jude.sms.dto.*;
+import com.jude.sms.enums.RespCodeEnum;
+import com.jude.sms.enums.SupplierEnums;
+import com.jude.sms.enums.VerifyStatusEnums;
 import com.jude.sms.service.SmsTemplateManageService;
+import com.jude.sms.template.entity.SmsTemplateEntity;
+import com.jude.sms.template.repository.SmsTemplateRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -25,9 +25,9 @@ import java.util.Objects;
  * @Description
  * @create 2025-03-09 09:12
  */
-@Service
+@Service("templateMaiSuiManageService")
 @Order(1)
-public class SmsTemplateManageServiceImpl implements SmsTemplateManageService {
+public class SmsTemplateMaiSuiManageServiceImpl implements SmsTemplateManageService {
 
     @Resource
     private SmsTemplateClientService smsTemplateClientService;

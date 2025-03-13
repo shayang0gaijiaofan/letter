@@ -12,196 +12,235 @@
 
         var url;
 
-        function formatEdit(val,row){
-            return "<a href=\"javascript:openRoleChooseDialog('"+row.roles+"',"+row.id+")\"><img style='margin-top: 4px' src='/static/images/edit.gif' /></a>";
+        function formatEdit(val, row) {
+            return "<a href=\"javascript:openRoleChooseDialog('" + row.roles + "'," + row.id + ")\"><img style='margin-top: 4px' src='/static/images/edit.gif' /></a>";
         }
 
-        function openRoleChooseDialog(roles,supplierId){
-            var rolesArr=roles.split(",");
-            $("#roleSetDialog").dialog("open").dialog("setTitle","选择角色");
+        function openRoleChooseDialog(roles, supplierId) {
+            var rolesArr = roles.split(",");
+            $("#roleSetDialog").dialog("open").dialog("setTitle", "选择角色");
             $("#roleDg").datagrid({
-                        url:'/admin/role/listAll',
-                        onLoadSuccess:function(data){
-                            var selectedRows=$("#roleDg").datagrid('getRows');
-                            for(var i=0;i<selectedRows.length;i++){
-                                var name=selectedRows[i].name;
-                                if($.inArray(name, rolesArr)>=0){
-                                    $("#roleDg").datagrid('checkRow',i);
-                                }
-                            }
+                url: '/admin/role/listAll',
+                onLoadSuccess: function (data) {
+                    var selectedRows = $("#roleDg").datagrid('getRows');
+                    for (var i = 0; i < selectedRows.length; i++) {
+                        var name = selectedRows[i].name;
+                        if ($.inArray(name, rolesArr) >= 0) {
+                            $("#roleDg").datagrid('checkRow', i);
                         }
+                    }
+                }
             });
             $("#supplierId").val(supplierId);
         }
 
-        function saveRoleSet(){
-            var supplierId=$("#supplierId").val();
-            var selectedRows=$("#roleDg").datagrid("getSelections");
-            var strRoleIds=[];
-            for(var i=0;i<selectedRows.length;i++){
+        function saveRoleSet() {
+            var supplierId = $("#supplierId").val();
+            var selectedRows = $("#roleDg").datagrid("getSelections");
+            var strRoleIds = [];
+            for (var i = 0; i < selectedRows.length; i++) {
                 strRoleIds.push(selectedRows[i].id);
             }
-            var roleIds=strRoleIds.join(",");
-            $.post("/letterSend/saveRoleSet",{roleIds:roleIds,supplierId:supplierId},function(result){
-                if(result.success){
+            var roleIds = strRoleIds.join(",");
+            $.post("/letterSend/saveRoleSet", {roleIds: roleIds, supplierId: supplierId}, function (result) {
+                if (result.success) {
                     closeRoleSetDialog();
                     $("#dg").datagrid("reload");
-                }else{
-                    $.messager.alert("系统提示","提交失败，请联系管理员！");
+                } else {
+                    $.messager.alert("系统提示", "提交失败，请联系管理员！");
                 }
-            },"json");
+            }, "json");
         }
 
-        function closeRoleSetDialog(){
-             $("#roleSetDialog").dialog("close");
-         }
-
-
-
-
-        function deleteSupplier(){
-            var selectedRows=$("#dg").datagrid("getSelections");
-            if(selectedRows.length==0){
-                 $.messager.alert("系统提示","请选择要删除的数据！");
-                 return;
-             }
-            var strIds=[];
-             for(var i=0;i<selectedRows.length;i++){
-                 strIds.push(selectedRows[i].id);
-             }
-             var ids=strIds.join(",");
-             $.messager.confirm("系统提示","您确定要删除这<font color=red>"+selectedRows.length+"</font>条数据吗？",function(r){
-                    if(r){
-                        $.post("/letterSend/delete",{ids:ids},function(result){
-                            if(result.success){
-                                 $.messager.alert("系统提示","数据已成功删除！");
-                                 $("#dg").datagrid("reload");
-                            }else{
-                                $.messager.alert("系统提示",result.errorInfo);
-                            }
-                        },"json");
-                    }
-           });
+        function closeRoleSetDialog() {
+            $("#roleSetDialog").dialog("close");
         }
 
 
-        function openSupplierAddDialog(){
-            $("#dlg").dialog("open").dialog("setTitle","添加函件发送信息");
-            url="/letterSend/save";
+        function deleteSupplier() {
+            var selectedRows = $("#dg").datagrid("getSelections");
+            if (selectedRows.length == 0) {
+                $.messager.alert("系统提示", "请选择要删除的数据！");
+                return;
+            }
+            var strIds = [];
+            for (var i = 0; i < selectedRows.length; i++) {
+                strIds.push(selectedRows[i].id);
+            }
+            var ids = strIds.join(",");
+            $.messager.confirm("系统提示", "您确定要删除这<font color=red>" + selectedRows.length + "</font>条数据吗？", function (r) {
+                if (r) {
+                    $.post("/letterSend/delete", {ids: ids}, function (result) {
+                        if (result.success) {
+                            $.messager.alert("系统提示", "数据已成功删除！");
+                            $("#dg").datagrid("reload");
+                        } else {
+                            $.messager.alert("系统提示", result.errorInfo);
+                        }
+                    }, "json");
+                }
+            });
         }
 
-        function openSupplierModifyDialog(){
-            var selectedRows=$("#dg").datagrid("getSelections");
-             if(selectedRows.length!=1){
-                 $.messager.alert("系统提示","请选择一条要修改的数据！");
-                 return;
-             }
-             var row=selectedRows[0];
-             $("#dlg").dialog("open").dialog("setTitle","修改供应商信息");
-             $("#fm").form("load",row);
-             $("#supplierName").attr("readonly","readonly")
-             url="/letterSend/save?id="+row.id;
-         }
+
+        function openSupplierAddDialog() {
+            $("#dlg").dialog("open").dialog("setTitle", "添加函件发送信息");
+            url = "/letterSend/save";
+        }
+
+        function openSupplierModifyDialog() {
+            var selectedRows = $("#dg").datagrid("getSelections");
+            if (selectedRows.length != 1) {
+                $.messager.alert("系统提示", "请选择一条要修改的数据！");
+                return;
+            }
+            var row = selectedRows[0];
+            $("#dlg").dialog("open").dialog("setTitle", "修改供应商信息");
+            $("#fm").form("load", row);
+            $("#supplierName").attr("readonly", "readonly")
+            url = "/letterSend/save?id=" + row.id;
+        }
 
 
+        function saveSupplier() {
+            debugger
+            var selectedTemNum = $("#s_supplier").combobox("getText"); // 获取选中的模板ID
+            var itmid = $("#itmid").val(); // 获取选中的 ID
+            // 获取隐藏字段的值
+            var sendTel = $("#hiddenSendTel").val();
+            var support = $("#hiddenSupport").val();
+            var letPic = $("#hiddenLetPic").val();
+            var overdueName = $("#hiddenOverdueName").val();
+            var temNum = $("#hiddenTemNum").val();
 
-        function saveSupplier(){
-             $("#fm").form("submit",{
-                url:url,
-                onSubmit:function(){
-                    return $(this).form("validate");
+            // 打印调试信息，确保值已经获取
+            console.log("发送手机号:", sendTel);
+            console.log("运营商:", support);
+            console.log("逾期人姓名:", overdueName);
+            console.log("模板编号:", temNum);
+            console.log("函件id:", temNum);
+
+            // 发送请求到短信接口
+            $.ajax({
+                url: "/letterSend/sendSMS",  // 短信接口的 URL
+                type: 'POST',  // 请求方式为 POST
+                contentType: 'application/json',  // 设置请求头为 JSON
+                data: JSON.stringify({
+                    itmid: itmid,
+                    letter: letPic,
+                    to: sendTel,
+                    param: overdueName,
+                    support: support,
+                    temNum: temNum
+                }),  // 将请求数据转为 JSON 格式
+                success: function (result) {
+                    console.log("短信接口返回:", result);
+                    $.messager.alert("系统提示", "短信已发送！");
                 },
-                success:function(result){
-                    var result=eval('('+result+')');
-                    if(result.success){
-                        $.messager.alert("系统提示","保存成功！");
-                        resetValue();
-                        $("#dlg").dialog("close");
-                        $("#dg").datagrid("reload");
-                    }else{
-                        $.messager.alert("系统提示",result.errorInfo);
-                    }
+                error: function (xhr, status, error) {
+                    console.error("请求失败:", error);
+                    $.messager.alert("系统提示", "短信发送失败，请重试！");
                 }
-             });
-         }
+            });
+        }
+
+        $(document).ready(function () {
+            $("#s_supplier").combobox({
+                onSelect: function (record) {
+                    console.log("选中的数据:", record);  // 调试输出选中的数据
+                    // 存储选中的 ID 到隐藏字段
+                    $("#itmid").val(record.id);
+                }
+            });
+        });
 
 
+        function resetValue() {
+            $("#name").val("");
+            $("#contact").val("");
+            $("#number").val("");
+            $("#address").val("");
+            $("#remarks").val("");
+        }
 
-        function resetValue(){
-             $("#name").val("");
-             $("#contact").val("");
-             $("#number").val("");
-             $("#address").val("");
-             $("#remarks").val("");
-         }
+        function closeSupplierDialog() {
+            $("#dlg").dialog("close");
+            resetValue();
+        }
 
-         function closeSupplierDialog(){
-             $("#dlg").dialog("close");
-             resetValue();
-         }
-
-         function searchSupplier(){
-            $("#dg").datagrid('load',{
-                "name":$("#s_name").val()
+        function searchSupplier() {
+            $("#dg").datagrid('load', {
+                "name": $("#s_name").val()
             });
         }
 
 
         $(function () {
 
-             $("#dg").datagrid({
-                    //双击事件
-                    onDblClickRow: function (index, row) {
-                        $("#dlg").dialog("open").dialog("setTitle","修改供应商信息");
-                            $("#fm").form("load",row);
-                            $("#supplierName").attr("readonly","readonly")
-                            url="/letterSend/save?id="+row.id;
+            $("#dg").datagrid({
+                //双击事件
+                onDblClickRow: function (index, row) {
+                    $("#dlg").dialog("open").dialog("setTitle", "修改供应商信息");
+                    $("#fm").form("load", row);
+                    $("#supplierName").attr("readonly", "readonly")
+                    url = "/letterSend/save?id=" + row.id;
+                }
+            });
+
+
+        });
+        var picBase;
+
+        function formatEdit(val, row) {
+            console.log(row)
+            return "<a href=\"javascript:openMenuSetDialog(" + row.letPic + ")\">点击预览</a>";
+        }
+
+        function formatAction(val, row) {
+            $(document).ready(function () {
+                $("#s_supplier").combobox({
+                    onChange: function (n, o) {
+                        var labelElement = document.getElementById("content");
+                        labelElement.innerHTML = n;
                     }
                 });
+            });
+            ;
+            let params = encodeURIComponent(JSON.stringify({
+                letPic: row.letPic,
+                sendTel: row.tel,
+                overdueName: row.overdueName,
+                support: row.support,
+                temNum: row.temNum
+            }));
+            console.log(params)
+            return `<a href="javascript:openMenuSendMsh('${params}')">发短信</a>`;
 
-
-         });
-         var picBase;
-        	function formatEdit(val,row){
-        	console.log(row)
-		return "<a href=\"javascript:openMenuSetDialog("+row.letPic+")\">点击预览</a>";
-	}
-	                function formatAction(val,row){
-	                $(document).ready(function () {
-                 $("#s_supplier").combobox({
-                 onChange: function (n,o) {
-                 var labelElement = document.getElementById("content");
-                 labelElement.innerHTML = n;
-                 }
-                 });
-                 });
-
-            return "<a href=\"javascript:openMenuSendMsh("+row.letPic+")\">发短信</a>";
         }
 
 
+        function openMenuSetDialog(id) {
+            $("#picFarm").dialog("open").dialog("setTitle", "函件预览");
+            $.post("/pic/getBase", {id: id}, function (result) {
+                var imgElement = document.getElementById('Img');
+                imgElement.src = result.rows.picData;
+            }, "json");
+        }
 
-                function openMenuSetDialog(id){
-                 $("#picFarm").dialog("open").dialog("setTitle","函件预览");
-                 $.post("/pic/getBase",{id:id},function(result){
-                  var imgElement = document.getElementById('Img');
-                  imgElement.src = result.rows.picData;},"json");
-                 }
+        function openMenuSendMsh(params) {
+            // $("#sendFarm").dialog("open").dialog("setTitle", "发送短信");
+            // 解析 JSON 字符串
+            let data = JSON.parse(decodeURIComponent(params));
+            console.log("发送短信参数:", data); // 调试输出
+            $("#sendFarm").dialog("open").dialog("setTitle", "发送短信");
+            // 填充表单字段
 
-                        function openMenuSendMsh(id){
-                 $("#sendFarm").dialog("open").dialog("setTitle","发送短信");
-                // $.post("/pic/getBase",{id:id},function(result){
-                //  var imgElement = document.getElementById('Img');
-                //  imgElement.src = result.rows.picData;},"json");
-                 }
-
-
-
-
-
-
-
-
+            $("#hiddenSendTel").val(data.sendTel);  // 填充发送手机号
+            $("#hiddenSupport").val(data.support);  // 填充运营商
+            $("#hiddenOverdueName").val(data.overdueName);  // 填充逾期人姓名
+            $("#hiddenTemNum").val(data.temNum);  // 填充模板编号
+            $("#hiddenLetPic").val(data.letPic);  // 填充模板编号
+        }
     </script>
 </head>
 <body style="margin: 1px">
@@ -247,31 +286,31 @@
     </div>
     <div>
         &nbsp;省：&nbsp;<input type="text" id="s_name1" size="20"
-                                      onkeydown="if(event.keyCode==13) searchSupplier()"/>
+                              onkeydown="if(event.keyCode==13) searchSupplier()"/>
         市：&nbsp;<input type="text" id="s_name2" size="20"
-                                onkeydown="if(event.keyCode==13) searchSupplier()"/>
+                        onkeydown="if(event.keyCode==13) searchSupplier()"/>
         批次号：&nbsp;<input type="text" id="s_name3" size="20"
-                                onkeydown="if(event.keyCode==13) searchSupplier()"/>
+                            onkeydown="if(event.keyCode==13) searchSupplier()"/>
         函件编号：&nbsp;<input type="text" id="s_name4" size="20"
-                                onkeydown="if(event.keyCode==13) searchSupplier()"/>
+                              onkeydown="if(event.keyCode==13) searchSupplier()"/>
         发送手机号：&nbsp;<input type="text" id="s_name5" size="20"
                                 onkeydown="if(event.keyCode==13) searchSupplier()"/>
         逾期人身份证：&nbsp;<input type="text" id="s_name6" size="20"
-                                onkeydown="if(event.keyCode==13) searchSupplier()"/>
+                                  onkeydown="if(event.keyCode==13) searchSupplier()"/>
         逾期人姓名：&nbsp;<input type="text" id="s_name7" size="20"
-                                  onkeydown="if(event.keyCode==13) searchSupplier()"/>
+                                onkeydown="if(event.keyCode==13) searchSupplier()"/>
         开始日期：&nbsp;<input type="text" id="s_name8" size="20"
-                                  onkeydown="if(event.keyCode==13) searchSupplier()"/>
+                              onkeydown="if(event.keyCode==13) searchSupplier()"/>
         截止日期：&nbsp;<input type="text" id="s_name9" size="20"
-                                  onkeydown="if(event.keyCode==13) searchSupplier()"/>
+                              onkeydown="if(event.keyCode==13) searchSupplier()"/>
         函件模版：&nbsp;<input type="text" id="s_name10" size="20"
-                                  onkeydown="if(event.keyCode==13) searchSupplier()"/>
+                              onkeydown="if(event.keyCode==13) searchSupplier()"/>
         函件类型：&nbsp;<input type="text" id="s_name11" size="20"
                               onkeydown="if(event.keyCode==13) searchSupplier()"/>
         发送状态：&nbsp;<input type="text" id="s_name12" size="20"
                               onkeydown="if(event.keyCode==13) searchSupplier()"/>
         运营商：&nbsp;<input type="text" id="s_name13" size="20"
-                              onkeydown="if(event.keyCode==13) searchSupplier()"/>
+                            onkeydown="if(event.keyCode==13) searchSupplier()"/>
         直邮状态：&nbsp;<input type="text" id="s_name14" size="20"
                               onkeydown="if(event.keyCode==13) searchSupplier()"/>
     </div>
@@ -411,15 +450,24 @@
 
     <form id="sendfm" method="post">
         <table cellspacing="8px">
-                发送模版：
+            发送模版：
             <tr>
-                <select class="easyui-combobox"  id="s_supplier"  style="width: 200px;"   data-options="panelHeight:'auto',valueField:'msfText',textField:'msgTemName',url:'/letMsgTem/listMenu'"></select>
+                <select class="easyui-combobox" id="s_supplier" style="width: 200px;"
+                        data-options="panelHeight:'auto',valueField:'msfText',textField:'msgTemName',url:'/letMsgTem/listMenu'"></select>
                 <!--<td><input type="text" id="sendTmp" name="sendTel" class="easyui-validatebox" required="true"
                            style="width: 250px"/></td>-->
             </tr>
+            <!-- 添加一个隐藏的 input 存储 id -->
+            <input type="hidden" id="itmid">
+            <!-- 隐藏的输入字段 -->
+            <input type="hidden" id="hiddenSendTel" name="sendTel"/>
+            <input type="hidden" id="hiddenLetPic" name="letPic"/>
+            <input type="hidden" id="hiddenSupport" name="support"/>
+            <input type="hidden" id="hiddenOverdueName" name="overdueName"/>
+            <input type="hidden" id="hiddenTemNum" name="temNum"/>
         </table>
         <tr>
-            <lable id="content"  style="width:400px;height:200px;"></lable>
+            <lable id="content" style="width:400px;height:200px;"></lable>
             <!--<td><input type="text" id="sendTmp" name="sendTel" class="easyui-validatebox" required="true"
                        style="width: 250px"/></td>-->
         </tr>
@@ -429,8 +477,6 @@
         <a href="javascript:closeSupplierDialog()" class="easyui-linkbutton" iconCls="icon-cancel">取消</a>
     </div>
 </div>
-
-
 
 
 </body>

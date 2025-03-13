@@ -3,7 +3,7 @@ package com.jude.sms.controller;
 
 import com.jude.sms.api.danmi.bo.*;
 import com.jude.sms.api.danmi.service.SmsSendClientService;
-import com.jude.sms.dto.SmsSendV1ReqDTO;
+import com.jude.sms.dto.SmsSendReqDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,8 +25,9 @@ public class SmsSendController {
     private SmsSendClientService smsSendClientService;
 
     @PostMapping("/sendV1")
-    public SmsSendResponse sendV1(@Valid @RequestBody SmsSendV1ReqDTO SmsSendV1ReqDTO) {
+    public SmsSendResponse sendV1(@Valid @RequestBody SmsSendReqDTO SmsSendV1ReqDTO) {
         SmsSendV1 smsSendV1 = new SmsSendV1();
+
         BeanUtils.copyProperties(SmsSendV1ReqDTO,smsSendV1);
         return smsSendClientService.sendV1(smsSendV1);
     }

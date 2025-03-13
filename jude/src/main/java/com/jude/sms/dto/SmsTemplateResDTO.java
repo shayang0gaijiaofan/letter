@@ -17,6 +17,10 @@ public class SmsTemplateResDTO {
      */
     private int id;
     /**
+     * 模板ID
+     */
+    private String templateid;
+    /**
      * 模板名称
      */
     private String templateName;
