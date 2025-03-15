@@ -13,10 +13,15 @@ import javax.validation.constraints.NotNull;
  */
 
 @Data
-public class SmsSendV1ReqDTO  {
+public class SmsSendReqDTO  {
 
     /**
-     * 模板 ID
+     * 本地模板 ID
+     */
+    private Integer temId;
+
+    /**
+     * 平台模板 ID
      */
     private String templateid;
 
@@ -40,12 +45,6 @@ public class SmsSendV1ReqDTO  {
      * 短信变量
      */
     private String param;
-
-    /**
-     * 业务账号  2-18
-     */
-    @NotNull
-    private String accountId;
 
     /**
      * 用户自定义

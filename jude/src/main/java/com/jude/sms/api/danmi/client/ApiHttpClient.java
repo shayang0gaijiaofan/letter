@@ -3,14 +3,11 @@ package com.jude.sms.api.danmi.client;
 import com.alibaba.fastjson2.JSONObject;
 import com.jude.sms.api.danmi.bo.SmsAuth;
 import com.jude.sms.api.danmi.bo.SmsResponse;
-import com.jude.sms.enums.SMServiceEnums;
+import com.jude.sms.api.danmi.enums.SMServiceEnums;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -21,6 +18,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
@@ -36,28 +34,25 @@ import java.security.MessageDigest;
 @Slf4j
 @Validated
 public class ApiHttpClient {
-    @Value("${sms.api.baseUrl}")
+    @Value("${sms.danmi.baseUrl}")
     private String baseUrl;  // API接口基础URL配置，类似：https://openapi.danmi.com
 
-    @Value("${sms.api.accountSid}")
+    @Value("${sms.danmi.accountSid}")
     private String accountSid; // 开发者主账号
 
-    @Value("${sms.api.authToken}")
+    @Value("${sms.danmi.authToken}")
     private String authToken; // 认证令牌
 
-    @Value("${sms.api.accountId}")
+    @Value("${sms.danmi.accountId}")
     private String accountId; // 认证令牌
 
-    @Autowired
-    @Lazy
     RestTemplate restTemplate;
 
-    @Bean
-    public RestTemplate init() {
-        RestTemplate client = new RestTemplate();
-        client.getMessageConverters().
+    @PostConstruct
+    public void init() {
+        restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters().
                 add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
-        return client;
     }
 
     private String getApiUrl(String endpoint) {

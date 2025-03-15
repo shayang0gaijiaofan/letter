@@ -12,6 +12,10 @@ import javax.validation.constraints.NotNull;
 @Data
 public class SmsTemplateQueryReqDTO {
 
-    @NotNull
+
     private Integer id;
+
+    private Integer temId;
+
+    private String supplier;
 }

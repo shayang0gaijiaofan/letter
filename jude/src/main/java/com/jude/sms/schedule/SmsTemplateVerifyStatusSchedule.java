@@ -35,7 +35,7 @@ public class SmsTemplateVerifyStatusSchedule {
     @Resource
     private SmsTemplateClientService smsTemplateClientService;
 
-    @Scheduled(cron = "0 */1 * * * ?")
+    @Scheduled(cron = "0 0/10 * * * ? ")
     public void verifyStatusConfirm() {
         log.info("定时任务-短信模版审核状态查询开始");
         List<SmsTemplateEntity> templateEntityList = templateRepository.findByVerifyStatus(VerifyStatusEnums.PENDING.getCode());

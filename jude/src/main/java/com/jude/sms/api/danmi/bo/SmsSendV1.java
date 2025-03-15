@@ -43,7 +43,7 @@ public class SmsSendV1 extends SmsAuth {
     /**
      * 业务账号  2-18
      */
-    @NotNull
+//    @NotNull
     private String accountId;
 
     /**
