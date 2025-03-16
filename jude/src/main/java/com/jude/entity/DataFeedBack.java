@@ -23,9 +23,9 @@ public class DataFeedBack  {//extends BaseEntity
     private Integer id;
 
     @Column(name = "create_time", insertable = false, updatable = false, columnDefinition = "datetime default current_timestamp")
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date createTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;  // 函件发送时间
 
     @Column(length=50)
     private Date updateTime;
@@ -49,10 +49,6 @@ public class DataFeedBack  {//extends BaseEntity
     private String letType; //函件类型
     @Column(length = 200)
     private String batchNum; //函件批次号
-    @Column(length = 200)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date letSendTime; //函件发送时间
     @Column(length = 200)
     private String sendType; //发送类型
     @Column(length = 200)

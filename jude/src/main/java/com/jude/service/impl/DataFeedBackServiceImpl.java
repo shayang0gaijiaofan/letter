@@ -60,15 +60,15 @@ public class DataFeedBackServiceImpl implements DataFeedBackService {
 					}
 					if(StringUtil.isNotEmpty(DataFeedBack.getSendStatus())
 						&& !DataFeedBack.getSendStatus().equals("all")){
-						predicate.getExpressions().add(cb.like(root.get("sendStatus"), "%"+DataFeedBack.getSendStatus().trim()+"%"));
+						predicate.getExpressions().add(cb.equal(root.get("sendStatus"), DataFeedBack.getSendStatus().trim()));
 					}
 					if(StringUtil.isNotEmpty(DataFeedBack.getSendType())
 							&& !DataFeedBack.getSendType().equals("all")){
-						predicate.getExpressions().add(cb.like(root.get("sendType"), "%"+DataFeedBack.getSendType().trim()+"%"));
+						predicate.getExpressions().add(cb.equal(root.get("sendType"), DataFeedBack.getSendType().trim()));
 					}
 					if(StringUtil.isNotEmpty(DataFeedBack.getLetType())
 							&& !DataFeedBack.getLetType().equals("all")){
-						predicate.getExpressions().add(cb.like(root.get("letType"), "%"+DataFeedBack.getLetType().trim()+"%"));
+						predicate.getExpressions().add(cb.equal(root.get("letType"), DataFeedBack.getLetType().trim()));
 					}
 					if(StringUtil.isNotEmpty(DataFeedBack.getLetNum())){
 						predicate.getExpressions().add(cb.like(root.get("letNum"), "%"+DataFeedBack.getLetNum().trim()+"%"));
