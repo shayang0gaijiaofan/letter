@@ -82,7 +82,7 @@
 
 
         function openSupplierAddDialog(){
-            $("#dlg").dialog("open").dialog("setTitle","添加函件发送信息");
+            $("#dlg").dialog("open").dialog("setTitle","添加函件短信模板");
             url="/letMsgTem/save";
         }
 
@@ -93,7 +93,7 @@
                  return;
              }
              var row=selectedRows[0];
-             $("#dlg").dialog("open").dialog("setTitle","修改短信模板");
+             $("#dlg").dialog("open").dialog("setTitle","修改函件短信模板");
              $("#fm").form("load",row);
              $("#supplierName").attr("readonly","readonly")
              url="/letMsgTem/save?id="+row.id;

@@ -53,6 +53,9 @@ public class LetterTemplate implements Serializable {
 	private String applyPerson   ; // 申请人姓名
 	@Column(length=200)
 	private String reviewStatus   ; // 审核状态
+	@Column(length=200)
+	private String letTempPic   ; // 函件模板图片url
+
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

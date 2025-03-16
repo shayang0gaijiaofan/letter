@@ -86,7 +86,7 @@
 	
 	
 	function openSupplierAddDialog(){
-		$("#dlg").dialog("open").dialog("setTitle","添加供应商信息");
+		$("#dlg").dialog("open").dialog("setTitle","添加数据反馈统计信息");
 		url="/admin/supplier/save";
 	}
 	
@@ -97,7 +97,7 @@
 			 return;
 		 }
 		 var row=selectedRows[0];
-		 $("#dlg").dialog("open").dialog("setTitle","修改供应商信息");
+		 $("#dlg").dialog("open").dialog("setTitle","修改数据反馈统计信息");
 		 $("#fm").form("load",row);
 		 $("#supplierName").attr("readonly","readonly")
 		 url="/admin/supplier/save?id="+row.id;

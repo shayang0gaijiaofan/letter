@@ -82,7 +82,7 @@
 
 
         function openSupplierAddDialog(){
-            $("#dlg").dialog("open").dialog("setTitle","添加函件发送信息");
+            $("#dlg").dialog("open").dialog("setTitle","添加函件直邮信息");
             url="/LetterStreet/save";
         }
 
@@ -93,7 +93,7 @@
                  return;
              }
              var row=selectedRows[0];
-             $("#dlg").dialog("open").dialog("setTitle","修改短信模板");
+             $("#dlg").dialog("open").dialog("setTitle","修改函件直邮");
              $("#fm").form("load",row);
              $("#supplierName").attr("readonly","readonly")
              url="/LetterStreet/save?id="+row.id;
@@ -137,8 +137,8 @@
 
          function searchSupplier(){
             $("#dg").datagrid('load',{
-                "province":$("#s_province").val(),
-                "city":$("#s_city").val(),
+<!--                "province":$("#s_province").val(),-->
+<!--                "city":$("#s_city").val(),-->
                 "overdueAddr":$("#s_overdueAddr").val(),
                 "phoneNum":$("#s_phoneNum").val(),
                 "overduePerson":$("#s_overduePerson").val(),
@@ -219,25 +219,26 @@
     </div>
     <div>
 
-        &nbsp;&nbsp;<input type="text" id="s_province_city" size="20" placeholder="请输入省/市名称"
-                                   onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;&nbsp;<input type="text" id="s_city" size="20" placeholder="请输入城市名称"
-                                      onkeydown="if(event.keyCode==13) searchSupplier()"/>
+<!--        &nbsp;&nbsp;<input type="text" id="s_province" size="20" placeholder="请输入省/市名称"-->
+<!--                                   onkeydown="if(event.keyCode==13) searchSupplier()"/>-->
+<!--        &nbsp;&nbsp;<input type="text" id="s_city" size="20" placeholder="请输入城市名称"-->
+<!--                                      onkeydown="if(event.keyCode==13) searchSupplier()"/>-->
         &nbsp;&nbsp;<input type="text" id="s_overdueAddr" size="20" placeholder="请输入逾期人地址"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
         &nbsp;&nbsp;<input type="text" id="s_phoneNum" size="20" placeholder="请输入发送手机号"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
 
-        &nbsp;&nbsp;<input type="text" id="s_overduePerson" size="20" placeholder="请输入逾期人姓名"
+        &nbsp;&nbsp;<input type="text" id="s_overduePerson" size="23" placeholder="请输入逾期人姓名"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        <br>
         &nbsp;&nbsp;<input type="text" id="s_letterNum" size="20" placeholder="请输入函件编号"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
+
+        <br>
         &nbsp;&nbsp;<input type="text" id="s_createStartTime" size="20" class="easyui-datebox"
                            data-options="prompt:'请输入函件创建开始时间'" onkeydown="if(event.keyCode==13) searchSupplier()"/>
         &nbsp;&nbsp;<input type="text" id="s_createEndTime" size="20" class="easyui-datebox"
                            data-options="prompt:'请输入函件创建结束时间'" onkeydown="if(event.keyCode==13) searchSupplier()"/>
-        &nbsp;&nbsp;地址规范状态：&nbsp; <select id="s_addrNormStatus" style="width:100px; height:25px; " >
+        &nbsp;&nbsp;地址规范状态：&nbsp; <select id="s_addrNormStatus" style="width:97px; height:25px; " >
         <option value="all">全部</option>
         <option value="不规范">不规范</option>
         <option value="规范">规范</option></select>
@@ -247,15 +248,15 @@
         <option value="律师函">律师函</option>
         <option value="催告函">催告函</option></select>
         <br>
-        &nbsp;&nbsp;<select id="s_tempNum"  style="width:160px; height:25px; "  onkeydown="if(event.keyCode==13) searchSupplier()" >
+        &nbsp;&nbsp;<select id="s_tempNum"  style="width:170px; height:25px; "  onkeydown="if(event.keyCode==13) searchSupplier()" >
         </select>
 
-        &nbsp;&nbsp;直邮任务状态：&nbsp; <select id="s_streetStatus" style="width:100px; height:25px; " >
+        &nbsp;&nbsp;直邮任务状态：&nbsp; <select id="s_streetStatus" style="width:80px; height:25px; " >
         <option value="all">全部</option>
         <option value="未下单">未下单</option>
         <option value="已下单">已下单</option></select>
 
-        &nbsp;&nbsp;邮件状态：&nbsp; <select id="s_mailStatus" style="width:100px; height:25px; " >
+        &nbsp;&nbsp;邮件状态：&nbsp; <select id="s_mailStatus" style="width:120px; height:25px; " >
             <option value="all">全部</option>
             <option value="未签收">未签收</option>
             <option value="已签收">已签收</option>

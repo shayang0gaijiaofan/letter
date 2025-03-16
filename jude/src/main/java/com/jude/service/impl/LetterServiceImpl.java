@@ -33,11 +33,18 @@ public class LetterServiceImpl implements LetterService {
 	
 
 	@Override
-	public void save(Letter Letter) {
-		Letter let = letterRepository.getOne(Letter.getId());
-		let.setBatchNum(Letter.getBatchNum());
-		let.setTemNum(Letter.getTemNum());
-		letterRepository.save(let);
+	public void save(Letter letter) {
+		// update
+		if ( letter.getId() != null) {
+			Letter let = letterRepository.getOne(letter.getId());
+			let.setBatchNum(letter.getBatchNum());
+			let.setTemNum(letter.getTemNum());
+			letterRepository.save(let);
+		}
+		// insert
+		else {
+			letterRepository.save(letter);
+		}
 	}
 
 	@Override

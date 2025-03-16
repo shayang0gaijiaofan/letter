@@ -81,7 +81,7 @@
         }
 
         function openSupplierAddDialog(){
-            $("#dlg").dialog("open").dialog("setTitle","添加函件发送信息");
+            $("#dlg").dialog("open").dialog("setTitle","添加函件信息");
 
             $.post("/LetterTemplate/findAll",{},function(data){
                 var select = $("#temNum");
@@ -101,7 +101,7 @@
                  return;
              }
              var row=selectedRows[0];
-             $("#dlg").dialog("open").dialog("setTitle","修改短信模板");
+             $("#dlg").dialog("open").dialog("setTitle","修改函件");
              $("#fm").form("load",row);
              $("#supplierName").attr("readonly","readonly")
              url="/Letter/save?id="+row.id;
@@ -197,9 +197,18 @@
     function formatTempName(value, row, index) {
         return row.temp.tempName;
     }
-
     function formatType(value, row, index) {
         return row.temp.type;
+    }
+
+
+
+    function openMenuSetDialog(id) {
+        $("#picFarm").dialog("open").dialog("setTitle", "函件预览");
+        $.post("/pic/getBase", {id: id}, function (result) {
+            var imgElement = document.getElementById('Img');
+            imgElement.src = result.rows.picData;
+        }, "json");
     }
 
     </script>
@@ -227,8 +236,6 @@
     </tr>
     </thead>
 </table>
-
-
 
 <div id="tb">
     <div>

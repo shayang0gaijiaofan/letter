@@ -4,10 +4,11 @@ server:
 spring:
    datasource:
       driver-class-name: com.mysql.jdbc.Driver
-      # url: jdbc:mysql://localhost:3306/db_letter?characterEncoding=utf-8&&useSSL=false
+#      url: jdbc:mysql://localhost:3306/db_letter?characterEncoding=utf-8&&useSSL=false
       #本地连测试
-      url: jdbc:mysql://9df7c6b2a30f1182.natapp.cc:14725/db_letter?characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+      url: jdbc:mysql://9df7c6b2a30f1182.natapp.cc:14725/db_letter?characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
       username: root
+#      password: Wanm1314
       password: 123456
 
        #本地连阿里云
@@ -30,10 +31,16 @@ spring:
    resources:
       static-locations: classpath:/static/
 sms:
-  api:
+  danmi:
     baseUrl: https://openapi.danmi.com
     accountSid: 4de5da7c57a67200849572eb3a12ab2a
     authToken: 6fd2cae798640047d8d5cc501153fd7b
+    accountId: 100727822613
+
+  maisui:
+    baseUrl: https://mc.sms-mstx.top/
+    userName: shtylsswhj
+    password: 6xh64q
 
 
 
