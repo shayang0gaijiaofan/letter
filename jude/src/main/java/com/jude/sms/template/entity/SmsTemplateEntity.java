@@ -68,4 +68,7 @@ public class SmsTemplateEntity {
     @Column(name = "update_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateTime;
+
+    @Column(name = "operate_flag")
+    private String operateFlag;
 }

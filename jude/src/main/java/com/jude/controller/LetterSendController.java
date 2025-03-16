@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class LetterSendController {
      */
     @RequestMapping("/sendSMS")
     //@RequiresPermissions(value = { "供应商管理" })
-    public Map<String, Object> sendSMS(@RequestBody SmsSendReqDTO smsSendReqDTO, String supplier) {
+    public Map<String, Object> sendSMS(@Valid @RequestBody SmsSendReqDTO smsSendReqDTO, String supplier) {
         // 1 通过本地模版id、选择的短信运营商 去查短信平台的id
         SmsTemplateQueryReqDTO smsTemplate = new SmsTemplateQueryReqDTO();
         smsTemplate.setTemId(smsSendReqDTO.getTemId());
@@ -58,7 +59,7 @@ public class LetterSendController {
         //  todo 加模版校验
         // 2 构建对应模版需要的参数
         smsSendReqDTO.setTemplateid(smsTemplateResDTO.getTemplateid());
-        smsSendReqDTO.setParam(smsSendReqDTO.getParam()+","+"https://www.baidu.com/");
+        smsSendReqDTO.setParam(smsSendReqDTO.getParam()+","+"http://ysqd.natapp1.cc/pic/image?id="+smsSendReqDTO.getLetter());
         SmsResDTO smsResDTO = smsSendManageService.sendMessage(smsSendReqDTO, SupplierEnums.DANMI);
         // 3 根据返回结果 在发送列表改状态
 
