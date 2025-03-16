@@ -8,13 +8,13 @@ CREATE TABLE db_letter.t_sms_template
     template_sign    VARCHAR(18)  COMMENT '短信签名',
     template_content TEXT         COMMENT '短信内容',
     template_auth    INT          COMMENT '模板权限（0：共享，1：专享）',
-    verify_status     VARCHAR(2)   default '0' COMMENT '审核状态（0：待审核，1：审核通过，2：审核拒绝, 3、已撤回）',
+    verify_status    VARCHAR(2)   default '0' COMMENT '审核状态（0：待审核，1：审核通过，2：审核拒绝, 3、已撤回）',
     version          INT          COMMENT '模板版本号，从1开始递增',
     is_latest        BOOLEAN      DEFAULT TRUE COMMENT '是否是最新版本（TRUE：最新，FALSE：历史版本）',
     is_deleted       BOOLEAN      DEFAULT TRUE COMMENT '是否是删除',
-    create_time       TIMESTAMP            DEFAULT CURRENT_TIMESTAMP COMMENT '模板创建时间',
-    update_time       TIMESTAMP            DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '模板更新时间',
-
+    create_time      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT '模板创建时间',
+    update_time      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '模板更新时间',
+    operate_flag     VARCHAR(2)   default '0' COMMENT '操作标识（0：变动、 1、已变更）',
     INDEX            idx_account_id (account_id),
     INDEX            idx_template_name (template_name),
     INDEX            idx_audit_status (audit_status)

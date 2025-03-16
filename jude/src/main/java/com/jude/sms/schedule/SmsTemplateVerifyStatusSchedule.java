@@ -2,6 +2,7 @@ package com.jude.sms.schedule;
 
 
 import com.jude.sms.api.danmi.bo.*;
+import com.jude.sms.enums.OperateFlagEnums;
 import com.jude.sms.template.entity.SmsTemplateEntity;
 import com.jude.sms.enums.RespCodeEnum;
 import com.jude.sms.enums.VerifyStatusEnums;
@@ -57,6 +58,7 @@ public class SmsTemplateVerifyStatusSchedule {
                     item.setIsDeleted(true);
                 }
                 item.setUpdateTime(new Date());
+                item.setOperateFlag(OperateFlagEnums.MODIFY.getCode());
                 templateRepository.save(item);
                 log.info("本地id[{}]模版id[{}]状态变动", item.getId(), item.getTemplateid());
             }

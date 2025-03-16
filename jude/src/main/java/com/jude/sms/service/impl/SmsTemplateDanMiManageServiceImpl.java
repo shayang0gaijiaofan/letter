@@ -2,6 +2,7 @@ package com.jude.sms.service.impl;
 
 import com.jude.sms.api.danmi.bo.*;
 import com.jude.sms.dto.*;
+import com.jude.sms.enums.OperateFlagEnums;
 import com.jude.sms.enums.SupplierEnums;
 import com.jude.sms.template.entity.SmsTemplateEntity;
 import com.jude.sms.enums.RespCodeEnum;
@@ -72,9 +73,9 @@ public class SmsTemplateDanMiManageServiceImpl implements SmsTemplateManageServi
 
         //  查询是否有模版
         SmsTemplateEntity smsTemplateEntity = smsTemplateRepository.findOne((root, query, cb) -> {
-            Predicate id = cb.equal(root.get("id").as(Long.class), smsTemplateUpdateReqDTO.getId());
+            Predicate temId = cb.equal(root.get("temId").as(Long.class), smsTemplateUpdateReqDTO.getId());
             Predicate isDeleted = cb.equal(root.get("isDeleted").as(Boolean.class), false);
-            return cb.and(id, isDeleted);
+            return cb.and(temId, isDeleted);
         });
         if (Objects.isNull(smsTemplateEntity)) {
             smsTemplateResDTO.setRespCode("9999");

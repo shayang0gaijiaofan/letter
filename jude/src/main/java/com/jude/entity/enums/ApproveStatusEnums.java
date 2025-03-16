@@ -1,23 +1,20 @@
-package com.jude.sms.enums;
+package com.jude.entity.enums;
 
+import com.jude.sms.enums.VerifyStatusEnums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/**
- * @author yuzhihang
- * @Description
- * @create 2025-03-09 09:00
- */
 @Getter
 @AllArgsConstructor
-public enum VerifyStatusEnums {
+public enum ApproveStatusEnums {
     /**
      * 1、待审核，2、审核成功，3、审核失败 4、撤回
      */
     PENDING("1", "待审核"),
     APPROVED("2", "审核通过"),
     REJECTED("3", "审核拒绝"),
-    WITHDRAWN("4", "撤回");
+    WITHDRAWN("4", "撤回"),
+    OTHER("999", "未知的状态");
 
     private final String code;
     private final String desc;
@@ -25,13 +22,12 @@ public enum VerifyStatusEnums {
     /**
      * 根据状态码获取枚举对象
      */
-    public static VerifyStatusEnums fromCode(String code) {
-        for (VerifyStatusEnums status : VerifyStatusEnums.values()) {
-            if (status.getCode().equals(code) ) {
+    public static ApproveStatusEnums  fromCode(String code) {
+        for (ApproveStatusEnums status : ApproveStatusEnums.values()) {
+            if (status.getCode().equals(code)) {
                 return status;
             }
         }
-        throw new IllegalArgumentException("未知的审核状态: " + code);
+        return ApproveStatusEnums.OTHER;
     }
-
 }

@@ -152,12 +152,36 @@
                         $("#dlg").dialog("open").dialog("setTitle","修改短信模板");
                             $("#fm").form("load",row);
                             $("#supplierName").attr("readonly","readonly")
-                            url="/letMsgTem/save?id="+row.id;
+                        // 先确保 combobox 数据已经加载
+                        $("#approveStatus").combobox({
+                            data: [
+                                { value: '1', text: '待审核' },
+                                { value: '2', text: '审核通过' },
+                                { value: '3', text: '审核拒绝' }
+                            ],
+                            valueField: 'value',
+                            textField: 'text',
+                            panelHeight: 'auto',
+                            editable: false
+                        });
+
+                        // 确保 combobox 被正确赋值
+                        $("#approveStatus").combobox("setValue", row.approveStatus);
+
+                        url="/letMsgTem/save?id="+row.id;
                     }
                 });
          });
 
-
+        function formatApproveStatus(value, row, index) {
+           console.log("msg")
+            var statusMap = {
+                "1": "待审核",
+                "2": "审核通过",
+                "3": "审核拒绝"
+            };
+            return statusMap[value] || "未知状态"; // 防止意外值
+        }
     </script>
 </head>
 <body style="margin: 1px">
@@ -172,7 +196,7 @@
         <th field="msfText" width="80" align="center">短信内容</th>
         <th field="signature" width="80" align="center">签名</th>
         <th field="createTime" width="80" align="center">申请时间</th>
-        <th field="approveStatus" width="80" align="center">审核状态</th>
+        <th field="approveStatus" width="80" align="center" formatter="formatApproveStatus">审核状态</th>
         <th field="approveInfo" width="80" align="center">审核信息</th>
     </tr>
     </thead>
@@ -196,9 +220,9 @@
         &nbsp;消息模版审核状态：&nbsp;
         <select id="s_approveStatus" style="width:100px; height:25px; " >
             <option value="all">全部</option>
-            <option value="待审核">待审核</option>
-            <option value="审核通过">审核通过</option>
-            <option value="审核未过">审核未过</option></select>
+            <option value="1">待审核</option>
+            <option value="2">审核通过</option>
+            <option value="3">审核未过</option></select>
         <br>
         &nbsp;创建开始时间：&nbsp;<input type="text" id="s_createStartTime" size="20"  class="easyui-datebox"
                                         onkeydown="if(event.keyCode==13) searchSupplier()"/>
@@ -219,12 +243,13 @@
             <tr><td>短信标题：</td><td><input type="text" id="msgTitle" name="msgTitle" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
             <tr><td>短信内容：</td><td><input type="text" id="msfText" name="msfText" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
             <tr><td>签名：</td><td><input type="text" id="signature" name="signature" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr><td>审核状态：</td><td>
-                <select id="approveStatus" name="approveStatus" style="width:255px; height:25px; " >
-                    <option value="待审核">待审核</option>
-                    <option value="审核通过">审核通过</option>
-                    <option value="审核未过">审核未过</option></select>
-            </td></tr>
+            <tr>
+                <td>审核状态：</td>
+                <td>
+                    <select id="approveStatus" name="approveStatus" class="easyui-combobox" style="width: 250px">
+                    </select>
+                </td>
+            </tr>
             <tr><td>审核信息：</td><td><input type="text" id="approveInfo" name="approveInfo" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
         </table>
     </form>

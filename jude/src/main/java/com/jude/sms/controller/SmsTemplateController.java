@@ -2,6 +2,7 @@ package com.jude.sms.controller;
 
 import com.jude.sms.dto.*;
 import com.jude.sms.service.SmsTemplateManageService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,10 +16,11 @@ import javax.validation.Valid;
  * @Description
  * @create 2025-02-27 14:35
  */
-//@RestController
-//@RequestMapping("/sms")
+@RestController
+@RequestMapping("/sms")
 public class SmsTemplateController {
     @Resource
+    @Qualifier("templateDanMiManageService")
     private SmsTemplateManageService smsTemplateManageService;
 
 
