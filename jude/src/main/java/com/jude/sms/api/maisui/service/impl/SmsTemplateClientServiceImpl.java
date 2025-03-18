@@ -1,6 +1,7 @@
 package com.jude.sms.api.maisui.service.impl;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.TypeReference;
 import com.jude.sms.api.maisui.bo.*;
 
 import com.jude.sms.api.maisui.client.MaisuiHttpClient;
@@ -55,7 +56,7 @@ public class SmsTemplateClientServiceImpl implements SmsTemplateClientService {
     @Override
     public SmsResponse<SmsPageRes<SmsTemplateListResponse>> listTemplate(SmsTemplateList smsTemplate) {
         String response = maisuiHttpClient.getStringResponseEntity(smsTemplate, SMSMaisuiUrlEnums.TEMPLATE_LIST);
-        SmsResponse<SmsPageRes<SmsTemplateListResponse>>  smsResponse = JSONObject.parseObject(response, SmsResponse.class);
+        SmsResponse<SmsPageRes<SmsTemplateListResponse>>  smsResponse = JSONObject.parseObject(response, new TypeReference<SmsResponse<SmsPageRes<SmsTemplateListResponse>>>() {});
         return smsResponse;
     }
 }

@@ -182,6 +182,19 @@
             };
             return statusMap[value] || "未知状态"; // 防止意外值
         }
+        $(function() {
+            $('#temNum').combobox({
+                data: [
+                    { value: '1', text: '待审核' },
+                    { value: '2', text: '审核通过' },
+                    { value: '3', text: '审核拒绝' }
+                ],
+                valueField: 'value',
+                textField: 'text',
+                panelHeight: 'auto',
+                editable: false  // 禁止用户手动输入
+            });
+        });
     </script>
 </head>
 <body style="margin: 1px">
@@ -243,13 +256,12 @@
             <tr><td>短信标题：</td><td><input type="text" id="msgTitle" name="msgTitle" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
             <tr><td>短信内容：</td><td><input type="text" id="msfText" name="msfText" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
             <tr><td>签名：</td><td><input type="text" id="signature" name="signature" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
-            <tr>
-                <td>审核状态：</td>
-                <td>
-                    <select id="approveStatus" name="approveStatus" class="easyui-combobox" style="width: 250px">
-                    </select>
-                </td>
-            </tr>
+            <tr><td>审核状态：</td><td>
+                <select id="approveStatus" name="approveStatus" style="width:255px; height:25px; " >
+                    <option value="1">待审核</option>
+                    <option value="2">审核通过</option>
+                    <option value="3">审核未过</option></select>
+            </td></tr>
             <tr><td>审核信息：</td><td><input type="text" id="approveInfo" name="approveInfo" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
         </table>
     </form>

@@ -1,6 +1,7 @@
 package com.jude.sms.service;
 
 import com.jude.sms.dto.*;
+import com.jude.sms.enums.SupplierEnums;
 
 public interface SmsTemplateManageService {
     /**
@@ -38,5 +39,5 @@ public interface SmsTemplateManageService {
      */
     public SmsTemplateResDTO updateTemplateAuth(SmsTemplateAuthReqDTO smsTemplate);
 
-
+    public SupplierEnums getSupplierEnums();
 }
