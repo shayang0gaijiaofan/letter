@@ -44,11 +44,18 @@ public class SmsSendReqDTO  {
     /**
      * 短信变量
      */
+    @NotNull
     private String param;
 
     /**
      * 用户自定义
      */
     private String customSmsId;
+
+    /**
+     * 函件id
+     */
+    @NotNull
+    private String letter;
 
 }
