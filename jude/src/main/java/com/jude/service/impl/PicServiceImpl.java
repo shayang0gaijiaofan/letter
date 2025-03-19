@@ -23,8 +23,10 @@ public class PicServiceImpl implements PicService {
 	
 
 	@Override
-	public void save(LetterSend LetterSend) {
-		//letterSendRepository.save(LetterSend);
+	public Integer save(String picData) {
+		Pic pic = new Pic();
+		pic.setPicData(picData);
+		return picRepository.save(pic).getId();
 	}
 
 	@Override

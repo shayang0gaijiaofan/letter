@@ -1,7 +1,9 @@
 package com.jude.service.impl;
 
+import com.jude.common.ResponseEntity;
 import com.jude.entity.Letter;
 import com.jude.entity.LetterTemplate;
+import com.jude.entity.dto.LetterTempWithFile;
 import com.jude.entity.dto.LetterTemplateWithTime;
 import com.jude.repository.LetterTemplateRepository;
 import com.jude.service.LetterTemplateService;
@@ -34,20 +36,20 @@ public class LetterTemplateServiceImpl implements LetterTemplateService {
 	
 
 	@Override
-	public void save(LetterTemplate LetterTemplate) {
+	public void save(LetterTemplate temp) {
 		// update
-		if (LetterTemplate.getId() != null) {
-			LetterTemplate letTemp = LetterTemplateRepository.getOne(LetterTemplate.getId());
-			// 审批状态发生变更
-			if (!letTemp.getReviewStatus().equals(LetterTemplate.getReviewStatus())) {
-				LetterTemplate.setReviewTime(new Date());
-			}
-			LetterTemplateRepository.save(LetterTemplate);
+		LetterTemplate letTemp = LetterTemplateRepository.getOne(temp.getId());
+		// 审批状态发生变更
+		if (!letTemp.getReviewStatus().equals(temp.getReviewStatus())) {
+			temp.setReviewTime(new Date());
 		}
+		LetterTemplateRepository.save(temp);
+	}
+
+	@Override
+	public void insert(LetterTemplate temp) {
 		// insert
-		else {
-			LetterTemplateRepository.save(LetterTemplate);
-		}
+		LetterTemplateRepository.save(temp);
 	}
 
 	@Override

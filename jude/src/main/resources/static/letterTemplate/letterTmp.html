@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>电子函件模板</title>
     <link rel="stylesheet" type="text/css" href="/static/jquery-easyui-1.3.3/themes/black/easyui.css"></link>
     <link rel="stylesheet" type="text/css" href="/static/jquery-easyui-1.3.3/themes/icon.css"></link>
@@ -11,6 +11,7 @@
     <script type="text/javascript">
 
         var url;
+        var uploadId;
 
         function formatEdit(val,row){
             return "<a href=\"javascript:openRoleChooseDialog('"+row.roles+"',"+row.id+")\"><img style='margin-top: 4px' src='/static/images/edit.gif' /></a>";
@@ -83,7 +84,7 @@
 
         function openSupplierAddDialog(){
             $("#dlg").dialog("open").dialog("setTitle","添加函件模板信息");
-            url="/LetterTemplate/save";
+            url="/LetterTemplate/insert";
         }
 
         function openSupplierModifyDialog(){
@@ -102,6 +103,15 @@
 
 
         function saveSupplier(){
+            // 把文件base64字符串传给fileData字段
+            // var file = $('#fileInput')[0].files[0];
+            // var reader = new FileReader();
+            //   reader.readAsDataURL(file);
+            //   reader.onload = function(e) {
+            //     var base64Str = e.target.result;
+           //      $('#fileData').val(base64Str);
+            //   };
+
              $("#fm").form("submit",{
                 url:url,
                 onSubmit:function(){
@@ -162,17 +172,58 @@
 
     function formatAction(val, row) {
         console.log(row)
-        return "<a href=\"javascript:openMenuSetDialog(" + row.letTempPic + ")\">点击预览</a>";
+        return "<a href=\"javascript:openUpdateFileDialog(" + row.id + ")\">上传模板</a> &nbsp;&nbsp; \
+            <a href=\"javascript:openMenuSetDialog(" + "'http://localhost:8080/show/" + row.letTempPic + "')\">点击预览</a>";
+    }
+
+    function openUpdateFileDialog(id) {
+        $("#uploadFarm").dialog("open").dialog("setTitle", "上传函件模板");
+        uploadId = id;
     }
 
     function openMenuSetDialog(id) {
         $("#picFarm").dialog("open").dialog("setTitle", "函件模板预览");
-        $.post("/pic/getBase", {id: id}, function (result) {
-            var imgElement = document.getElementById('Img');
-            imgElement.src = result.rows.picData;
-        }, "json");
+        var imgElement = document.getElementById('Img');
+        console.log(id);
+        imgElement.src = id;
     }
 
+    function transBase64() {
+      var file = $('#fileInput')[0].files[0];
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function(e) {
+        var base64Str = e.target.result;
+        console.log(base64Str); // 输出Base64字符串
+        inputImg.src = base64Str;
+      };
+      var inputImg = document.getElementById('previewImg');
+      inputImg.style.display = "block";
+    }
+
+     $(document).ready(function () {
+        $('#uploadForm').on('submit', function (e) {
+            e.preventDefault();  // 阻止表单提交
+            $.ajax({
+                type: "POST",
+                url: "/File/uploadFile",
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    $.post("/LetterTemplate/updateFile", {id: uploadId, fileName: response.data}, function (result) {
+                        if(result.code == 200){
+                            $.messager.alert("系统提示", result.data);
+                            resetValue();
+                            $("#uploadFarm").dialog("close");
+                        }else{
+                            $.messager.alert("系统提示", result.message);
+                        }
+                    }, "json");
+                }
+            });
+        })
+    });
 
     </script>
 </head>
@@ -245,6 +296,15 @@
     </form>
 </div>
 
+<!-- 函件上传 -->
+<div id="uploadFarm" class="easyui-dialog" style="width:650px;height:600px;padding: 10px 20px"
+     closed="true" buttons="#dlg-buttons" data-options="onClose:function(){resetValue()}">
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="file"/>
+        <input type="submit" value="上传">
+    </form>
+</div>
+<!--action="/uploadFile" method="post"-->
 <div id="dlg" class="easyui-dialog" style="width:500px;height:350px;padding: 10px 20px"
      closed="true" buttons="#dlg-buttons" data-options="onClose:function(){resetValue()}">
     <form id="fm" method="post">
@@ -257,6 +317,13 @@
                     <option value="催告函">催告函</option>
                 </select>
             </td></tr>
+<!--            <tr><td>-->
+<!--                上传模板：</td><td><input type="file" id="fileInput" name="fileInput"">-->
+<!--            </td></tr>-->
+<!--            <tr><input type="text" id="fileData" name="fileData" style="display:none;" /></tr>-->
+            <tr>
+                <img style="display:none;" id="previewImg" width="100" height="100" />
+            </tr>
             <tr><td>律所名称：</td><td><input type="text" id="lawFirmName" name="lawFirmName" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
             <tr><td>律师姓名：</td><td><input type="text" id="lawyerName" name="lawyerName" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>
             <tr><td>函件验证网址：</td><td><input type="text" id="validateUrl" name="validateUrl" class="easyui-validatebox" required="true" style="width: 250px"/></td></tr>

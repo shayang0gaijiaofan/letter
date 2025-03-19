@@ -30,6 +30,11 @@ spring:
     cache: false
    resources:
       static-locations: classpath:/static/
+   servlet:
+    multipart:
+      # 上传文件大小限制
+      max-file-size: 200MB
+      max-request-size: 500MB
 sms:
   danmi:
     baseUrl: https://openapi.danmi.com
@@ -42,5 +47,6 @@ sms:
     userName: shtylsswhj
     password: 6xh64q
 
-
-
+# 文件管理目录
+upload:
+  filePath: D:/pic/

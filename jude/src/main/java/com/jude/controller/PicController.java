@@ -78,14 +78,14 @@ public class PicController {
 	@RequestMapping("/save")
 	@RequiresPermissions(value = { "供应商管理" })
 	public Map<String,Object> save(LetterSend LetterSend)throws Exception{
-		if(LetterSend.getId()!=null){ // 写入日志
-			logService.save(new Log(Log.UPDATE_ACTION,"更新供应商信息"+LetterSend));
-		}else{
-			logService.save(new Log(Log.ADD_ACTION,"添加供应商信息"+LetterSend));
-		}
+//		if(LetterSend.getId()!=null){ // 写入日志
+//			logService.save(new Log(Log.UPDATE_ACTION,"更新供应商信息"+LetterSend));
+//		}else{
+//			logService.save(new Log(Log.ADD_ACTION,"添加供应商信息"+LetterSend));
+//		}
 		Map<String, Object> resultMap = new HashMap<>();
-		picService.save(LetterSend);
-		resultMap.put("success", true);
+//		picService.save(LetterSend);
+//		resultMap.put("success", true);
 		return resultMap;
 	}
 

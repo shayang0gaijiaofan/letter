@@ -1,6 +1,8 @@
 package com.jude.service;
 
+import com.jude.common.ResponseEntity;
 import com.jude.entity.LetterTemplate;
+import com.jude.entity.dto.LetterTempWithFile;
 import com.jude.entity.dto.LetterTemplateWithTime;
 import org.springframework.data.domain.Sort.Direction;
 
@@ -27,10 +29,16 @@ public interface LetterTemplateService {
 	public LetterTemplate findById(Integer id);
 	
 	/**
-	 * 修改或者修改供应商信息
-	 * @param LetterTemplate
+	 * 修改函件模板信息
+	 * @param temp
 	 */
-	public void save(LetterTemplate LetterTemplate);
+	public void save(LetterTemplate temp);
+
+	/**
+	 * 添加函件模板信息
+	 * @param temp
+	 */
+	public void insert(LetterTemplate temp);
 	
 	/**
 	 * 根据条件分页查询供应商信息

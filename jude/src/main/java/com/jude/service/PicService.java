@@ -29,9 +29,9 @@ public interface PicService {
 	
 	/**
 	 * 修改或者修改供应商信息
-	 * @param LetterSend
+	 * @param picData
 	 */
-	public void save(LetterSend LetterSend);
+	public Integer save(String picData);
 	
 	/**
 	 * 根据条件分页查询供应商信息
