@@ -10,6 +10,7 @@ import com.jude.sms.enums.VerifyStatusEnums;
 import com.jude.sms.template.repository.SmsTemplateRepository;
 import com.jude.sms.api.danmi.service.SmsTemplateClientService;
 import com.jude.sms.service.SmsTemplateManageService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ import java.util.Objects;
  */
 @Service("templateDanMiManageService")
 @Order(1)
+@Slf4j
 public class SmsTemplateDanMiManageServiceImpl implements SmsTemplateManageService {
 
     @Resource
@@ -37,6 +39,11 @@ public class SmsTemplateDanMiManageServiceImpl implements SmsTemplateManageServi
 
     @Resource
     private SmsTemplateRepository smsTemplateRepository;
+
+    @Override
+    public SupplierEnums getSupplierEnums() {
+        return supplierEnums;
+    }
 
     SupplierEnums supplierEnums;
 
@@ -49,6 +56,7 @@ public class SmsTemplateDanMiManageServiceImpl implements SmsTemplateManageServi
     public SmsTemplateResDTO createTemplate(SmsTemplateCreateReqDTO smsTemplateCreateReqDTO) {
         SmsTemplateCreate smsTemplate = new SmsTemplateCreate();
         BeanUtils.copyProperties(smsTemplateCreateReqDTO, smsTemplate);
+        log.info("模版申请[{}]",smsTemplate);
         SmsTemplateCreateResponse smsResponse = smsTemplateClientService.createTemplate(smsTemplate);
         if (Objects.nonNull(smsResponse) && RespCodeEnum.SUCCESS.getCode().equals(smsResponse.getRespCode())) {
             SmsTemplateEntity entity = new SmsTemplateEntity();
@@ -138,9 +146,12 @@ public class SmsTemplateDanMiManageServiceImpl implements SmsTemplateManageServi
         SmsTemplateResDTO smsTemplateResDTO = new SmsTemplateResDTO();
         //  查询是否有模版
         SmsTemplateEntity smsTemplateEntity = smsTemplateRepository.findOne((root, query, cb) -> {
-            Predicate id = cb.equal(root.get("id").as(Long.class), smsTemplateDeleteReqDTO.getId());
-            Predicate isDeleted = cb.equal(root.get("isDeleted").as(Boolean.class), false);
-            return cb.and(id, isDeleted);
+            List<Predicate> predicates = new ArrayList<>();
+
+            predicates.add(cb.equal(root.get("id").as(Long.class), smsTemplateDeleteReqDTO.getId()));
+            predicates.add(cb.equal(root.get("isDeleted").as(Boolean.class), false));
+            predicates.add(cb.equal(root.get("supplier").as(String.class), supplierEnums.getCode()));
+            return cb.and(predicates.toArray(new Predicate[0]));
         });
 
         if (Objects.isNull(smsTemplateEntity)) {

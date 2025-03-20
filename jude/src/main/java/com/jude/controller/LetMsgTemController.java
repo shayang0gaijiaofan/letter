@@ -13,6 +13,7 @@ import com.jude.sms.dto.SmsTemplateResDTO;
 import com.jude.sms.dto.SmsTemplateUpdateReqDTO;
 import com.jude.sms.enums.RespCodeEnum;
 import com.jude.sms.enums.SmsTemplateAuthEnum;
+import com.jude.sms.enums.SupplierEnums;
 import com.jude.sms.service.SmsTemplateManageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -48,8 +49,8 @@ public class LetMsgTemController {
     private LogService logService;
 
     @Resource
-    @Qualifier("templateDanMiManageService")
-    private SmsTemplateManageService smsTemplateManageService;
+//    @Qualifier("templateDanMiManageService")
+    private List<SmsTemplateManageService> smsTemplateManageService;
 
     /**
      * 分页查询函件短信模版信息
@@ -89,16 +90,32 @@ public class LetMsgTemController {
     public Map<String, Object> save(LetMsgTem letMsgTem) throws Exception {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", false);
+        // 结果控制器
+        Boolean createFlag = false;
+
         if (letMsgTem.getId() != null) { // 写入日志
             logService.save(new Log(Log.UPDATE_ACTION, "更新函件短信模版信息" + letMsgTem));
             SmsTemplateUpdateReqDTO smsTemplateUpdateReqDTO = new SmsTemplateUpdateReqDTO();
             smsTemplateUpdateReqDTO.setId(letMsgTem.getId());
             smsTemplateUpdateReqDTO.setTemplateName(letMsgTem.getMsgTemName());
             smsTemplateUpdateReqDTO.setTemplateContent(letMsgTem.getMsfText());
-            SmsTemplateResDTO template = smsTemplateManageService.updateTemplate(smsTemplateUpdateReqDTO);
-            if (Objects.isNull(template) || !RespCodeEnum.SUCCESS.getCode().equals(template.getRespCode())) {
-                resultMap.put("errorInfo", template.getRespDesc());
-                log.error("更新失败[{}]-[{}]回滚", template.getRespCode(), template.getRespDesc());
+
+
+            for (SmsTemplateManageService templateManageService : smsTemplateManageService) {
+                SmsTemplateResDTO template = templateManageService.updateTemplate(smsTemplateUpdateReqDTO);
+                if (RespCodeEnum.SUCCESS.getCode().equals(template.getRespCode())) {
+                    if (!createFlag) {
+                        createFlag = true;
+                    }
+                } else {
+                    SupplierEnums supplierEnums = templateManageService.getSupplierEnums();
+                    log.info("{}模版更新失败", supplierEnums.getDesc());
+                    String error = (String) (Objects.isNull(resultMap.get("errorInfo")) ? "模版部分更新失败:" : resultMap.get("errorInfo"));
+                    resultMap.put("errorInfo", error + supplierEnums.getDesc() + "|");
+                }
+            }
+            if (!createFlag) {
+                log.error("更新全部失败[{}]", resultMap.get("errorInfo"));
                 return resultMap;
             }
             letterMsgService.save(letMsgTem);
@@ -120,20 +137,34 @@ public class LetMsgTemController {
             smsTemplateCreateReqDTO.setTemplateAuth(Integer.parseInt(SmsTemplateAuthEnum.SHARED.getCode()));
             //
             smsTemplateCreateReqDTO.setTemId(entity.getId());
-            SmsTemplateResDTO template = smsTemplateManageService.createTemplate(smsTemplateCreateReqDTO);
-            if (Objects.isNull(template) || !RespCodeEnum.SUCCESS.getCode().equals(template.getRespCode())) {
+
+            for (SmsTemplateManageService templateManageService : smsTemplateManageService) {
+                SmsTemplateResDTO template = templateManageService.createTemplate(smsTemplateCreateReqDTO);
+                if (RespCodeEnum.SUCCESS.getCode().equals(template.getRespCode())) {
+                    if (!createFlag) {
+                        createFlag = true;
+                    }
+                } else {
+                    SupplierEnums supplierEnums = templateManageService.getSupplierEnums();
+                    log.info("{}模版生成失败", supplierEnums.getDesc());
+                    String error = (String) (Objects.isNull(resultMap.get("errorInfo")) ? "模版部分新增失败:" : resultMap.get("errorInfo"));
+                    resultMap.put("errorInfo", error + supplierEnums.getDesc() + "|");
+                }
+            }
+
+            if (!createFlag) {
                 letterMsgService.delete(entity.getId());
-                resultMap.put("errorInfo", template.getRespDesc());
-                log.error("保存失败[{}]-[{}]回滚", template.getRespCode(), template.getRespDesc());
+                log.error("保存失败[{}]回滚", resultMap.get("errorInfo"));
                 return resultMap;
             }
+
             letMsgTem.setCreateTime(new Date(System.currentTimeMillis()));
             letMsgTem.setUpdateTime(new Date(System.currentTimeMillis()));
             letterMsgService.save(letMsgTem);
             resultMap.put("success", true);
             return resultMap;
         }
-	}
+    }
 
 
     /**
@@ -145,40 +176,35 @@ public class LetMsgTemController {
      */
     @RequestMapping("/delete")
     //@RequiresPermissions(value = { "函件短信模版管理" })
-    public Map<String, Object> delete(@NotNull String ids) throws Exception {
+    public Map<String, Object> delete(@NotNull List<Integer> ids) throws Exception {
         Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("success", false);
+        resultMap.put("success", false);
 
-        String[] idsStr = ids.split(",");
-		if (idsStr.length == 0) {
-			resultMap.put("success", false);
-			resultMap.put("errorInfo", "未提供模版id!");
-			return resultMap;
-		}
+
+        if (ids.size() == 0) {
+            resultMap.put("success", false);
+            resultMap.put("errorInfo", "未提供模版id!");
+            return resultMap;
+        }
 
         List<Integer> failList = new ArrayList<>();
-        for (int i = 0; i < idsStr.length; i++) {
-            int id = Integer.parseInt(idsStr[i]);
-            SmsTemplateDeleteReqDTO smsTemplate = new SmsTemplateDeleteReqDTO();
-            smsTemplate.setId(id);
-            SmsTemplateResDTO smsTemplateResDTO = smsTemplateManageService.deleteTemplate(smsTemplate);
-            if (!RespCodeEnum.SUCCESS.getCode().equals(smsTemplateResDTO.getRespCode())) {
-                failList.add(i);
-                log.info("模版id[{}]短信平台删除异常[{}]", i, smsTemplateResDTO.getRespDesc());
-                continue;
+        for (int i = 0; i < ids.size(); i++) {
+            int id = ids.get(i);
+
+            for (SmsTemplateManageService templateManageService : smsTemplateManageService) {
+                SmsTemplateDeleteReqDTO smsTemplate = new SmsTemplateDeleteReqDTO();
+                smsTemplate.setId(id);
+                SmsTemplateResDTO smsTemplateResDTO = templateManageService.deleteTemplate(smsTemplate);
+                if (!RespCodeEnum.SUCCESS.getCode().equals(smsTemplateResDTO.getRespCode())) {
+                    failList.add(i);
+                    log.info("模版id[{}]短信平台删除异常[{}]", i, smsTemplateResDTO.getRespDesc());
+                    continue;
+                }
             }
             letterMsgService.delete(id);
         }
-		resultMap.put("success", true);
-
-        if (failList.size() > 0) {
-            resultMap.put("errorInfo", "模版id：" + JSONArray.toJSONString(failList) + "模版删除失败");
-        }
-
-        if (idsStr.length == failList.size()) {
-            resultMap.put("errorInfo", "删除异常!");
-			resultMap.put("success", false);
-        }
+        resultMap.put("success", true);
+        resultMap.put("errorInfo", "本系统短信模版已删除!");
         return resultMap;
     }
 }
