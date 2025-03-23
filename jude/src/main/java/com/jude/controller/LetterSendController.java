@@ -4,6 +4,7 @@ import com.aspose.words.Document;
 import com.aspose.words.SaveFormat;
 import com.jude.common.ResponseEntity;
 import com.jude.config.UploadFileConfig;
+import com.jude.common.util.pds.annotation.PreventDuplicateSubmit;
 import com.jude.entity.*;
 import com.jude.entity.dto.WordUpdateData;
 import com.jude.service.*;
@@ -54,10 +55,6 @@ public class LetterSendController {
     UploadFileConfig uploadFileConfig;
 
     @Resource
-    @Qualifier("templateDanMiManageService")
-    private SmsTemplateManageService smsTemplateManageService;
-
-    @Resource
     private LogService logService;
 
 
@@ -66,18 +63,11 @@ public class LetterSendController {
      *
      */
     @RequestMapping("/sendSMS")
-    //@RequiresPermissions(value = { "供应商管理" })
-    public Map<String, Object> sendSMS(@Valid @RequestBody SmsSendReqDTO smsSendReqDTO, String supplier) {
+    @PreventDuplicateSubmit
+    public Map<String, Object> sendSMS(@Valid @RequestBody SmsSendReqDTO smsSendReqDTO) {
         // 1 通过本地模版id、选择的短信运营商 去查短信平台的id
-        SmsTemplateQueryReqDTO smsTemplate = new SmsTemplateQueryReqDTO();
-        smsTemplate.setTemId(smsSendReqDTO.getTemId());
-        smsTemplate.setSupplier(SupplierEnums.DANMI.getCode());
-        SmsTemplateResDTO smsTemplateResDTO = smsTemplateManageService.queryTemplate(smsTemplate);
-        //  todo 加模版校验
-        // 2 构建对应模版需要的参数
-        smsSendReqDTO.setTemplateid(smsTemplateResDTO.getTemplateid());
         smsSendReqDTO.setParam(smsSendReqDTO.getParam()+","+"http://ysqd.natapp1.cc/pic/image?id="+smsSendReqDTO.getLetter());
-        SmsResDTO smsResDTO = smsSendManageService.sendMessage(smsSendReqDTO, SupplierEnums.DANMI);
+        SmsResDTO smsResDTO = smsSendManageService.sendMessage(smsSendReqDTO, smsSendReqDTO.getSupplierEnum());
         // 3 根据返回结果 在发送列表改状态
 
         // 4 组装返回结果

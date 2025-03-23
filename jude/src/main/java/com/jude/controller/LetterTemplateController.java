@@ -12,6 +12,7 @@ import com.jude.util.StringUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,7 +72,6 @@ public class LetterTemplateController {
 		//logService.save(new Log(Log.SEARCH_ACTION,"查询函件模板信息")); // 写入日志
 		return resultMap;
 	}
-
 
 	/**
 	 * 修改函件模板信息

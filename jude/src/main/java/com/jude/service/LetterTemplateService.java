@@ -7,6 +7,7 @@ import com.jude.entity.dto.LetterTemplateWithTime;
 import org.springframework.data.domain.Sort.Direction;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 供应商Service接口
@@ -65,4 +66,6 @@ public interface LetterTemplateService {
 	 * @param id
 	 */
 	public void delete(Integer id);
+
+	List<Map<String, String>> querySendSupportTemplateList(String temId, String supplier);
 }

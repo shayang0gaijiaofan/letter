@@ -1,6 +1,8 @@
 package com.jude.controller;
 
 import com.alibaba.fastjson2.JSONArray;
+import com.jude.common.ResponseEntity;
+import com.jude.common.util.pds.annotation.PreventDuplicateSubmit;
 import com.jude.entity.LetMsgTem;
 import com.jude.entity.Log;
 import com.jude.entity.dto.LetMsgTemWithTime;
@@ -15,10 +17,13 @@ import com.jude.sms.enums.RespCodeEnum;
 import com.jude.sms.enums.SmsTemplateAuthEnum;
 import com.jude.sms.enums.SupplierEnums;
 import com.jude.sms.service.SmsTemplateManageService;
+import com.jude.sms.template.service.SmsTemplateSpecialQueryService;
+import com.jude.sms.template.vo.SmsTemSupportVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -87,6 +92,7 @@ public class LetMsgTemController {
      * @throws Exception
      */
     @RequestMapping("/save")
+    @PreventDuplicateSubmit
     public Map<String, Object> save(LetMsgTem letMsgTem) throws Exception {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("success", false);
@@ -175,6 +181,7 @@ public class LetMsgTemController {
      * @throws Exception
      */
     @RequestMapping("/delete")
+    @PreventDuplicateSubmit
     //@RequiresPermissions(value = { "函件短信模版管理" })
     public Map<String, Object> delete(@NotNull List<Integer> ids) throws Exception {
         Map<String, Object> resultMap = new HashMap<>();
@@ -207,4 +214,20 @@ public class LetMsgTemController {
         resultMap.put("errorInfo", "本系统短信模版已删除!");
         return resultMap;
     }
+
+    @Resource
+    SmsTemplateSpecialQueryService smsTemplateSpecialQueryService;
+
+    /**
+     * 查询指定模版支持的短信供应商
+     * @param temId
+     * @param supplier
+     * @return
+     */
+    @GetMapping("/support")
+    public SmsTemSupportVO querySendSupportTemplateList(String temId, String supplier ) {
+        SmsTemSupportVO SmsTemSupportVO = smsTemplateSpecialQueryService.querySendSupportTemplateList(temId,supplier);
+        return SmsTemSupportVO;
+    }
+
 }

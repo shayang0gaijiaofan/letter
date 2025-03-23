@@ -20,8 +20,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 供应商Service实现类
@@ -118,6 +120,12 @@ public class LetterTemplateServiceImpl implements LetterTemplateService {
 	@Override
 	public void delete(Integer id) {
 		LetterTemplateRepository.delete(id);
+	}
+
+	@Override
+	public List<Map<String, String>> querySendSupportTemplateList(String temId, String supplier) {
+
+		return Collections.emptyList();
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.jude.sms.api.danmi.bo.*;
 import com.jude.sms.api.danmi.client.ApiHttpClient;
 import com.jude.sms.api.danmi.enums.SMServiceEnums;
+import com.jude.sms.api.danmi.service.SmsReceipClienttService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import javax.annotation.Resource;
  */
 @Service
 @Slf4j
-public class SmsReceiptService {
+public class SmsReceiptClientServiceImpl implements SmsReceipClienttService {
     @Resource
     private ApiHttpClient apiHttpClient;
 
@@ -38,6 +39,7 @@ public class SmsReceiptService {
         SmsReceiptResponse<SmsReceiptSmsResult> smsReceiptResponse = JSONObject.parseObject(stringResponseEntity, SmsReceiptResponse.class);
         return smsReceiptResponse;
     }
+
     /**
      * 短信上行拉取接口
      * @param smsReceipt
@@ -49,11 +51,6 @@ public class SmsReceiptService {
         return smsReceiptMoPullResponse;
     }
 
-//    public static void main(String[] args) {
-//        String stringResponseEntity = "{\"respCode\":\"0000\",\"respDesc\":\"请求成功。\",\"moResult\":[{\"phone\":\"19117251744\",\"content\":\"OK\",\"timestamp\":1741786121069,\"sig\":null,\"accountId\":\"100727822613\",\"moport\":\"001\",\"motime\":\"2025-03-12 20:41:36\"}],\"success\":true}";
-//        SmsReceiptMoPullResponse smsReceiptMoPullResponse = JSONObject.parseObject(stringResponseEntity, SmsReceiptMoPullResponse.class);
-//        System.out.println(smsReceiptMoPullResponse);
-//    }
     /**
      * 短信上行拉取接口
      * @param smsReceipt
