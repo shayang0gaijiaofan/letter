@@ -126,6 +126,11 @@ public class LetterTemplateServiceImpl implements LetterTemplateService {
 	}
 
 	@Override
+	public List<LetterTemplate> findByNum(String tempNum) {
+		return LetterTemplateRepository.getLetterTemplatesByTempNum(tempNum);
+	}
+
+	@Override
 	public List<LetterTemplate> findAll() {
 		return LetterTemplateRepository.findAll();
 	}

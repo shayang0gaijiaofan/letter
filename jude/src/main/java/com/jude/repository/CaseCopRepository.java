@@ -1,7 +1,6 @@
 package com.jude.repository;
 
 import com.jude.entity.CaseCop;
-import com.jude.entity.CaseTmp;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;

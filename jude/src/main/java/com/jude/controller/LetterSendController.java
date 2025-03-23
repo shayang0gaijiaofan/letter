@@ -1,6 +1,11 @@
 package com.jude.controller;
 
+import com.aspose.words.Document;
+import com.aspose.words.SaveFormat;
+import com.jude.common.ResponseEntity;
+import com.jude.config.UploadFileConfig;
 import com.jude.entity.*;
+import com.jude.entity.dto.WordUpdateData;
 import com.jude.service.*;
 import com.jude.sms.dto.SmsResDTO;
 import com.jude.sms.dto.SmsSendReqDTO;
@@ -9,15 +14,23 @@ import com.jude.sms.dto.SmsTemplateResDTO;
 import com.jude.sms.enums.SupplierEnums;
 import com.jude.sms.service.SmsSendManageService;
 import com.jude.sms.service.SmsTemplateManageService;
+import com.jude.util.FileUtil;
+import com.jude.util.StringUtil;
+import com.jude.util.UUIDUtil;
+import com.jude.util.WordUtil;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +47,11 @@ public class LetterSendController {
     @Resource
     private LetterSendService letterSendService;
     @Resource
+    private LetterTemplateService letterTemplateService;
+    @Resource
     private SmsSendManageService smsSendManageService;
+    @Autowired
+    UploadFileConfig uploadFileConfig;
 
     @Resource
     @Qualifier("templateDanMiManageService")
@@ -91,6 +108,58 @@ public class LetterSendController {
         return resultMap;
     }
 
+    @RequestMapping("/generateLetter")
+    public ResponseEntity generateLetter(Integer id) throws Exception {
+        LetterSend letSend = letterSendService.findById(id);
+        if (letSend.getTemNum() == null) {
+            return ResponseEntity.err(500, "模板编号未绑定");
+        }
+        LetterTemplate tmp = letterTemplateService.findByNum(letSend.getTemNum()).get(0);
+        if (tmp.getWordUUID() == null) {
+            return ResponseEntity.err(500, "函件模板未上传文档");
+        }
+        // 函件替换key-value
+        HashMap<String, String> kv = new HashMap<>();
+        kv.put("逾期人姓名", "张均驰");
+        kv.put("合同号", "110");
+        kv.put("逾期金额", "114514.14");
+        kv.put("客服电话", "110");
+        kv.put("出函日期", "2025-02-13");
+
+        String wordName = tmp.getWordUUID();
+        if (!FileUtil.isWordFile(wordName)) return ResponseEntity.err(500, "函件模板不是word类型文件!");
+        String fileExtension = wordName.substring(wordName.lastIndexOf(".") + 1).toLowerCase();
+        String newWordUUID = UUIDUtil.generateUUID() + "." + fileExtension;
+
+        // 获取替换后的word文件
+        Document doc = WordUtil.docReplaceText(uploadFileConfig.getFilePath() + wordName, kv);
+        // 另存文件
+        File file = new File(uploadFileConfig.getFilePath() + newWordUUID);  //新建一个空白word文档
+        FileOutputStream os = new FileOutputStream(file);
+        WordUtil.saveDocStream(doc, os, fileExtension);
+
+        return ResponseEntity.ok(FileUtil.saveWordRelatedFile(newWordUUID, newWordUUID, uploadFileConfig.getFilePath()));
+    }
+
+    @Transactional
+    @RequestMapping("/getPic")
+    public ResponseEntity getPic(Integer id) throws Exception{
+        LetterSend temp = letterSendService.findById(id);
+        if (temp == null) return ResponseEntity.err(500, "请输入正确的模板发送的id");
+        if (StringUtil.isEmpty(temp.getLetPic())) return ResponseEntity.err(500, "请先生成函件文件");
+
+        return ResponseEntity.ok(temp.getLetPic());
+    }
+
+    @Transactional
+    @RequestMapping("/updateFile")
+    public ResponseEntity updateFile(Integer id, String picUUIDName)throws Exception{
+        LetterSend temp = letterSendService.findById(id);
+        temp.setLetPic(picUUIDName);
+        letterSendService.save(temp);
+
+        return ResponseEntity.ok("修改成功！");
+    }
 
     /**
      * 添加或者修改供应商信息

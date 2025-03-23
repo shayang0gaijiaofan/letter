@@ -17,4 +17,10 @@ public class ResponseEntity<T> {
     public static ResponseEntity err(Integer code,String message){
         return new ResponseEntity(code,message,null);
     }
+
+    public static ResponseEntity wrongFile(Object data) {
+        return new ResponseEntity(ResultCode.MEDIA_TYPE_NOT_SUPPORTED.getValue(),ResultCode.MEDIA_TYPE_NOT_SUPPORTED.getDescription(),data);
+    }
+
+
 }

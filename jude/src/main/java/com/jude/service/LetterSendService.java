@@ -1,5 +1,6 @@
 package com.jude.service;
 
+import com.jude.entity.Letter;
 import com.jude.entity.LetterSend;
 import org.springframework.data.domain.Sort.Direction;
 
@@ -55,4 +56,5 @@ public interface LetterSendService {
 	 * @param id
 	 */
 	public void delete(Integer id);
+
 }

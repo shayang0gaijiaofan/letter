@@ -193,7 +193,7 @@
 
         function formatEdit(val, row) {
             console.log(row)
-            return "<a href=\"javascript:openMenuSetDialog(" + row.letPic + ")\">点击预览</a>";
+            return "<a href=\"javascript:openMenuSetDialog(" + row.id + ")\">点击预览</a>";
         }
 
         function formatAction(val, row) {
@@ -213,17 +213,61 @@
                 support: row.support,
                 temNum: row.temNum
             }));
-            console.log(params)
-            return `<a href="javascript:openMenuSendMsh('${params}')">发短信</a>`;
+            let id = row.id;
+            console.log(id);
+            console.log(params);
+            return `<a href="javascript:generateLetter(${id})">生成函件</a> \
+                <a href="javascript:openMenuSendMsh('${params}')">发短信</a>
+            `;
 
         }
 
+        function generateLetter(id) {
+            console.log('id:' + id);
+            $.ajax({
+                type: 'POST',
+                url: "/letterSend/generateLetter?id=" + id,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    // word上传成功
+                    if (response.code == 200) {
+                        $.post("/letterSend/updateFile", {id: id, picUUIDName: response.data.picUUIDName}, function (result) {
+                            if(result.code == 200){
+                                // 设置表单中的图片url
+                                $.messager.alert("系统提示", result.data);
+                                resetValue();
+                                $("#uploadFarm").dialog("close");
+                            }
+                            else{
+                                $.messager.alert("系统提示", result.message);
+                            }
+                        }, "json");
+                    }
+                    // word上传失败
+                    else {
+                        var errorMsg = document.getElementById('errorMsg');
+                        errorMsg.style.display = "block";
+                        errorMsg.innerHTML = '错误:' + response.message + "  " + response.data;
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("请求失败:", error);
+                    $.messager.alert("系统提示", "函件生成失败，请重试！");
+                }
+            });
+        }
 
         function openMenuSetDialog(id) {
-            $("#picFarm").dialog("open").dialog("setTitle", "函件预览");
-            $.post("/pic/getBase", {id: id}, function (result) {
-                var imgElement = document.getElementById('Img');
-                imgElement.src = result.rows.picData;
+            $.post("/letterSend/getPic", { id: id }, function (result) {
+                if(result.code == 200) {
+                    $("#picFarm").dialog("open").dialog("setTitle", "函件预览");
+                    var imgElement = document.getElementById('Img');
+                    imgElement.src = "http://localhost:8080/show/" + result.data;
+                }
+                else{
+                    $.messager.alert("系统提示", result.message);
+                }
             }, "json");
         }
 
@@ -434,13 +478,13 @@
     </form>
 </div>
 
-<div id="picFarm" class="easyui-dialog" style="width:650px;height:600px;padding: 10px 20px"
+<div id="picFarm" class="easyui-dialog" style="width:520px;height:720px;padding: 10px 10px"
      closed="true" buttons="#dlg-buttons" data-options="onClose:function(){resetValue()}">
 
     <form id="pic" method="post">
         <tr id="preview_tr">
             <td class="td-content">
-                <img id="Img" width="600px" height="500px"/>
+                <img id="Img" width="462px" height="653px"/>
         </tr>
     </form>
 </div>

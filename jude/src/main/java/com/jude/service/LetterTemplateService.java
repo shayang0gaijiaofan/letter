@@ -27,6 +27,8 @@ public interface LetterTemplateService {
 	 * @return
 	 */
 	public LetterTemplate findById(Integer id);
+
+	public List<LetterTemplate> findByNum(String tempNum);
 	
 	/**
 	 * 修改函件模板信息

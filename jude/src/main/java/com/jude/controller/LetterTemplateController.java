@@ -8,6 +8,7 @@ import com.jude.entity.dto.LetterTemplateWithTime;
 import com.jude.service.LetterTemplateService;
 import com.jude.service.LogService;
 import com.jude.service.PicService;
+import com.jude.util.StringUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
@@ -111,14 +112,25 @@ public class LetterTemplateController {
 
 	@Transactional
 	@RequestMapping("/updateFile")
-	public ResponseEntity updateFile(Integer id, String fileName)throws Exception{
+	public ResponseEntity updateFile(Integer id, String originWordName, String wordUUIDName, String picUUIDName)throws Exception{
 		LetterTemplate temp = LetterTemplateService.findById(id);
-		temp.setLetTempPic(fileName);
+		temp.setPicUUID(picUUIDName);
+		temp.setWordUUID(wordUUIDName);
+		temp.setOriginWordName(originWordName);
 		LetterTemplateService.save(temp);
 
 		return ResponseEntity.ok("修改成功！");
 	}
 
+	@Transactional
+	@RequestMapping("/getPic")
+	public ResponseEntity getPic(Integer id) throws Exception{
+		LetterTemplate temp = LetterTemplateService.findById(id);
+		if (temp == null) return ResponseEntity.err(500, "请输入正确的模板id");
+		if (StringUtil.isEmpty(temp.getPicUUID())) return ResponseEntity.err(500, "请先上传模板文件");
+
+		return ResponseEntity.ok(temp.getPicUUID());
+	}
 
 	/**
 	 * 删除函件模板信息
