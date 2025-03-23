@@ -85,8 +85,11 @@ public class SmsTemplateMaiSuiManageServiceImpl implements SmsTemplateManageServ
             entity.setTemplateid(smsTemplateListResponse.getMsgTemplateId());
             // 模版签名
             entity.setTemplateSign(smsTemplateListResponse.getSign());
+            // 平台供应商
             entity.setSupplier(supplierEnums.getCode());
+            // 待审核状态
             entity.setVerifyStatus(VerifyStatusEnums.PENDING.getCode());
+            //
             entity.setVersion(1);
             entity.setCreateTime(new Date());
             entity.setUpdateTime(new Date());

@@ -1,7 +1,7 @@
 package com.jude.sms.controller;
 
 import com.jude.sms.api.danmi.bo.*;
-import com.jude.sms.api.danmi.service.impl.SmsReceiptService;
+import com.jude.sms.api.danmi.service.SmsReceipClienttService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +19,7 @@ import javax.validation.Valid;
 @RequestMapping("/sms")
 public class SmsReceiptController {
     @Resource
-    private SmsReceiptService smsReceiptService;
+    private SmsReceipClienttService smsReceiptService;
 
     @PostMapping("/receiptPullDr")
     public SmsReceiptResponse<SmsReceiptSmsResult> receiptPullDr(@Valid @RequestBody SmsReceiptPullDr smsReceipt) {

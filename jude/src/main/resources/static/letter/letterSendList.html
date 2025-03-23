@@ -105,20 +105,19 @@
         function saveSupplier() {
             debugger
             var selectedTemNum = $("#s_supplier").combobox("getText"); // 获取选中的模板ID
-            var itmid = $("#itmid").val(); // 获取选中的 ID
+            var temId = $("#temId").val(); // 获取选中的 ID
             // 获取隐藏字段的值
             var sendTel = $("#hiddenSendTel").val();
             var support = $("#hiddenSupport").val();
             var letPic = $("#hiddenLetPic").val();
             var overdueName = $("#hiddenOverdueName").val();
-            var temNum = $("#hiddenTemNum").val();
+            var letterId = $("#hiddenLetterId").val();
 
             // 打印调试信息，确保值已经获取
             console.log("发送手机号:", sendTel);
             console.log("运营商:", support);
             console.log("逾期人姓名:", overdueName);
-            console.log("模板编号:", temNum);
-            console.log("函件id:", temNum);
+            console.log("函件id:", letterId);
 
             // 发送请求到短信接口
             $.ajax({
@@ -126,12 +125,13 @@
                 type: 'POST',  // 请求方式为 POST
                 contentType: 'application/json',  // 设置请求头为 JSON
                 data: JSON.stringify({
-                    itmid: itmid,
-                    letter: letPic,
-                    to: sendTel,
-                    param: overdueName,
-                    support: support,
-                    temNum: temNum
+                    supplierEnum: "DANMI", // 模版id
+                    temId: temId, // 模版id
+                    letter: letPic, // 函件影像id
+                    to: sendTel, // 电话号码
+                    param: overdueName, // 参数之一 逾期人姓名
+                    support: support, // 手机供应商
+                    letterId: letterId // 待发送函件编号
                 }),  // 将请求数据转为 JSON 格式
                 success: function (result) {
                     console.log("短信接口返回:", result);
@@ -149,7 +149,7 @@
                 onSelect: function (record) {
                     console.log("选中的数据:", record);  // 调试输出选中的数据
                     // 存储选中的 ID 到隐藏字段
-                    $("#itmid").val(record.id);
+                    $("#temId").val(record.id);
                 }
             });
         });
@@ -211,7 +211,7 @@
                 sendTel: row.tel,
                 overdueName: row.overdueName,
                 support: row.support,
-                temNum: row.temNum
+                letterId: row.id
             }));
             let id = row.id;
             console.log(id);
@@ -282,7 +282,7 @@
             $("#hiddenSendTel").val(data.sendTel);  // 填充发送手机号
             $("#hiddenSupport").val(data.support);  // 填充运营商
             $("#hiddenOverdueName").val(data.overdueName);  // 填充逾期人姓名
-            $("#hiddenTemNum").val(data.temNum);  // 填充模板编号
+            $("#hiddenLetterId").val(data.letterId);  // 填充函件id
             $("#hiddenLetPic").val(data.letPic);  // 填充模板编号
         }
     </script>
@@ -293,6 +293,7 @@
        url="/letterSend/list" fit="true" toolbar="#tb">
     <thead>
     <tr>
+        <th field="id"  align="center">函件序号</th>
         <th field="cb" checkbox="true" align="center"></th>
         <th field="tel" width="90" align="center">发送手机号</th>
         <th field="support" width="80" align="center">运营商</th>
@@ -502,13 +503,13 @@
                            style="width: 250px"/></td>-->
             </tr>
             <!-- 添加一个隐藏的 input 存储 id -->
-            <input type="hidden" id="itmid">
+            <input type="hidden" id="temId">
             <!-- 隐藏的输入字段 -->
             <input type="hidden" id="hiddenSendTel" name="sendTel"/>
             <input type="hidden" id="hiddenLetPic" name="letPic"/>
             <input type="hidden" id="hiddenSupport" name="support"/>
             <input type="hidden" id="hiddenOverdueName" name="overdueName"/>
-            <input type="hidden" id="hiddenTemNum" name="temNum"/>
+            <input type="hidden" id="hiddenLetterId" name="letterId"/>
         </table>
         <tr>
             <lable id="content" style="width:400px;height:200px;"></lable>

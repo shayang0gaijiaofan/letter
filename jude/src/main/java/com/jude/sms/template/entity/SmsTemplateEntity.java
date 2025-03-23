@@ -18,12 +18,6 @@ public class SmsTemplateEntity {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "tem_id")
-    private int temId;
-    @Size(max = 32)
-    @Column(name = "supplier", length = 32)
-    private String supplier;
-
     @Size(max = 32)
     @Column(name = "template_id", length = 32)
     private String templateid;
@@ -39,8 +33,6 @@ public class SmsTemplateEntity {
     @Size(max = 18)
     @Column(name = "template_sign", length = 18)
     private String templateSign;
-
-
     @Lob
     @Column(name = "template_content")
     private String templateContent;
@@ -61,6 +53,16 @@ public class SmsTemplateEntity {
     @Column(name = "is_deleted")
     private Boolean isDeleted = false;
 
+    @Size(max = 2)
+    @Column(name = "supplier", length = 2)
+    private String supplier;
+
+    @Column(name = "operate_flag", length = 2)
+    private String operateFlag;
+
+    @Column(name = "tem_id")
+    private int temId;
+
     @Column(name = "create_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
@@ -69,6 +71,5 @@ public class SmsTemplateEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateTime;
 
-    @Column(name = "operate_flag")
-    private String operateFlag;
+
 }

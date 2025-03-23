@@ -1,6 +1,7 @@
 package com.jude.sms.dto;
 
 import com.jude.sms.api.danmi.bo.SmsAuth;
+import com.jude.sms.enums.SupplierEnums;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -53,9 +54,22 @@ public class SmsSendReqDTO  {
     private String customSmsId;
 
     /**
-     * 函件id
+     * 函件影像id
      */
     @NotNull
     private String letter;
+
+    /**
+     * 函件id
+     */
+    @NotNull
+    private String letterId;
+    /**
+     * 运营商
+     */
+    @NotNull
+    private String support;
+
+    private SupplierEnums supplierEnum;
 
 }
