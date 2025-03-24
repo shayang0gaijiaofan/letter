@@ -23,7 +23,7 @@ import java.util.Objects;
  * @Description
  * @create 2025-03-19 21:16
  */
-@Component
+//@Component
 @Slf4j
 @Async
 public class SmsSendStatusSchedule {
