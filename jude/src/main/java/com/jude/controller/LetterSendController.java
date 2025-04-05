@@ -194,4 +194,31 @@ public class LetterSendController {
         resultMap.put("success", true);
         return resultMap;
     }
+
+    @RequestMapping("/reply")
+    public ResponseEntity replyLetter(Integer id, String reply) throws Exception {
+        LetterSend ls = letterSendService.findById(id);
+        ls.setLetReply(reply);
+
+        letterSendService.save(ls);
+
+        return ResponseEntity.ok("回复成功");
+    }
+
+    @RequestMapping("/feedBack")
+    public ResponseEntity feedBackLetter(Integer id, String feedBack) throws Exception {
+        LetterSend ls = letterSendService.findById(id);
+        ls.setLetFeedBack(feedBack);
+
+        letterSendService.save(ls);
+
+        return ResponseEntity.ok("回复成功");
+    }
+
+    @RequestMapping("/getReply")
+    public ResponseEntity getLetterSend(Integer id) throws Exception {
+        LetterSend ls = letterSendService.findById(id);
+
+        return ResponseEntity.ok(ls);
+    }
 }

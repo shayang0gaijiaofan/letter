@@ -11,6 +11,7 @@
     <script type="text/javascript">
 
         var url;
+        var id;
 
         function formatEdit(val, row) {
             return "<a href=\"javascript:openRoleChooseDialog('" + row.roles + "'," + row.id + ")\"><img style='margin-top: 4px' src='/static/images/edit.gif' /></a>";
@@ -144,6 +145,32 @@
             });
         }
 
+        function saveReply() {
+            var letFeedBack = $("#letFeedBack").val();
+            var letReply = $("#letReply").val();
+
+            $.ajax({
+                url: "/letterSend/reply?id=" + id + "&reply=" + $('#letReply').val(),
+                type: 'POST',  // 请求方式为 POST
+                contentType: 'application/json',  // 设置请求头为 JSON
+                success: function (result) {
+                    if (result.code == 200) {
+                        $.messager.alert("系统提示","保存成功！");
+                        resetValue();
+                        $("#relpyDlg").dialog("close");
+                        $("#dg").datagrid("reload");
+                    }else{
+                        $.messager.alert("系统提示",result.errorInfo);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("请求失败:", error);
+                    $.messager.alert("系统提示", "函件回复失败，请重试！");
+                }
+            });
+
+        }
+
         $(document).ready(function () {
             $("#s_supplier").combobox({
                 onSelect: function (record) {
@@ -165,6 +192,11 @@
 
         function closeSupplierDialog() {
             $("#dlg").dialog("close");
+            resetValue();
+        }
+
+        function closeReplyDialog() {
+            $("#replyDlg").dialog("close");
             resetValue();
         }
 
@@ -213,17 +245,29 @@
                 support: row.support,
                 letterId: row.id
             }));
-            let id = row.id;
+            id = row.id;
             console.log(id);
             console.log(params);
-            return `<a href="javascript:generateLetter(${id})">生成函件</a> \
+            return `<a href="javascript:reply(${id})">回复</a> \
+                <a href="javascript:generateLetter(${id})">生成函件</a> \
                 <a href="javascript:openMenuSendMsh('${params}')">发短信</a>
             `;
+        }
 
+        function  reply(id) {
+            $("#replyDlg").dialog("open").dialog("setTitle", "函件回复");
+            $.post("/letterSend/getReply", {id: id }, function (result) {
+                if(result.code == 200) {
+                    $('#letFeedBack').val(result.data.letFeedBack);
+                    $('#letReply').val(result.data.letReply);
+                }
+                else{
+                    alert(result.message);
+                }
+            }, "json");
         }
 
         function generateLetter(id) {
-            console.log('id:' + id);
             $.ajax({
                 type: 'POST',
                 url: "/letterSend/generateLetter?id=" + id,
@@ -316,6 +360,7 @@
         <th field="letType" width="80" align="center">发送状态</th>
         <th field="sendStatus" width="80" align="center">发送次数</th>
         <th field="streetStatus" width="80" align="center">直邮状态</th>
+        <th field="letFeedBack" width="80" align="center">函件反馈</th>
         <th field="action" width="80" align="center" formatter="formatAction">操作</th>
     </tr>
     </thead>
@@ -523,6 +568,23 @@
     </div>
 </div>
 
+<div id="replyDlg" class="easyui-dialog" style="width:500px;height:350px;padding: 10px 20px"
+     closed="true" buttons="#replyDlg-buttons" data-options="onClose:function(){resetValue()}">
+    <form id="replyFm" method="post">
+        <table cellspacing="8px">
+            <tr><td>函件留言：</td><td>
+                <textarea readonly id="letFeedBack" name="letFeedBack" class="easyui-validatebox" style="width: 250px"></textarea>
+            </td></tr>
+            <tr><td>回复：</td><td>
+                <textarea id="letReply" name="letReply" class="easyui-validatebox" style="width: 250px"></textarea>
+            </td></tr>
+        </table>
+    </form>
+</div>
+<div id="replyDlg-buttons">
+    <a href="javascript:saveReply()" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+    <a href="javascript:closeReplyDialog()" class="easyui-linkbutton" iconCls="icon-cancel">关闭</a>
+</div>
 
 </body>
 </html>

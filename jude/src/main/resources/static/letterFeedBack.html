@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<style>
+    /* .image-container {
+        position: absolute;
+    } */
+
+    p {
+        font-size: 14px; /* This will make the text smaller */
+        color: white;
+    }
+
+    .image-container img {
+        position: relative;
+        top: 0;
+        left: 0;
+        height: 90%; /* adjust this for different percentage heights */
+        width: auto;
+    }
+
+    .buttons {
+        position: fixed;
+        right: 0px; /* Position buttons on the right side of the screen */
+        bottom: 50%; /* Center the buttons vertically */
+        transform: translateY(50%);
+        display: flex;
+        flex-direction: column;
+      }
+
+    .clickableDiv {
+        width: 60px;
+        height: 60px;
+        background-color: rgb(98, 94, 94);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .clickableDiv img {
+        width: 20px;
+        height: 20px;
+    }
+
+    #drawer {
+        position: fixed; /* 这使它不随页面滚动 */
+        bottom: -260px; /* 起始位置在屏幕下方 */
+        width: 100%;   /* 宽度占满整个视口的宽度 */
+        height: 260px; /* 高度自定义 */
+        background-color: #f8f9fa; /* 背景色自定义 */
+        transition: bottom .5s ease-out; /* 提供平滑的滑动效果 */
+    }
+
+    .container {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-auto-rows: max-content;
+        width: 95%;
+        margin-top: 20px;
+    }
+
+    .container button {
+        padding: 10px;
+    }
+    .radio-btn.active {
+        border: 2px solid red;
+    }
+
+    .tabs {
+        display: flex;
+        /* justify-content: space-between; */
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        border-bottom: 1px solid #ccc;
+    }
+    .tab-item {
+        cursor: pointer;
+        padding: 10px;
+        border-bottom: 2px solid transparent;
+    }
+
+    .active {
+        border-color: blue;
+    }
+</style>
+<script src="static/js/jquery.js"></script>
+
+<script>
+    var picUrl;
+    // picUrl = 'D:\\pic\\a965b5b4-3b24-42a1-8d6b-48634ae38bde.jpg';
+
+    $(document).ready(function() {
+      $('.image-container img').css('width', function() {
+        var screenWidth = $(window).innerWidth(); // get the width of the viewport
+        return screenWidth * 976 / 1368; // calculate the new width based on the viewport's width
+      });
+
+      $.ajax({
+            type: "POST",
+            url: "/letterSend/getReply?id=" + id,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                picUrl = "http://localhost:8080/show/" + response.data.letPic;
+                $('#pic').attr('src', picUrl);
+                $('#replyMsg').text( response.data.letReply );
+            }
+        });
+
+        setTimeout(function() {
+            $('#drawer').css('bottom', '0'); // 当页面加载完成后1秒开始向上滑动
+        }, 1000);
+
+      $('#pic').attr('src', picUrl);
+    });
+
+    function toggleDrawer() {
+        $('#drawer').css('height', '260px');
+        $('#textarea').attr('display', 'none');
+        $('#drawer').css('bottom', '-260px');
+    }
+
+    function showDrawer() {
+        $('#drawer').css('height', '260px');
+        $('#drawer').css('bottom', '0px');
+        $('#textarea').css('display', 'none');
+    }
+
+    // 点击其他问题
+    function toggleTextArea() {
+        const textarea = document.getElementById("textarea");
+        if($('#textarea').css("display") == 'none')  {
+            $('#drawer').css('height', '316px');
+            $('#textarea').css('display', 'block');
+        }
+        else {
+            $('#drawer').css('height', '260px');
+            $('#textarea').css('display', 'none');
+        }
+        // textarea.hidden = !textarea.hidden;
+    }
+
+    // 从URL中获取查询参数
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+
+    function changeColor(element) {
+        // Remove style from all buttons
+        let buttons = document.querySelectorAll('.radio-btn');
+        for (let btn of buttons) {
+            btn.classList.remove('active');
+            if (btn.id !== 'otherQ') {
+                $('#drawer').css('height', '260px');
+                $('#textarea').css('display', 'none');
+            }
+        }
+
+        // Add style to the clicked button
+        element.classList.add('active');
+    }
+
+    function submitFeedBack() {
+        let buttons = document.querySelectorAll('.radio-btn');
+        msg = "";
+        for (let btn of buttons) {
+            if (btn.classList.contains('active')) {
+                if (btn.id === 'otherQ') {
+                    msg = msg + btn.innerText + ": " + $('#textarea').val();
+                }
+                else {
+                    msg = msg + btn.innerText;
+                }
+            }
+        }
+        // alert(msg);
+        $.post("/letterSend/feedBack", {id: id, feedBack: msg
+       }, function (result) {
+            if(result.code == 200){
+                alert(result.data);
+            }
+            else{
+                alert(result.message);
+            }
+        }, "json");
+    }
+
+    function showTab(tabName) {
+        var tabContent1 = document.getElementById('content1');
+        var tabContent2 = document.getElementById('content2');
+
+        if (tabName === 'online') {
+            tabContent1.style.display = "grid";
+            tabContent2.style.display = 'none';
+
+            // Update active tab
+            document.getElementById('tab1').className = 'tab-item active';
+            document.getElementById('tab2').className = 'tab-item';
+        }
+        else if (tabName === 'reply') {
+            tabContent1.style.display = 'none';
+            tabContent2.style.display = 'block';
+
+            // Update active tab
+            document.getElementById('tab1').className = 'tab-item';
+            document.getElementById('tab2').className = 'tab-item active';
+        }
+    }
+
+    function downloadLetter() {
+        const link = document.createElement('a');
+        link.href = picUrl;
+        link.download = '电子函件.jpg';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // app.get('/download', function(req, res) {
+    //     var filePath = picUrl;
+
+    //     res.setHeader('Content-Disposition', 'attachment; filename=电子函件.jpg');
+    //     res.setHeader('Content-Type', 'image/jpeg');
+
+    //     res.sendFile(filePath);
+    // });
+</script>
+
+<body>
+<div class="image-container">
+    <img id="pic" alt="">
+</div>
+<div class="buttons">
+    <div class="clickableDiv" onclick="showDrawer()">
+        <p>我要留言</p>
+    </div>
+    <div class="clickableDiv" onclick="downloadLetter()">
+        <!-- onclick="downloadLetter() -->
+        <!-- <img src="" alt="Placeholder Image" />  -->
+        <p>函件下载</p>
+    </div>
+</div>
+
+
+
+<div id="drawer">
+    <div>
+        <ul class="tabs">
+            <li id="tab1" class="tab-item active" onclick="showTab('online')">在线留言</li>
+            <li id="tab2" class="tab-item" onclick="showTab('reply')">回复内容</li>
+            <li style="position: fixed;right: 1px; margin-top: 10px; ">
+                <button style="border-radius: 50%;" onclick="toggleDrawer()">×</button>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 回复 -->
+    <div id="content1" class="container">
+        <button class="radio-btn" onclick="changeColor(this)">我会尽快还款</button>
+        <button class="radio-btn" onclick="changeColor(this)">申请协商还款</button>
+
+        <button class="radio-btn" onclick="changeColor(this)">已还款请核实</button>
+        <button class="radio-btn" onclick="changeColor(this)">对金额有异议</button>
+
+        <button id="otherQ" style="grid-column: span 2;"  class="radio-btn"
+                onclick="changeColor(this);toggleTextArea()">其他问题</button>
+
+        <textarea id="textarea" style="grid-column: span 2; display: none;"></textarea>
+
+        <button style="grid-column: span 2;" onclick="submitFeedBack()">确认提交</button>
+    </div>
+
+    <!-- 查看回复 -->
+    <div id="content2" class="checkReply">
+        <p1 id="replyMsg">暂无回复</p1>
+    </div>
+
+</div>
+</body>
+</html>

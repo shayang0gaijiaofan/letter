@@ -77,11 +77,10 @@ streetStatus*/
 	@Column(length=200)
 	private String letCreateTime   ;//函件图片
 
+	@Column(length=200)
+	private String letFeedBack;	// 函件留言信息
 
-
-
-
-	
-	
+	@Column(length=200)
+	private String letReply; // 函件回复信息
 	
 }

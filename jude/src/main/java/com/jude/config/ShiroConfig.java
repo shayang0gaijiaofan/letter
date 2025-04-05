@@ -49,7 +49,10 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/user/login", "anon");
         filterChainDefinitionMap.put("/drawImage", "anon");
+        filterChainDefinitionMap.put("/feedBack/**", "anon");
         filterChainDefinitionMap.put("/sms/**", "anon");
+        filterChainDefinitionMap.put("/letterFeedBack.html", "anon");
+        filterChainDefinitionMap.put("/letterFeedBack", "anon");
         filterChainDefinitionMap.put("/pic/image", "anon");
         filterChainDefinitionMap.put("/show/**", "anon");
 
